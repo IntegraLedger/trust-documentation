@@ -1,0 +1,18 @@
+export default {
+  overview: 'Layer 3 Overview',
+  'tokenizer-comparison': 'Tokenizer Comparison',
+  BaseTokenizerV7: 'BaseTokenizerV7 (Abstract)',
+  TrustGraphIntegration: 'TrustGraphIntegration (Mixin)',
+  IDocumentTokenizerV7: 'IDocumentTokenizerV7',
+  OwnershipTokenizerV7: 'OwnershipTokenizerV7 (ERC-721)',
+  MultiPartyTokenizerV7: 'MultiPartyTokenizerV7 (ERC-1155)',
+  MultiPartyTokenizerV7Lite: 'MultiPartyTokenizerV7Lite (ERC-6909)',
+  SharesTokenizerV7: 'SharesTokenizerV7 (ERC-20)',
+  RoyaltyTokenizerV7: 'RoyaltyTokenizerV7 (ERC-1155)',
+  RentalTokenizerV7: 'RentalTokenizerV7 (ERC-1155)',
+  BadgeTokenizerV7: 'BadgeTokenizerV7 (ERC-1155)',
+  SoulboundTokenizerV7: 'SoulboundTokenizerV7 (ERC-721)',
+  VaultTokenizerV7: 'VaultTokenizerV7 (ERC-721)',
+  SecurityTokenTokenizerV7: 'SecurityTokenTokenizerV7 (ERC-20)',
+  SemiFungibleTokenizerV7: 'SemiFungibleTokenizerV7 (ERC-1155)',
+};
