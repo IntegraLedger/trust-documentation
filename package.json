@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:embedded": "NEXT_CONFIG=embedded next build",
     "start": "next start",
     "deploy": "npm run build && wrangler pages deploy out --project-name=integra-documentation"
   },

@@ -29,11 +29,8 @@ npm install
 # Start dev server (serves on http://localhost:3000)
 npm run dev
 
-# Build for standalone deployment (no basePath, outputs to out/)
+# Build static site
 npm run build
-
-# Build for embedded deployment (basePath: /docs, outputs to ../cf-integra-trust-platform/public/docs)
-npm run build:embedded
 ```
 
 ## Adding Documentation
@@ -59,14 +56,11 @@ npm run build
 
 ## Build Output
 
-There are two build modes:
-
-1. **Standalone deployment** - Built to `out/` directory for hosting at integra-documentation.pages.dev
-2. **Embedded deployment** - Built to `../cf-integra-trust-platform/public/docs` with basePath `/docs` for iframe integration
+The static site is built to `out/` directory for deployment to Cloudflare Pages.
 
 ## Integration with Trust Platform
 
-The documentation is embedded in the Trust Platform at `/documentation` route using an iframe:
+The documentation is deployed to Cloudflare Pages at `integra-documentation.pages.dev` and embedded in the Trust Platform at `/documentation` route using an iframe:
 
 - **Page Component**: `cf-integra-trust-platform/src/pages/DocumentationPage.tsx`
 - **Router**: Added to `cf-integra-trust-platform/src/router/index.tsx`
@@ -75,10 +69,13 @@ The documentation is embedded in the Trust Platform at `/documentation` route us
 
 ## Deployment
 
-The static site is deployed as part of the Trust Platform:
+Deploy to Cloudflare Pages:
 
-1. Build docs: `npm run build` (in trust-documentation/)
-2. Deploy Trust Platform to Cloudflare Pages (includes public/docs)
+```bash
+npm run deploy
+```
+
+This builds the static site and deploys it to the `integra-documentation` Cloudflare Pages project.
 
 ## Syncing Docs from Other Repos
 
