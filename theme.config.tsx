@@ -14,6 +14,23 @@ const config: DocsThemeConfig = {
     defaultMenuCollapseLevel: 1,
     toggleButton: true,
   },
+  head: (
+    <>
+      <style>{`
+        .rwc-hero {
+          background-color: #1e40af;
+          color: white;
+          padding: 4rem 2rem;
+          border-radius: 0.5rem;
+          margin: 2rem 0;
+        }
+        .dark .rwc-hero {
+          background-color: #1e3a8a;
+          color: white;
+        }
+      `}</style>
+    </>
+  ),
 };
 
 export default config;
