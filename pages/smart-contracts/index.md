@@ -23,25 +23,25 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 ### Tier 1: The Immutable Quad
 Permanent foundation contracts deployed once per chain:
 
-- **[CapabilityNamespaceV7_Immutable](./layer0/capability-namespace)** - 256-bit capability bit definitions
-- **[AttestationProviderRegistryV7_Immutable](./layer0/provider-registry)** - Provider registry with code hash verification
-- **[IntegraVerifierRegistryV7_Immutable](./layer0/verifier-registry)** - ZK proof verifier registry
+- **[CapabilityNamespaceV7_Immutable](./layer0/CapabilityNamespaceV7_Immutable)** - 256-bit capability bit definitions
+- **[AttestationProviderRegistryV7_Immutable](./layer0/AttestationProviderRegistryV7_Immutable)** - Provider registry with code hash verification
+- **[IntegraVerifierRegistryV7_Immutable](./layer0/IntegraVerifierRegistryV7_Immutable)** - ZK proof verifier registry
 - **[IntegraResolverRegistryV7_Immutable](./layer2/resolver-registry)** - Document resolver registry
 
 ### Tier 2: Ossifiable Foundation
 Contracts with progressive governance evolution:
 
-- **[AttestationAccessControlV7](./layer0/attestation-access-control)** - Provider-agnostic access control (UUPS upgradeable → Ossified)
+- **[AttestationAccessControlV7](./layer0/AttestationAccessControlV7)** - Provider-agnostic access control (UUPS upgradeable → Ossified)
 - **[IntegraDocumentRegistryV7_Immutable](./layer2/document-registry)** - Pure document identity registry (immutable deployment)
 
 ### Tier 3: Application Layer
 Continuously upgradeable service contracts:
 
-- **[EASAttestationProviderV7](./layer0/eas-provider)** - EAS-based attestation provider
+- **[EASAttestationProviderV7](./layer0/EASAttestationProviderV7)** - EAS-based attestation provider
 - **[SimpleContactResolverV7](./layer2/simple-contact-resolver)** - Encrypted URL contact provider
-- **[Tokenizers](./layer3/tokenizers)** - Document tokenization implementations
-- **[Communication](./layer4/communication)** - Messaging and signaling
-- **[Execution](./layer6/execution)** - Gasless operations
+- **[Tokenizers](./layer3/overview)** - Document tokenization implementations
+- **[Communication](./layer4/overview)** - Messaging and signaling
+- **[Execution](./layer6/overview)** - Gasless operations
 
 ## Layer Structure
 
@@ -117,7 +117,7 @@ Review the [Integration Guide](./guides/integration) for step-by-step instructio
 
 All Tier 1 contracts undergo formal verification with Certora. Security audits are conducted by Trail of Bits and ConsenSys Diligence.
 
-[View Security Overview →](./security/overview)
+[View Security Guide →](./guides/security)
 
 ## Deployment
 
@@ -139,5 +139,5 @@ The protocol follows a phased deployment approach:
 
 - [GitHub Repository](https://github.com/IntegraLedger/smart-contracts-evm-v7)
 - [Architecture Deep Dive](./guides/architecture)
-- [API Reference](./api/overview)
+- [Integration Guide](./guides/integration)
 - [Security Contact](mailto:security@integra.io)
