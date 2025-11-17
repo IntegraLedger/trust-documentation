@@ -3,7 +3,7 @@
 <div style="text-align: center; margin: 4rem 0;">
   <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Introducing</h2>
   <div style="font-size: 35vh; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">RWC</div>
-  <h2 style="font-size: 1.5rem; margin-top: 1rem;">Real World Contract</h2>
+  <h2 style="font-size: 3rem; margin-top: 1rem;">Real World Contracts</h2>
 </div>
 
 ## Overview
