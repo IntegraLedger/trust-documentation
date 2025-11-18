@@ -4,43 +4,51 @@ Immutable registry architecture with code hash verification for secure infrastru
 
 ## Overview
 
-The Integra V7 system uses immutable registry contracts to manage critical infrastructure:
+The Integra system uses a **unified immutable registry** contract to manage critical infrastructure:
 
 - **Code Hash Verification**: Captures and validates contract code at registration
 - **Active/Inactive Status**: Lifecycle management without removal
 - **Graceful Degradation**: Returns `address(0)` instead of reverting
 - **Metadata Storage**: Human-readable descriptions and categorization
 - **Enumeration Support**: Off-chain discovery and monitoring
-- **Immutable Pattern**: Registries cannot be upgraded (ultimate trust)
+- **Immutable Pattern**: Registry cannot be upgraded (ultimate trust)
+- **Type Categorization**: Single registry supports multiple component types
 
-**Three Immutable Registries**:
-1. `AttestationProviderRegistryV7_Immutable` - Attestation system providers (EAS, VCs, ZK, DIDs)
-2. `IntegraVerifierRegistryV7_Immutable` - ZK proof verifiers
-3. `IntegraResolverRegistryV7_Immutable` - Document resolvers
+**IntegraRegistryV7_Immutable** (Unified Registry) supports:
+1. **PROVIDER** type: Attestation system providers (EAS, VCs, ZK, DIDs)
+2. **VERIFIER** type: ZK proof verifiers (Groth16, PLONK, Poseidon)
+3. **RESOLVER** type: Document resolvers (lifecycle, compliance, custom)
+4. **TOKENIZER** type: Token implementations (ERC-721, ERC-1155, ERC-20)
 
-## Why Immutable Registries?
+## Why an Immutable Unified Registry?
 
 ### Trust Guarantees
 
-Registries are immutable because they provide critical infrastructure that must be trustworthy:
+The registry is immutable because it provides critical infrastructure that must be trustworthy:
 
-**Attestation Provider Registry**:
+**For All Component Types**:
 - Code hash verification logic must be reliable
 - Cannot be upgraded to bypass security checks
 - Graceful degradation pattern must work correctly
-- Users must trust that attestation providers are validated
+- Users must trust that all infrastructure components are validated
 
-**Verifier Registry**:
+**For PROVIDER Components** (Attestation Providers):
+- Attestation verification must be trustworthy
+- No risk of malicious provider substitution
+
+**For VERIFIER Components** (ZK Verifiers):
 - ZK verifier addresses must be trustworthy
 - Proof verification is security-critical
-- Cannot risk malicious logic injection
 - Must guarantee proof integrity forever
 
-**Resolver Registry**:
+**For RESOLVER Components** (Document Resolvers):
 - Resolver lookup must be reliable
 - Service composition pattern depends on it
-- Code hash validation must work correctly
 - Cannot risk DOS via compromised registry
+
+**For TOKENIZER Components** (Token Implementations):
+- Tokenizer validation must be consistent
+- Code hash ensures tokenizer hasn't been compromised
 
 ### Benefits
 
