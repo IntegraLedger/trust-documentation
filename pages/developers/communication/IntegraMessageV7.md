@@ -772,7 +772,7 @@ app.post('/api/zkproof/generate', async (req, res) => {
 
 - [Communication Overview](./overview.md)
 - [IntegraSignalV7](./IntegraSignalV7.md)
-- [IntegraVerifierRegistryV7_Immutable](../layer0/IntegraVerifierRegistryV7_Immutable.md)
+- [IntegraVerifierRegistryV7_Immutable](./layer0/IntegraVerifierRegistryV7_Immutable.md)
 - [Poseidon Hash](https://www.poseidon-hash.info/)
 - [Groth16 ZK Proofs](https://eprint.iacr.org/2016/260.pdf)
 - [Circom Documentation](https://docs.circom.io/)

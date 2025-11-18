@@ -567,7 +567,7 @@ describe("ERC-721 Compliance", () => {
 - [Integration Guide →](/smart-contracts/guides/integration)
 
 ### Related Topics
-- [Purpose →](/smart-contracts/purpose/overview)
+- [Purpose →](./introduction/why-real-world-contracts)
 - [Security →](/smart-contracts/security/overview)
 - [Automation →](/smart-contracts/automation/overview)
 

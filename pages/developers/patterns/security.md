@@ -663,4 +663,4 @@ function emergencyUnlockResolvers(
 
 - [Access Control Patterns](./access-control.md) - Detailed access control architecture
 - [Registry Patterns](./registries.md) - Code hash verification deep dive
-- [Emergency Controls](../guides/emergency-procedures.md) - Operational procedures
+- [Emergency Controls](./guides/emergency-procedures.md) - Operational procedures

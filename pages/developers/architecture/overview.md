@@ -15,7 +15,7 @@ Integra's unique architecture **permanently binds ERC tokens to real-world docum
 
 This means tokens aren't just NFTs with metadata - they're **cryptographically verifiable representations of real-world assets** that work with any ERC-compatible wallet or marketplace.
 
-[Learn more about Document-Token Binding →](../concepts/document-token-binding)
+[Learn more about Document-Token Binding →](./concepts/document-token-binding)
 
 ## Contract Layers
 
@@ -274,7 +274,7 @@ tokenizer.claimToken(integraHash, tokenId, attestationUID, processHash);
 - **Gas Efficiency**: 30-50% cheaper claims (validation happens once, not per claim)
 - **Clean System**: Invalid attestations never get created
 
-**See**: [TokenClaimResolverV7 Documentation](../document-registration/token-claim-resolver.md)
+**See**: [TokenClaimResolverV7 Documentation](./document-registration/token-claim-resolver.md)
 
 ## Key Concepts for Developers
 

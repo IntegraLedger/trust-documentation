@@ -886,8 +886,8 @@ This makes Integra **the bridge** between traditional business processes and blo
 
 ## Learn More
 
-- [TokenClaimResolverV7](../document-registration/token-claim-resolver.md) - Attestation validation
-- [Document-Token Binding](./document-token-binding.md) - Document identity architecture
-- [ProcessHash Integration](./process-hash-integration.md) - Workflow correlation
-- [Trust Graph](../trust-graph/overview.md) - Reputation building
-- [Integration Guide](../guides/integration.md) - Complete integration examples
+- [TokenClaimResolverV7](/developers/document-registration/token-claim-resolver.md) - Attestation validation
+- [Document-Token Binding](/developers/document-token-binding.md) - Document identity architecture
+- [ProcessHash Integration](/developers/process-hash-integration.md) - Workflow correlation
+- [Trust Graph](/developers/trust-graph/overview.md) - Reputation building
+- [Integration Guide](/developers/guides/integration.md) - Complete integration examples

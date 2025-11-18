@@ -821,7 +821,7 @@ This creates a **privacy-preserving, verifiable reputation system** where the bl
 
 ## Learn More
 
-- [Document-Token Binding](../concepts/document-token-binding.md) - How contracts bind to tokens
-- [Privacy Architecture](../privacy/overview.md) - Privacy considerations
-- [EAS Attestations](../eas-attestations/eas-reference.md) - Attestation system
-- [Tokenizer Overview](../tokenizer-contracts/overview.md) - Which tokenizers support trust graph
+- [Document-Token Binding](/developers/concepts/document-token-binding.md) - How contracts bind to tokens
+- [Privacy Architecture](/developers/privacy/overview.md) - Privacy considerations
+- [EAS Attestations](/developers/eas-attestations/eas-reference.md) - Attestation system
+- [Tokenizer Overview](/developers/tokenizer-contracts/overview.md) - Which tokenizers support trust graph

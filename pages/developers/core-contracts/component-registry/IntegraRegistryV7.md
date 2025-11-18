@@ -426,4 +426,4 @@ contract MyApplication {
 
 - [Foundation Overview](./overview.md) - Architecture overview
 - [EASAttestationProviderV7](./EASAttestationProviderV7.md) - EAS provider details
-- [Document Registry](../document-registration/document-registry.md) - How documents use components
+- [Document Registry](./document-registration/document-registry.md) - How documents use components

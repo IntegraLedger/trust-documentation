@@ -390,14 +390,14 @@ const encodedData = schemaEncoder.encodeData([
   { name: "capabilities", value: 0x03, type: "uint256" }, // CLAIM + TRANSFER
   { name: "verifiedIdentity", value: "John Doe", type: "string" },
   { name: "verificationMethod", value: "KYC:Provider", type: "string" },
-  { name: "verificationDate", value: Date.now() / 1000, type: "uint256" },
+  { name: "verificationDate", value: Date.now(./ 1000, type: "uint256" },
   { name: "contractRole", value: "Buyer", type: "string" },
   { name: "legalEntityType", value: "Individual", type: "string" },
   { name: "notes", value: "", type: "string" },
   { name: "sourceChainId", value: 8453, type: "uint256" }, // Base
   { name: "sourceEASContract", value: EAS_CONTRACT_ADDRESS, type: "address" },
   { name: "documentContract", value: DOCUMENT_REGISTRY_ADDRESS, type: "address" },
-  { name: "issuedAt", value: Math.floor(Date.now() / 1000), type: "uint64" },
+  { name: "issuedAt", value: Math.floor(Date.now(./ 1000), type: "uint64" },
   { name: "attestationVersion", value: ethers.utils.id("INTEGRA_CAPABILITY_V6.2"), type: "bytes32" }
 ]);
 

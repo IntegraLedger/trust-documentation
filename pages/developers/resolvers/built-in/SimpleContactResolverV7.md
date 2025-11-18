@@ -865,7 +865,7 @@ assertEq(
 
 - [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/resolvers/SimpleContactResolverV7.sol)
 - [Document Registry Documentation](./document-registry)
-- [Resolver Development Guide](../guides/resolver-development)
+- [Resolver Development Guide](./guides/resolver-development)
 
 ## Support
 

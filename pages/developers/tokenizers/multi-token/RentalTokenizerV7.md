@@ -764,7 +764,7 @@ async function checkRentalStatus(
   const balance = await rentalTokenizer.balanceOf(userAddress, tokenId);
   const expiration = await rentalTokenizer.getExpiration(integraHash, tokenId, userAddress);
 
-  const now = Math.floor(Date.now() / 1000);
+  const now = Math.floor(Date.now(./ 1000);
   const isExpired = now > expiration;
   const isActive = balance.gt(0) && !isExpired;
 
@@ -935,7 +935,7 @@ async function checkExpiringRentals() {
       rental.holder
     );
 
-    const timeRemaining = expiration - Math.floor(Date.now() / 1000);
+    const timeRemaining = expiration - Math.floor(Date.now(./ 1000);
 
     if (timeRemaining < expiringThreshold && timeRemaining > 0) {
       // Send notification

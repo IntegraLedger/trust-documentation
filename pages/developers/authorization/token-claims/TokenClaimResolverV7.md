@@ -578,5 +578,5 @@ contract DocumentManager {
 
 - [EAS Documentation](https://docs.attest.org) - Ethereum Attestation Service
 - [Document Registry](./document-registry.md) - Document management
-- [Tokenizers Overview](../tokenizer-contracts/overview.md) - Token claim patterns
+- [Tokenizers Overview](./tokenizer-contracts/overview.md) - Token claim patterns
 - [SimpleContactResolverV7](./simple-contact-resolver.md) - Another resolver example

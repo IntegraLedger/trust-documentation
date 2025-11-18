@@ -1105,8 +1105,8 @@ This enables **automation with privacy** - the foundational insight that makes R
 
 ## Learn More
 
-- [Document-Token Binding](./document-token-binding.md) - How documents and tokens connect
-- [Trust Graph](../trust-graph/overview.md) - Privacy-preserving reputation
-- [Reserve-Claim Pattern](./reserve-claim-pattern.md) - Wallet-less onboarding
-- [ProcessHash Integration](./process-hash-integration.md) - Workflow correlation
-- [Privacy Overview](../privacy/overview.md) - Privacy features summary
+- [Document-Token Binding](/developers/document-token-binding.md) - How documents and tokens connect
+- [Trust Graph](/developers/trust-graph/overview.md) - Privacy-preserving reputation
+- [Reserve-Claim Pattern](/developers/reserve-claim-pattern.md) - Wallet-less onboarding
+- [ProcessHash Integration](/developers/process-hash-integration.md) - Workflow correlation
+- [Privacy Overview](/developers/privacy/overview.md) - Privacy features summary

@@ -864,7 +864,7 @@ const attestation = {
                 chainId,
                 easAddress,
                 documentContractAddress,
-                Math.floor(Date.now() / 1000),
+                Math.floor(Date.now(./ 1000),
                 schemaVersion
             ]
         )

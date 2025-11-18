@@ -535,9 +535,9 @@ const paymentDetails = await decryptAES256GCM(
 - [IntegraSignalV7](./IntegraSignalV7.md)
 
 ### Related Contracts
-- [Foundation Contracts](../layer0/overview.md)
-- [Document Contracts](../layer2/overview.md)
-- [Tokenization Contracts](../layer3/overview.md)
+- [Foundation Contracts](./layer0/overview.md)
+- [Document Contracts](./layer2/overview.md)
+- [Tokenization Contracts](./layer3/overview.md)
 
 ### External Resources
 - [Ethereum Attestation Service (EAS)](https://docs.attest.sh/)

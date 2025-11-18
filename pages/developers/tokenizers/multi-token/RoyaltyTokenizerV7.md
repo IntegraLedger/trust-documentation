@@ -927,7 +927,7 @@ async function getRoyaltyBreakdown(integraHash: string) {
       breakdown.push({
         tokenId,
         holder,
-        percentage: basisPoints.toNumber() / 100,  // Convert to percentage
+        percentage: basisPoints.toNumber(./ 100,  // Convert to percentage
         claimed: true
       });
     }

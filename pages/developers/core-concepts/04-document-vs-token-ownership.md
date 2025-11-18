@@ -221,7 +221,7 @@ ownershipTokenizer.reserveTokenAnonymous(
 
 ### Scenario 3: Company Issuing Stock to Employees
 
-**Document Owner:** Company (HR/Finance)
+**Document Owner:** Company (/developers/Finance)
 **Token Holders:** Employees (shareholders)
 
 ```solidity
@@ -930,7 +930,7 @@ This sophisticated model enables:
 
 ## Learn More
 
-- [Reserve-Claim Pattern](./reserve-claim-pattern.md) - Token issuance for non-wallet users
-- [Document-Token Binding](./document-token-binding.md) - How documents and tokens connect
-- [Tokenizer Overview](../tokenizer-contracts/overview.md) - Different token models
-- [Document Registry](../document-registration/document-registry.md) - Document ownership functions
+- [Reserve-Claim Pattern](/developers/reserve-claim-pattern.md) - Token issuance for non-wallet users
+- [Document-Token Binding](/developers/document-token-binding.md) - How documents and tokens connect
+- [Tokenizer Overview](/developers/tokenizer-contracts/overview.md) - Different token models
+- [Document Registry](/developers/document-registration/document-registry.md) - Document ownership functions

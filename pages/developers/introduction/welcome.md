@@ -31,7 +31,7 @@ Integra approach: Blockchain as coordination layer
 
 **The breakthrough:** Privacy-preserving coordination at planetary scale - parties coordinate using blockchain identifiers without sharing documents, using any software, with no direct integrations.
 
-[Learn about Blockchain as Global State Machine →](/smart-contracts/concepts/blockchain-as-global-state-machine)
+[Learn about Blockchain as Global State Machine →](./core-concepts/blockchain-as-global-state-machine)
 
 ### Privacy-First Architecture
 
@@ -48,7 +48,7 @@ Integra was born from the need to enable document automation when privacy/securi
 
 Each party keeps documents in their secure environment, coordinates using blockchain, preserves privacy.
 
-[Learn about Privacy Architecture →](/smart-contracts/privacy/architecture)
+[Learn about Privacy Architecture →](./privacy/architecture)
 
 ### The Unique Pattern: Document-Token Binding
 
@@ -65,7 +65,7 @@ Unlike traditional NFTs that only store metadata, Integra uses a **two-layer arc
 - Bound to document identity
 - Verifiable real-world representation
 
-[Learn about Document-Token Binding →](/smart-contracts/concepts/document-token-binding)
+[Learn about Document-Token Binding →](./core-concepts/document-token-binding)
 
 ### Privacy-Preserving Trust Graph
 
@@ -83,7 +83,7 @@ When parties complete real-world contracts, Integra automatically issues **socia
 - Counterparty validated (mutual attestation)
 - Portable across platforms
 
-[Learn about Trust Graph →](/smart-contracts/trust-graph/overview)
+[Learn about Trust Graph →](./core-concepts/07-trust-graphoverview)
 
 ### Resolver Composition: Unlimited Extensibility
 
@@ -102,7 +102,7 @@ Transform static documents into programmable contracts by attaching **resolver s
 - No core contract modifications required
 - Mix and match for any use case
 
-[Learn about Resolver Composition →](/smart-contracts/patterns/resolvers)
+[Learn about Resolver Composition →](./patterns/resolvers)
 
 ### ProcessHash: Universal Application Integration
 
@@ -121,7 +121,7 @@ Every Integra function includes a **processHash** field that correlates blockcha
 - Enables cross-chain workflow tracking
 - No additional infrastructure required
 
-[Learn about ProcessHash Integration →](/smart-contracts/concepts/process-hash-integration)
+[Learn about ProcessHash Integration →](./core-concepts/process-hash-integration)
 
 ### Reserve-Claim Pattern: Mainstream Blockchain Adoption
 
@@ -145,7 +145,7 @@ Tokenize agreements with people who don't have crypto wallets using the **reserv
 - Email/SMS-based claims (familiar UX)
 - Gradual adoption (claim when ready)
 
-[Learn about Reserve-Claim Pattern →](/smart-contracts/concepts/reserve-claim-pattern)
+[Learn about Reserve-Claim Pattern →](./core-concepts/reserve-claim-pattern)
 
 ### Document vs Token Ownership: Sophisticated Dual-Ownership Model
 
@@ -171,7 +171,7 @@ Integra separates **document control** from **economic interests** - a critical 
 **Philosophy:**
 Integra binds blockchain functionality to traditional contracts - it doesn't replace them. Tokens represent roles and interests in real-world agreements, not speculative assets for trading.
 
-[Learn about Document vs Token Ownership →](/smart-contracts/concepts/document-vs-token-ownership)
+[Learn about Document vs Token Ownership →](./core-concepts/document-vs-token-ownership)
 
 ## Why Smart Contracts Matter
 
@@ -192,7 +192,7 @@ Smart contracts are self-executing programs on the blockchain that run exactly a
 ### Learn the Purpose
 Understand what problems Integra solves and how our smart contracts work.
 
-[Explore Purpose →](/smart-contracts/purpose/overview)
+[Explore Purpose →](./introduction/why-real-world-contracts)
 
 </div>
 
@@ -201,7 +201,7 @@ Understand what problems Integra solves and how our smart contracts work.
 ### Privacy First
 Learn how we protect sensitive information while leveraging blockchain transparency.
 
-[Learn About Privacy →](/smart-contracts/privacy/overview)
+[Learn About Privacy →](./privacy/overview)
 
 </div>
 
@@ -287,7 +287,7 @@ Upgradeable service layer allows innovation while the core remains stable and se
 
 <div style="background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
 
-**New to blockchain?** Start with [Purpose](/smart-contracts/purpose/overview) to understand the fundamentals.
+**New to blockchain?** Start with [Purpose](./introduction/why-real-world-contracts) to understand the fundamentals.
 
 **Developer?** Check out the [Technical Overview](/smart-contracts/index) and [Integration Guides](/smart-contracts/guides/integration).
 

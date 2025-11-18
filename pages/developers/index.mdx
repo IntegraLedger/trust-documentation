@@ -1,56 +1,70 @@
 # Welcome to Integra Smart Contracts
 
-## Real World Contracts
+## Real World Contracts (RWC)
 
-Integra provides blockchain infrastructure for tokenizing real-world documents and assets with verifiable ownership, privacy controls, and automated workflows.
+Integra provides blockchain infrastructure for tokenizing real-world documents and assets. Our smart contracts enable you to bring legal documents, certificates, agreements, and other important records onto the blockchain with verifiable ownership, privacy controls, and automated workflows.
 
-## Core Innovations
+### The Revolutionary Concept: Blockchain as Global State Machine
 
-### 1. Blockchain as Global State Machine
+Integra uses the **blockchain as a global state machine** to solve the impossible coordination problem: How do millions of parties with different software, security policies, and no trust coordinate contract execution?
 
-Coordinate millions of parties with different software, no shared systems, complete privacy preservation.
+**The foundational challenge Integra solves:**
 
-[Learn more →](./core-concepts/01-blockchain-as-global-state-machine)
+Traditional approach requires shared systems → Cloud collaboration (violates privacy policies) → Point-to-point APIs (N² integration problem) → Manual processes (doesn't scale).
 
-### 2. Privacy-First Architecture
+Integra approach uses blockchain as coordination layer → Each party keeps documents private → Register proofs (hashes) on global blockchain → Use shared identifiers (integraHash, processHash) → Any software can read/write global state → Ad hoc coordination across unlimited parties.
 
-Public proof of private information - enable automation when document sharing is prohibited.
+**The breakthrough:** Privacy-preserving coordination at planetary scale.
 
-[Learn more →](./core-concepts/02-privacy-first-architecture)
+[Learn about Blockchain as Global State Machine →](/developers/core-concepts/01-blockchain-as-global-state-machine)
 
-### 3. Document-Token Binding
+### Privacy-First Architecture
 
-Permanently bind standard ERC tokens to cryptographically verifiable real-world documents.
+**Core principle:** Public proof of private information
 
-[Learn more →](./core-concepts/03-document-token-binding)
+Integra was born from the need to enable document automation when privacy/security policies prohibit document sharing.
 
-### 4. Document vs Token Ownership
+[Learn about Privacy Architecture →](/developers/core-concepts/02-privacy-first-architecture)
 
-Sophisticated dual-ownership: Document owner ≠ token holder. Tokens represent roles and interests.
+### Document-Token Binding
 
-[Learn more →](./core-concepts/04-document-vs-token-ownership)
+Unlike traditional NFTs that only store metadata, Integra uses a two-layer architecture that permanently binds ERC tokens to real-world documents.
 
-### 5. Reserve-Claim Pattern
+[Learn about Document-Token Binding →](/developers/core-concepts/03-document-token-binding)
 
-Tokenize agreements with people who don't have wallets - mainstream blockchain adoption.
+### Document vs Token Ownership
 
-[Learn more →](./core-concepts/05-reserve-claim-pattern)
+Integra separates document control from economic interests - a critical distinction from traditional NFTs.
 
-### 6. ProcessHash Integration
+[Learn about Document vs Token Ownership →](/developers/core-concepts/04-document-vs-token-ownership)
 
-Universal workflow correlation with CRM, ERP, DMS, and any software system.
+### Reserve-Claim Pattern
 
-[Learn more →](./core-concepts/06-process-hash-integration)
+Tokenize agreements with people who don't have crypto wallets using the reserve-claim pattern.
 
-### 7. Trust Graph
+[Learn about Reserve-Claim Pattern →](/developers/core-concepts/05-reserve-claim-pattern)
 
-Privacy-preserving reputation from blockchain-backed social attestations.
+### ProcessHash Integration
 
-[Learn more →](./core-concepts/07-trust-graph)
+Every Integra function includes a processHash field that correlates blockchain events with off-chain workflows.
+
+[Learn about ProcessHash Integration →](/developers/core-concepts/06-process-hash-integration)
+
+### Trust Graph
+
+When parties complete real-world contracts, Integra automatically issues social attestations that build verifiable reputation.
+
+[Learn about Trust Graph →](/developers/core-concepts/07-trust-graph)
+
+### Resolver Composition
+
+Transform static documents into programmable contracts by attaching resolver services.
+
+[Learn about Resolver Composition →](/developers/patterns/resolvers)
 
 ## Get Started
 
-- [Core Concepts](./core-concepts/overview) - Understand the philosophy
-- [Architecture](./architecture/overview) - See how it fits together
-- [Tokenizers](./tokenizers/overview) - Explore token types
-- [Core Contracts](./core-contracts/overview) - The foundation layer
+- [Core Concepts](/developers/core-concepts/overview) - Understand the philosophy
+- [Architecture](/developers/architecture/overview) - See how it fits together
+- [Tokenizers](/developers/tokenizers/overview) - Explore token types
+- [Core Contracts](/developers/core-contracts/overview) - The foundation layer

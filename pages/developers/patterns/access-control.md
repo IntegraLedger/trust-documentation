@@ -840,4 +840,4 @@ Multiple independent security layers provide defense in depth:
 - [Security Patterns](./security.md) - Comprehensive security architecture
 - [Upgradeability Patterns](./upgradeability.md) - Progressive ossification
 - [Registry Patterns](./registries.md) - Code hash verification
-- [Foundation Documentation](../layer0/) - Attestation system details
+- [Foundation Documentation](./layer0/) - Attestation system details

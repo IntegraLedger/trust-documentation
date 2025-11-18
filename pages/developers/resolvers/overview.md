@@ -820,8 +820,8 @@ This makes Integra's document registry a **programmable platform** where develop
 
 ## Learn More
 
-- [Document Registry](../document-registration/document-registry.md) - Core document management
-- [SimpleContactResolverV7](../document-registration/simple-contact-resolver.md) - Contact resolver example
-- [TokenClaimResolverV7](../document-registration/token-claim-resolver.md) - EAS resolver example
-- [Extensibility Overview](../extensibility/overview.md) - System extensibility
-- [Document-Token Binding](../concepts/document-token-binding.md) - How documents and tokens work together
+- [Document Registry](./document-registration/document-registry.md) - Core document management
+- [SimpleContactResolverV7](./document-registration/simple-contact-resolver.md) - Contact resolver example
+- [TokenClaimResolverV7](./document-registration/token-claim-resolver.md) - EAS resolver example
+- [Extensibility Overview](./extensibility/overview.md) - System extensibility
+- [Document-Token Binding](./concepts/document-token-binding.md) - How documents and tokens work together

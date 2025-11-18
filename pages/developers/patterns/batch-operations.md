@@ -648,4 +648,4 @@ for (const chunk of chunkArray(documents, 50)) {
 
 - [Security Patterns](./security.md) - Reentrancy protection in batch operations
 - [Access Control Patterns](./access-control.md) - Batch executor authorization
-- [Document Documentation](../layer2/) - Document registry architecture
+- [Document Documentation](./layer2/) - Document registry architecture

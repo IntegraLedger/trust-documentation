@@ -817,4 +817,4 @@ describe("Storage Layout", () => {
 - [Security Patterns](./security.md) - Emergency controls and pausability
 - [Access Control Patterns](./access-control.md) - GOVERNOR_ROLE management
 - [Registry Patterns](./registries.md) - Immutable infrastructure
-- [Foundation Documentation](../layer0/) - Attestation system architecture
+- [Foundation Documentation](./layer0/) - Attestation system architecture

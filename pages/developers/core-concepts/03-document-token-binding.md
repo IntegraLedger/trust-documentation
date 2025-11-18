@@ -519,7 +519,7 @@ This is what makes Integra's tokens **Real World Contracts** - they're not just 
 
 ## Learn More
 
-- [Document Registry Documentation](../document-registration/document-registry.md)
-- [Tokenizer Overview](../tokenizer-contracts/overview.md)
-- [Architecture Guide](../guides/architecture.md)
-- [Purpose: Why Integra Exists](../purpose/overview.md)
+- [Document Registry Documentation](/developers/document-registration/document-registry.md)
+- [Tokenizer Overview](/developers/tokenizer-contracts/overview.md)
+- [Architecture Guide](/developers/guides/architecture.md)
+- [Purpose: Why Integra Exists](/developers/purpose/overview.md)

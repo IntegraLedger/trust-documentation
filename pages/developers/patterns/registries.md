@@ -739,4 +739,4 @@ describe("Provider Lifecycle", () => {
 
 - [Security Patterns](./security.md) - Code hash verification security
 - [Resolver Patterns](./resolvers.md) - Resolver composition using registries
-- [Foundation Documentation](../layer0/) - Attestation provider architecture
+- [Foundation Documentation](./layer0/) - Attestation provider architecture

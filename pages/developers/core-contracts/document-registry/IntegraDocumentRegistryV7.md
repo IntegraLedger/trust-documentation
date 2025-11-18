@@ -1344,8 +1344,8 @@ IntegraDocumentRegistryV7_Immutable documentRegistry = new IntegraDocumentRegist
 
 - [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/IntegraDocumentRegistryV7_Immutable.sol)
 - [Resolver Registry Documentation](./resolver-registry)
-- [Integration Guide](../guides/layer2-integration)
-- [Security Audit](../audits/layer2)
+- [Integration Guide](./guides/layer2-integration)
+- [Security Audit](./audits/layer2)
 
 ## Support
 

@@ -1069,6 +1069,6 @@ integraSignal.on("PaymentMarkedPaid", async (
 
 - [Communication Overview](./overview.md)
 - [IntegraMessageV7](./IntegraMessageV7.md)
-- [IntegraDocumentRegistryV7_Immutable](../layer2/document-registry.md)
+- [IntegraDocumentRegistryV7_Immutable](./layer2/document-registry.md)
 - [Ethereum Attestation Service (EAS)](https://docs.attest.sh/)
 - [AES-256-GCM Encryption](https://en.wikipedia.org/wiki/Galois/Counter_Mode)

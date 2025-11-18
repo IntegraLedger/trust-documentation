@@ -82,7 +82,7 @@ Not everything belongs on a public blockchain. We provide:
 - **Encrypted Metadata**: Sensitive data stays private
 - **Zero-Knowledge Proofs**: Prove facts without revealing data
 
-[Learn more about Privacy →](/smart-contracts/privacy/overview)
+[Learn more about Privacy →](./privacy/overview)
 
 ### 2. Security by Design
 Security isn't added later - it's built into every layer:
@@ -181,7 +181,7 @@ We're building permanent infrastructure for the next century of real-world asset
 
 Ready to dive deeper?
 
-- **Understand Privacy**: [How we protect sensitive data →](/smart-contracts/privacy/overview)
+- **Understand Privacy**: [How we protect sensitive data →](./privacy/overview)
 - **Explore Security**: [Our security architecture →](/smart-contracts/security/overview)
 - **See Automation**: [Smart contract capabilities →](/smart-contracts/automation/overview)
 - **Learn Standards**: [ERC token standards →](/smart-contracts/erc-standards/overview)

@@ -12,7 +12,7 @@ These concepts build on each other - we recommend reading in order:
 
 How do millions of parties with different software coordinate contract execution without trust or shared systems?
 
-[Read: Blockchain as Global State Machine →](./01-blockchain-as-global-state-machine)
+[Read: Blockchain as Global State Machine →](/developers/01-blockchain-as-global-state-machine)
 
 ---
 
@@ -22,7 +22,7 @@ How do millions of parties with different software coordinate contract execution
 
 Why Integra exists: Enable document automation when privacy policies prohibit sharing.
 
-[Read: Privacy-First Architecture →](./02-privacy-first-architecture)
+[Read: Privacy-First Architecture →](/developers/02-privacy-first-architecture)
 
 ---
 
@@ -32,7 +32,7 @@ Why Integra exists: Enable document automation when privacy policies prohibit sh
 
 The two-layer architecture that permanently binds tokens to cryptographically verifiable documents.
 
-[Read: Document-Token Binding →](./03-document-token-binding)
+[Read: Document-Token Binding →](/developers/03-document-token-binding)
 
 ---
 
@@ -42,7 +42,7 @@ The two-layer architecture that permanently binds tokens to cryptographically ve
 
 Document owners ≠ Token holders. Service providers can facilitate without owning. Tokens represent roles and interests, not just assets.
 
-[Read: Document vs Token Ownership →](./04-document-vs-token-ownership)
+[Read: Document vs Token Ownership →](/developers/04-document-vs-token-ownership)
 
 ---
 
@@ -52,7 +52,7 @@ Document owners ≠ Token holders. Service providers can facilitate without owni
 
 How to tokenize agreements with people who don't have crypto wallets using document-anchored identity.
 
-[Read: Reserve-Claim Pattern →](./05-reserve-claim-pattern)
+[Read: Reserve-Claim Pattern →](/developers/05-reserve-claim-pattern)
 
 ---
 
@@ -62,7 +62,7 @@ How to tokenize agreements with people who don't have crypto wallets using docum
 
 Link blockchain events to CRM/ERP/DMS workflows. Integrate with Salesforce, SAP, SharePoint, or any system.
 
-[Read: ProcessHash Integration →](./06-process-hash-integration)
+[Read: ProcessHash Integration →](/developers/06-process-hash-integration)
 
 ---
 
@@ -72,7 +72,7 @@ Link blockchain events to CRM/ERP/DMS workflows. Integrate with Salesforce, SAP,
 
 Build verifiable trust through counterparty-verified contract completion, with selective disclosure.
 
-[Read: Trust Graph →](./07-trust-graph)
+[Read: Trust Graph →](/developers/07-trust-graph)
 
 ---
 
@@ -92,7 +92,7 @@ Together, these seven concepts enable:
 
 After understanding these concepts:
 
-- [Explore Architecture →](../architecture/overview) - See how it all fits together
-- [View Core Contracts →](../core-contracts/overview) - The immutable foundation
-- [Browse Tokenizers →](../tokenizers/overview) - Economic layer implementations
-- [Get Started →](../getting-started/quickstart) - Build your first integration
+- [Explore Architecture →](/developers/architecture/overview) - See how it all fits together
+- [View Core Contracts →](/developers/core-contracts/overview) - The immutable foundation
+- [Browse Tokenizers →](/developers/tokenizers/overview) - Economic layer implementations
+- [Get Started →](/developers/getting-started/quickstart) - Build your first integration
