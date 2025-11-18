@@ -1,0 +1,702 @@
+openapi: 3.0.3
+info:
+  title: Integra API
+  version: 1.0.0
+  description: |
+    Public blockchain data access API for the Integra ecosystem.
+    
+    This service provides access to blockchain transaction data, smart contract events, 
+    and blockchain analytics for the Integra platform. It serves both the Integra Explorer 
+    frontend and external API clients.
+    
+    ## Endpoint Categories
+    
+    ### Public Endpoints (No Authentication)
+    - `/health` - Health check with dependency status
+    - `/ready` - Kubernetes readiness probe
+    - `/metrics` - Prometheus metrics
+    
+    ### User API Endpoints (JWT Required)
+    - `/v1/transactions/*` - Transaction data and search
+    - `/v1/blocks/*` - Block information
+    - `/v1/documents/*` - Document activity tracking
+    - `/v1/contracts/*` - Smart contract events
+    - `/v1/addresses/*` - Address transaction history
+    - `/v1/chains` - Active blockchain networks
+    - `/v1/stats/*` - Blockchain statistics
+    
+    ### Internal Endpoints (Service Token Required)
+    - `/v1/internal/*` - Internal service monitoring and control
+    
+    ### Legacy Endpoints (Frontend Logging)
+    - `/api/logs` - Frontend log ingestion (temporary, will migrate to /v1)
+    
+    This API is the primary data source for https://explorer.trustwithintegra.com
+    and provides rate-limited access for external integrations.
+  contact:
+    name: Integra Development Team
+  license:
+    name: Proprietary
+
+servers:
+  - url: 'http://localhost:3000'
+    description: Local development
+  - url: 'https://tx.trustwithintegra.com'
+    description: Production
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for user authentication
+
+  schemas:
+    # Common response schemas
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+        - version
+        - timestamp
+        - uptime
+        - dependencies
+      properties:
+        status:
+          type: string
+          enum: [healthy]
+          example: healthy
+        service:
+          type: string
+          example: integra-api
+        version:
+          type: string
+          example: 1.0.0
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+        uptime:
+          type: number
+          minimum: 0
+          description: Service uptime in seconds
+          example: 3600
+        dependencies:
+          type: object
+          required:
+            - database
+            - redis
+            - rabbitmq
+          properties:
+            database:
+              type: string
+              enum: [healthy, unhealthy]
+              example: healthy
+            redis:
+              type: string
+              enum: [healthy, unhealthy]
+              example: healthy
+            rabbitmq:
+              type: string
+              enum: [healthy, unhealthy]
+              example: healthy
+
+    ReadyResponse:
+      type: object
+      required:
+        - ready
+      properties:
+        ready:
+          type: boolean
+          example: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - statusCode
+      properties:
+        error:
+          type: string
+          example: Internal Server Error
+        message:
+          type: string
+          example: An unexpected error occurred
+        statusCode:
+          type: integer
+          example: 500
+
+    # Transaction schemas
+    Transaction:
+      type: object
+      required:
+        - hash
+        - block_number
+        - block_timestamp
+        - from_address
+        - to_address
+        - value
+        - contract_type
+        - chain_id
+      properties:
+        hash:
+          type: string
+          pattern: "^0x[a-fA-F0-9]{64}$"
+          example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+        block_number:
+          type: integer
+          minimum: 0
+          example: 12345678
+        block_timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        from_address:
+          type: string
+          pattern: "^0x[a-fA-F0-9]{40}$"
+          example: "0x742d35Cc6634C0532925a3b8D95c2b0D93c29D8b"
+        to_address:
+          type: string
+          pattern: "^0x[a-fA-F0-9]{40}$"
+          example: "0x742d35Cc6634C0532925a3b8D95c2b0D93c29D8b"
+        value:
+          type: string
+          description: Transaction value in wei
+          example: "1000000000000000000"
+        contract_type:
+          type: string
+          enum: [IntegraLedger, IntegraMessage, IntegraPayment, IntegraSignal]
+          example: IntegraLedger
+        chain_id:
+          type: integer
+          example: 137
+        integra_hash:
+          type: string
+          nullable: true
+          pattern: "^0x[a-fA-F0-9]{64}$"
+          example: "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+        gas_used:
+          type: integer
+          minimum: 0
+          example: 21000
+        gas_price:
+          type: string
+          example: "20000000000"
+
+    TransactionList:
+      type: object
+      required:
+        - data
+        - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        pagination:
+          type: object
+          required:
+            - total
+            - page
+            - limit
+            - totalPages
+          properties:
+            total:
+              type: integer
+              minimum: 0
+              example: 1000
+            page:
+              type: integer
+              minimum: 1
+              example: 1
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 100
+              example: 20
+            totalPages:
+              type: integer
+              minimum: 1
+              example: 50
+
+    # Block schemas
+    Block:
+      type: object
+      required:
+        - number
+        - timestamp
+        - transaction_count
+        - chain_id
+      properties:
+        number:
+          type: integer
+          minimum: 0
+          example: 12345678
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        transaction_count:
+          type: integer
+          minimum: 0
+          example: 145
+        chain_id:
+          type: integer
+          example: 137
+        hash:
+          type: string
+          pattern: "^0x[a-fA-F0-9]{64}$"
+          example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+
+    # Chain schemas
+    Chain:
+      type: object
+      required:
+        - chain_id
+        - name
+        - symbol
+        - rpc_url
+        - is_active
+      properties:
+        chain_id:
+          type: integer
+          example: 137
+        name:
+          type: string
+          example: "Polygon"
+        symbol:
+          type: string
+          example: "MATIC"
+        rpc_url:
+          type: string
+          format: uri
+          example: "https://polygon-rpc.com"
+        is_active:
+          type: boolean
+          example: true
+
+    # Statistics schemas
+    ChainStats:
+      type: object
+      required:
+        - chain_id
+        - total_transactions
+        - total_blocks
+        - last_block_number
+      properties:
+        chain_id:
+          type: integer
+          example: 137
+        total_transactions:
+          type: integer
+          minimum: 0
+          example: 1000000
+        total_blocks:
+          type: integer
+          minimum: 0
+          example: 50000
+        last_block_number:
+          type: integer
+          minimum: 0
+          example: 12345678
+        transactions_24h:
+          type: integer
+          minimum: 0
+          example: 5000
+        avg_block_time:
+          type: number
+          example: 2.1
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: |
+        Returns the health status of the service and its dependencies.
+        
+        This endpoint tests real connections to:
+        - TimescaleDB database (blockchain data storage)
+        - Redis cache (performance optimization)
+        - RabbitMQ message queue (event processing)
+        
+        The service will return HTTP 500 if any dependency is unhealthy.
+      operationId: getHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '500':
+          description: Service or dependencies are unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ready:
+    get:
+      summary: Kubernetes readiness probe
+      description: |
+        Simple readiness check for Kubernetes deployments.
+        Returns 200 when the service is ready to accept traffic.
+      operationId: getReady
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadyResponse'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint
+      description: |
+        Returns Prometheus-formatted metrics for monitoring.
+        
+        Includes standard Node.js metrics plus custom application metrics:
+        - API request rates and response times
+        - Database query performance
+        - Cache hit/miss ratios
+        - Background job processing statistics
+      operationId: getMetrics
+      tags:
+        - Monitoring
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /v1/transactions:
+    get:
+      summary: List blockchain transactions
+      description: |
+        Retrieve a paginated list of blockchain transactions with filtering options.
+        
+        This endpoint supports filtering by:
+        - Contract type (IntegraLedger, IntegraMessage, etc.)
+        - Chain ID (137 for Polygon, 1 for Ethereum)
+        - Time range (from/to timestamps)
+        - Address (from or to address)
+        
+        Results are ordered by block timestamp (newest first).
+      operationId: listTransactions
+      tags:
+        - Transactions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of transactions per page
+        - name: contract-type
+          in: query
+          schema:
+            type: string
+            enum: [IntegraLedger, IntegraMessage, IntegraPayment, IntegraSignal]
+          description: Filter by contract type
+        - name: chain-id
+          in: query
+          schema:
+            type: integer
+          description: Filter by blockchain network
+        - name: address
+          in: query
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{40}$"
+          description: Filter by from or to address
+        - name: from-timestamp
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter transactions after this timestamp
+        - name: to-timestamp
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter transactions before this timestamp
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionList'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/transactions/{hash}:
+    get:
+      summary: Get transaction details
+      description: |
+        Retrieve detailed information about a specific blockchain transaction.
+        
+        Returns complete transaction data including:
+        - Transaction metadata (hash, block, timestamp)
+        - Contract interaction details
+        - Gas usage and costs
+        - Event logs and decoded data
+      operationId: getTransactionDetail
+      tags:
+        - Transactions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{64}$"
+          description: Transaction hash
+          example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/blocks/{block-number}:
+    get:
+      summary: Get block information
+      description: |
+        Retrieve information about a specific block and its transactions.
+        
+        Returns block metadata and a list of all Integra-related transactions
+        that were included in the block.
+      operationId: getBlockTransactions
+      tags:
+        - Blocks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: block-number
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Block number
+          example: 12345678
+      responses:
+        '200':
+          description: Block information and transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - block
+                  - transactions
+                properties:
+                  block:
+                    $ref: '#/components/schemas/Block'
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Block not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/documents/{integra-hash}:
+    get:
+      summary: Get document activity
+      description: |
+        Retrieve all blockchain activity for a specific document.
+        
+        Returns all transactions that reference the given integraHash,
+        showing the complete lifecycle of document interactions on the blockchain.
+      operationId: getDocumentActivity
+      tags:
+        - Documents
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: integra-hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{64}$"
+          description: Integra document hash
+          example: "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+      responses:
+        '200':
+          description: Document activity transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - integra_hash
+                  - transactions
+                properties:
+                  integra_hash:
+                    type: string
+                    pattern: "^0x[a-fA-F0-9]{64}$"
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/chains:
+    get:
+      summary: List active blockchain networks
+      description: |
+        Get a list of all blockchain networks supported by the Integra platform.
+        
+        Returns network information including chain IDs, names, and configuration
+        details for supported blockchains.
+      operationId: listChains
+      tags:
+        - Chains
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of active chains
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chain'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/stats/{chain-id}:
+    get:
+      summary: Get blockchain statistics
+      description: |
+        Retrieve statistics and analytics for a specific blockchain network.
+        
+        Returns metrics such as:
+        - Total transactions processed
+        - Block processing statistics
+        - Transaction volume trends
+        - Network performance metrics
+      operationId: getChainStats
+      tags:
+        - Statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: chain-id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Chain ID
+          example: 137
+      responses:
+        '200':
+          description: Chain statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChainStats'
+        '404':
+          description: Chain not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+tags:
+  - name: Health
+    description: Health monitoring endpoints
+  - name: Monitoring
+    description: Metrics and observability endpoints  
+  - name: Transactions
+    description: Blockchain transaction data
+  - name: Blocks
+    description: Blockchain block information
+  - name: Documents
+    description: Document lifecycle tracking
+  - name: Chains
+    description: Blockchain network information
+  - name: Statistics
+    description: Blockchain analytics and metrics

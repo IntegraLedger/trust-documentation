@@ -1,0 +1,40 @@
+# Internal Documentation
+
+Welcome to Integra Internal Documentation. This section contains operational guides, support procedures, and administrative documentation for Integra staff.
+
+## Quick Links
+
+- [Operations Guide](/internal/operations)
+- [Customer Support](/internal/support)
+- [Troubleshooting](/internal/troubleshooting)
+- [Admin Tasks](/internal/admin)
+
+## Overview
+
+This internal documentation hub provides Integra team members with the resources needed for:
+
+### Operations
+- Deployment procedures and system monitoring
+- Production and staging environment management
+- Maintenance windows and emergency procedures
+
+### Customer Support
+- Ticket priority levels and response times
+- Common issues and resolutions
+- Escalation processes and contacts
+
+### Troubleshooting
+- Diagnostic tools (Sentry, Jaeger, Kubernetes logs)
+- Common system issues and solutions
+- Emergency procedures
+
+### Administration
+- User management and permissions
+- Configuration management via Infisical
+- Database operations and Kubernetes management
+
+---
+
+> **🔒 Protected Content**
+>
+> This documentation is restricted to Integra staff. All content is confidential and should not be shared outside the organization.

@@ -1,0 +1,115 @@
+import { Tabs } from 'nextra/components'
+
+# RPC API
+
+Direct JSON-RPC access to supported blockchain networks through Integra's optimized RPC infrastructure.
+
+**Base URL:** `https://rpc.trustwithintegra.com`
+
+## OpenAPI Specification
+
+Download the complete OpenAPI specification to use with your favorite API client:
+
+- [Download OpenAPI Spec (YAML)](/openapi/rpc-api.yaml)
+- [View in Swagger UI](https://petstore.swagger.io/?url=https://78b67064.integra-documentation.pages.dev/openapi/rpc-api.yaml)
+
+## Supported Networks
+
+Access multiple blockchain networks through a unified API:
+
+| Network | Chain ID | Endpoint |
+|---------|----------|----------|
+| Ethereum Mainnet | 1 | `/v1/rpc/ethereum` |
+| Ethereum Sepolia | 11155111 | `/v1/rpc/sepolia` |
+| Polygon Mainnet | 137 | `/v1/rpc/polygon` |
+| Polygon Mumbai | 80001 | `/v1/rpc/mumbai` |
+| Base Mainnet | 8453 | `/v1/rpc/base` |
+| Base Sepolia | 84532 | `/v1/rpc/base-sepolia` |
+| Arbitrum One | 42161 | `/v1/rpc/arbitrum` |
+| Arbitrum Sepolia | 421614 | `/v1/rpc/arbitrum-sepolia` |
+| Optimism | 10 | `/v1/rpc/optimism` |
+| BNB Smart Chain | 56 | `/v1/rpc/bnb` |
+| Avalanche C-Chain | 43114 | `/v1/rpc/avalanche` |
+
+## Quick Start
+
+### Standard JSON-RPC Request
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+curl https://rpc.trustwithintegra.com/v1/rpc/ethereum \
+  -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "eth_blockNumber",
+    "params": []
+  }'
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+
+const provider = new ethers.JsonRpcProvider(
+  'https://rpc.trustwithintegra.com/v1/rpc/ethereum',
+  undefined,
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY'
+    }
+  }
+);
+
+const blockNumber = await provider.getBlockNumber();
+console.log('Latest block:', blockNumber);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+
+w3 = Web3(Web3.HTTPProvider(
+    'https://rpc.trustwithintegra.com/v1/rpc/ethereum',
+    request_kwargs={'headers': {'Authorization': 'Bearer YOUR_API_KEY'}}
+))
+
+block_number = w3.eth.block_number
+print(f'Latest block: {block_number}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Supported Methods
+
+All standard Ethereum JSON-RPC methods are supported:
+
+- `eth_blockNumber` - Get latest block number
+- `eth_getBlockByNumber` - Get block by number
+- `eth_getBalance` - Get account balance
+- `eth_call` - Execute contract call
+- `eth_sendRawTransaction` - Send signed transaction
+- `eth_getTransactionReceipt` - Get transaction receipt
+- `eth_getLogs` - Get event logs
+- And many more...
+
+## Using with Postman
+
+Import the OpenAPI spec into Postman for interactive testing:
+
+1. Open Postman
+2. Click "Import" > "Link"
+3. Paste: `https://78b67064.integra-documentation.pages.dev/openapi/rpc-api.yaml`
+4. Click "Import"
+
+## Support
+
+Need help with the RPC API?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)
+- 📊 Status: [status.trustwithintegra.com](https://status.trustwithintegra.com)

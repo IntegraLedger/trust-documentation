@@ -1,0 +1,272 @@
+import { Tabs } from 'nextra/components'
+import AbiViewer from '../../../../components/AbiViewer'
+
+# IntegraLedger V4.5
+
+The core ledger contract for document registration, verification, and management on the Integra platform.
+
+## Overview
+
+IntegraLedger V4.5 is the foundational smart contract that handles:
+- Document registration with cryptographic hashing
+- Multi-signature claim approvals
+- ERC-1155 token integration for document ownership
+- Access control and verification workflows
+- On-chain attestation management
+
+## Key Features
+
+### Document Registration
+Register documents on-chain with secure hashing and metadata storage.
+
+### Multi-Signature Approvals
+Enable multiple parties to approve document claims before execution.
+
+### Token Integration
+ERC-1155 tokens represent document ownership and transfer rights.
+
+### Access Control
+Role-based permissions for document operations and verification.
+
+## Contract Interface
+
+<AbiViewer
+  abiUrl="/abis/IntegraLedgerV4_5.json"
+  contractName="IntegraLedger V4.5"
+/>
+
+## Main Functions
+
+### registerDocument
+
+Register a new document on-chain.
+
+<Tabs items={['TypeScript', 'Python', 'Solidity']}>
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import IntegraLedgerABI from './abis/IntegraLedgerV4_5.json';
+
+const contract = new ethers.Contract(
+  INTEGRA_LEDGER_ADDRESS,
+  IntegraLedgerABI.abi,
+  signer
+);
+
+// Register a document
+const tx = await contract.registerDocument(
+  documentHash,
+  metadataURI,
+  verifierAddress
+);
+
+await tx.wait();
+console.log('Document registered:', tx.hash);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+import json
+
+# Load ABI
+with open('IntegraLedgerV4_5.json', 'r') as f:
+    contract_data = json.load(f)
+    abi = contract_data['abi']
+
+contract = w3.eth.contract(address=INTEGRA_LEDGER_ADDRESS, abi=abi)
+
+# Register a document
+tx_hash = contract.functions.registerDocument(
+    document_hash,
+    metadata_uri,
+    verifier_address
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f'Document registered: {tx_hash.hex()}')
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```solidity
+// Call from another contract
+IIntegraLedger(ledgerAddress).registerDocument(
+    documentHash,
+    metadataURI,
+    verifierAddress
+);
+```
+</Tabs.Tab>
+</Tabs>
+
+### getDocument
+
+Retrieve document information by hash.
+
+<Tabs items={['TypeScript', 'Python', 'Solidity']}>
+<Tabs.Tab>
+```typescript
+const document = await contract.getDocument(documentHash);
+
+console.log({
+  exists: document.exists,
+  owner: document.owner,
+  timestamp: new Date(document.timestamp * 1000),
+  metadataURI: document.metadataURI,
+  verifier: document.verifier
+});
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+document = contract.functions.getDocument(document_hash).call()
+
+print({
+    'exists': document[0],
+    'owner': document[1],
+    'timestamp': document[2],
+    'metadata_uri': document[3],
+    'verifier': document[4]
+})
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```solidity
+(
+    bool exists,
+    address owner,
+    uint256 timestamp,
+    string memory metadataURI,
+    address verifier
+) = IIntegraLedger(ledgerAddress).getDocument(documentHash);
+```
+</Tabs.Tab>
+</Tabs>
+
+### requestClaim
+
+Request ownership claim for a document.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+const tx = await contract.requestClaim(
+  documentHash,
+  tokenId,
+  claimantAddress
+);
+
+await tx.wait();
+console.log('Claim requested:', tx.hash);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+tx_hash = contract.functions.requestClaim(
+    document_hash,
+    token_id,
+    claimant_address
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f'Claim requested: {tx_hash.hex()}')
+```
+</Tabs.Tab>
+</Tabs>
+
+### approveClaim
+
+Approve a pending ownership claim (requires authorization).
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+const tx = await contract.approveClaim(
+  documentHash,
+  tokenId
+);
+
+await tx.wait();
+console.log('Claim approved:', tx.hash);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+tx_hash = contract.functions.approveClaim(
+    document_hash,
+    token_id
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f'Claim approved: {tx_hash.hex()}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Events
+
+### DocumentRegistered
+```solidity
+event DocumentRegistered(
+    bytes32 indexed integraHash,
+    address indexed owner,
+    string metadataURI,
+    uint256 timestamp
+);
+```
+
+### ClaimRequested
+```solidity
+event ClaimRequested(
+    bytes32 indexed integraHash,
+    uint256 indexed tokenId,
+    address indexed claimant
+);
+```
+
+### ClaimApproved
+```solidity
+event ClaimApproved(
+    bytes32 indexed integraHash,
+    uint256 indexed tokenId,
+    address indexed approver
+);
+```
+
+## Error Handling
+
+### Common Errors
+
+- `DocumentAlreadyExists` - Document hash already registered
+- `DocumentNotFound` - Document hash does not exist
+- `DocumentHashCannotBeZero` - Invalid zero hash provided
+- `ClaimAlreadyRequested` - Claim already pending for this document
+- `ClaimAlreadyApproved` - Claim already approved
+- `Unauthorized` - Caller lacks required permissions
+
+## Best Practices
+
+1. **Hash Documents Locally**: Always hash documents client-side before registration
+2. **Store Metadata Off-Chain**: Use IPFS or similar for large metadata
+3. **Verify Before Registration**: Check if document already exists
+4. **Handle Events**: Listen for events to track document lifecycle
+5. **Error Handling**: Implement proper error handling for all transactions
+
+## Related Contracts
+
+- [IntegraPayment V4.5](./integra-payment) - Payment processing
+- [IntegraVerifierRegistry V4.5](./integra-verifier-registry) - Verifier management
+- [IntegraMessage V4.5](./integra-message) - Document messaging
+
+## Support
+
+Need help with IntegraLedger?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)
+- 📚 Guides: [Document Registration Guide](../document-registration)

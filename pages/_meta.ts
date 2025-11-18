@@ -1,7 +1,8 @@
 export default {
-  index: 'Introduction',
-  architecture: 'Architecture',
-  'smart-contracts': 'Smart Contracts',
-  observability: 'Observability',
-  workflows: 'Workflows',
+  index: {
+    type: 'page',
+    display: 'hidden',
+  },
+  developers: 'Developers',
+  users: 'Users',
 };

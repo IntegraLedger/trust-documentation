@@ -1,0 +1,115 @@
+# Communication Layer
+
+## Overview
+
+The communication layer enables secure, attestable communication between contract parties through **IntegraMessage** (encrypted messaging) and **IntegraSignal** (cross-chain events).
+
+## IntegraMessage
+
+Encrypted on-chain messaging with attestations.
+
+### Features
+
+- **Encrypted Content** - Only recipient can decrypt
+- **Thread Management** - Organize conversations
+- **Message Attestations** - Cryptographically verified
+- **Access Control** - Fine-grained permissions
+
+### Usage
+
+```typescript
+import { IntegraMessage } from '@integraledger/sdk';
+
+// Send encrypted message
+const message = await integraMessage.send({
+  recipient: contractorAddress,
+  content: encryptMessage("Project looks great!", recipientPublicKey),
+  threadId: contractHash
+});
+
+// Retrieve messages
+const messages = await integraMessage.getThread(contractHash);
+```
+
+## IntegraSignal
+
+Cross-chain event signaling for state synchronization.
+
+### Features
+
+- **Cross-Chain Events** - Signal across networks
+- **State Sync** - Keep systems in sync
+- **Message Routing** - Intelligent delivery
+- **Real-Time Notifications** - Instant updates
+
+### Usage
+
+```typescript
+import { IntegraSignal } from '@integraledger/sdk';
+
+// Emit signal
+await integraSignal.emit({
+  targetChainId: 137, // Polygon
+  signalType: "CONTRACT_SIGNED",
+  payload: contractData
+});
+
+// Listen for signals
+integraSignal.on("CONTRACT_SIGNED", (data) => {
+  console.log("Contract signed:", data);
+});
+```
+
+## Use Cases
+
+### Contract Negotiation
+
+```typescript
+// Back-and-forth messaging during negotiation
+await integraMessage.send({
+  recipient: counterparty,
+  content: "Proposed changes to Section 3",
+  threadId: contractHash,
+  attachments: [modifiedTerms]
+});
+```
+
+### Milestone Notifications
+
+```typescript
+// Signal milestone completion cross-chain
+await integraSignal.emit({
+  signalType: "MILESTONE_COMPLETED",
+  payload: { contractId, milestoneId, proof }
+});
+```
+
+### Multi-Party Coordination
+
+```typescript
+// Coordinate between multiple signers
+await integraMessage.sendToGroup({
+  recipients: [signer1, signer2, signer3],
+  content: "Ready to sign final agreement",
+  threadId: contractHash
+});
+```
+
+## Privacy
+
+- Messages encrypted end-to-end
+- Only participants can read
+- Metadata minimized on-chain
+- Optional disappearing messages
+
+## Related Topics
+
+- [Resolver Layer](./resolvers)
+- [Attestation Layer](./attestations)
+- [IntegraMessage Contract](../smart-contracts/contracts/integra-message)
+- [IntegraSignal Contract](../smart-contracts/contracts/integra-signal)
+
+## Support
+
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)

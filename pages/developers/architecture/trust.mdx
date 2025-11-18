@@ -1,0 +1,309 @@
+# Trust Principles
+
+## Overview
+
+Trust in traditional systems relies on centralized intermediaries - banks, notaries, certification authorities - to verify claims and enforce agreements. Integra replaces institutional trust with **cryptographic proofs** and **social attestations**, creating a decentralized trust infrastructure.
+
+## Trust Mechanisms
+
+### 1. Cryptographic Proofs
+
+Mathematical certainty replaces institutional promises.
+
+**Digital Signatures:**
+```typescript
+// Sign a document hash
+const signature = await signer.signMessage(documentHash);
+
+// Anyone can verify the signer's identity
+const recovered = ethers.utils.verifyMessage(documentHash, signature);
+// recovered === signer.address
+```
+
+**Benefits:**
+- **Unforgeable** - Only private key holder can create valid signatures
+- **Non-repudiable** - Cannot deny signing after the fact
+- **Verifiable** - Anyone can verify without trusted third party
+- **Timestamped** - On-chain registration proves time of signing
+
+### 2. Social Attestations
+
+Network effects create reputation.
+
+**How It Works:**
+- Party A works with Party B successfully
+- Party B attests to Party A's performance
+- Attestation is cryptographically signed and public
+- Future parties can verify A's track record
+
+**Example:**
+```typescript
+// Client attests to contractor's work quality
+const attestation = await eas.attest({
+  schema: WORK_QUALITY_SCHEMA,
+  data: {
+    recipient: contractor.address,
+    rating: 5,
+    projectType: "smart-contract-audit",
+    completedOnTime: true,
+    wouldHireAgain: true
+  }
+});
+```
+
+### 3. Reputation Graphs
+
+Historical records build trust over time.
+
+**Trust Score Components:**
+- Number of successful contracts
+- Value of contracts completed
+- Attestations from counterparties
+- Time in ecosystem
+- Dispute resolution history
+
+**Progressive Trust:**
+```typescript
+const trustScore = await calculateTrustScore(address);
+
+// New user: Low trust, small contract limits
+// trustScore: 10/100, maxContractValue: 1 ETH
+
+// Experienced user: High trust, unlimited
+// trustScore: 85/100, maxContractValue: unlimited
+```
+
+### 4. Progressive Disclosure
+
+Reveal only what's necessary to establish trust.
+
+**Zero-Knowledge Proofs:**
+- Prove you have a credential without revealing it
+- Prove you're authorized without revealing why
+- Prove you completed a project without revealing details
+
+**Example:**
+```typescript
+// Prove employment without revealing salary
+const proof = await generateProof({
+  claim: "employed-at-company-x",
+  reveal: ["employer", "duration"],
+  hide: ["salary", "title", "performance-reviews"]
+});
+
+// Verifier sees: "Employed at Company X for 2 years"
+// Verifier doesn't see: Salary, title, reviews, reason for leaving
+```
+
+## Trust in Practice
+
+### Scenario 1: First-Time Transaction
+
+Alice (new user) wants to hire Bob (experienced contractor):
+
+1. **Bob's Trust Indicators:**
+   - 50 completed contracts
+   - 4.8/5.0 average rating
+   - 45 positive attestations
+   - Member for 2 years
+   - Zero disputes
+
+2. **Alice's Protection:**
+   - Escrow contract holds payment
+   - Milestone-based release
+   - Dispute resolution available
+   - Bob's reputation at stake
+
+3. **Outcome:**
+   - Alice trusts based on Bob's history
+   - No intermediary needed
+   - Smart contract enforces agreement
+
+### Scenario 2: Building Reputation
+
+Charlie is new to the platform:
+
+**Week 1:**
+- Completes 3 small contracts
+- Each client attests to completion
+- Trust score: 15/100
+
+**Month 3:**
+- Completed 25 contracts
+- Average rating: 4.7/5.0
+- Trust score: 45/100
+- Can bid on larger projects
+
+**Year 1:**
+- Completed 100+ contracts
+- Top-rated in category
+- Trust score: 80/100
+- Clients seek him out
+
+### Scenario 3: Cross-Organization Trust
+
+Two companies collaborate:
+
+**Company A attests:**
+- "Company B delivered project on time"
+- "Quality exceeded expectations"
+- "Would partner again"
+
+**Company B attests:**
+- "Company A paid promptly"
+- "Clear communication"
+- "Professional relationship"
+
+**Network Effect:**
+- Other companies see mutual attestations
+- Both companies' trust scores increase
+- Future partnerships easier to establish
+
+## Trust vs Traditional Systems
+
+| Traditional | Integra |
+|------------|---------|
+| Central authority verifies | Cryptographic proof verifies |
+| Institution holds reputation | Blockchain holds reputation |
+| Platform-specific trust | Portable across platforms |
+| Opaque scoring | Transparent on-chain history |
+| Can be manipulated | Mathematically sound |
+| Expensive intermediaries | Minimal fees |
+
+## Building Trustless Systems
+
+### Smart Contract Escrow
+
+```solidity
+// Trustless escrow - no intermediary needed
+contract ProjectEscrow {
+    address public client;
+    address public contractor;
+    uint256 public amount;
+    bool public approved;
+
+    function releasePayment() external {
+        require(msg.sender == client, "Only client can release");
+        require(!approved, "Already released");
+        approved = true;
+        payable(contractor).transfer(amount);
+    }
+}
+```
+
+### Multi-Signature Approvals
+
+```solidity
+// Require multiple parties to approve
+contract MultiSigApproval {
+    mapping(address => bool) public signers;
+    mapping(bytes32 => uint256) public approvals;
+    uint256 public threshold = 3;
+
+    function approve(bytes32 documentHash) external {
+        require(signers[msg.sender], "Not authorized");
+        approvals[documentHash]++;
+    }
+
+    function isApproved(bytes32 documentHash) public view returns (bool) {
+        return approvals[documentHash] >= threshold;
+    }
+}
+```
+
+## Attestation-Based Trust
+
+### Creating Trust Attestations
+
+```typescript
+// Client attests to successful project
+const attestation = await eas.attest({
+  schema: PROJECT_COMPLETION_SCHEMA,
+  data: {
+    recipient: contractorAddress,
+    projectHash: documentHash,
+    rating: 5,
+    paidAmount: ethers.utils.parseEther("10"),
+    completionDate: Date.now(),
+    wouldRecommend: true
+  }
+});
+```
+
+### Querying Trust History
+
+```typescript
+// Get all attestations for a user
+const attestations = await eas.getAttestationsForRecipient(userAddress);
+
+// Filter for work quality
+const workAttestations = attestations.filter(
+  a => a.schema === WORK_QUALITY_SCHEMA
+);
+
+// Calculate average rating
+const avgRating = workAttestations.reduce(
+  (sum, a) => sum + a.data.rating, 0
+) / workAttestations.length;
+```
+
+## Best Practices
+
+### For Service Providers
+
+1. **Start Small** - Build reputation with smaller contracts
+2. **Deliver Quality** - Each attestation matters
+3. **Request Attestations** - Proactively ask satisfied clients
+4. **Maintain History** - Don't abandon old addresses
+5. **Be Transparent** - Honest disclosure builds trust
+
+### For Clients
+
+1. **Check History** - Review past attestations
+2. **Use Escrow** - Protect payments with smart contracts
+3. **Attest Fairly** - Accurate attestations help ecosystem
+4. **Start with Milestones** - Break large projects into stages
+5. **Communicate Clearly** - Prevent misunderstandings
+
+### For Organizations
+
+1. **Build Brand Reputation** - Consistent quality across contracts
+2. **Attest to Partners** - Support ecosystem growth
+3. **Use Multi-Sig** - Require multiple approvals
+4. **Monitor Metrics** - Track trust score and attestations
+5. **Resolve Disputes Professionally** - Reputation is valuable
+
+## Trust and Privacy
+
+Trust and privacy work together:
+
+**Public Trust Signals:**
+- Number of contracts
+- Average ratings
+- Time in ecosystem
+- Categories of work
+
+**Private Details:**
+- Contract specifics
+- Payment amounts
+- Client identities (if desired)
+- Proprietary information
+
+**Example:**
+```
+Public: "Completed 50 smart contract audits, 4.9/5.0 rating"
+Private: Client names, code reviewed, findings, fees
+```
+
+## Related Topics
+
+- [Identity Principles](./identity) - Foundation of trust
+- [Privacy Guarantees](./privacy) - Trust without exposure
+- [Attestation Layer](./attestations) - Trust infrastructure
+- [Security Model](./security) - Protecting trust
+
+## Support
+
+Questions about trust?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)

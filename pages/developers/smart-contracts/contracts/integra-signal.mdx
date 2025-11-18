@@ -1,0 +1,141 @@
+import { Tabs } from 'nextra/components'
+import AbiViewer from '../../../../components/AbiViewer'
+
+# IntegraSignal V4.5
+
+Event signaling and cross-chain communication protocol.
+
+## Overview
+
+IntegraSignal V4.5 provides:
+- Cross-chain messaging infrastructure
+- Event emission and listening
+- Signal routing between contracts
+- State synchronization across chains
+- Message verification and attestation
+
+## Contract Interface
+
+<AbiViewer
+  abiUrl="/abis/IntegraSignalV4_5.json"
+  contractName="IntegraSignal V4.5"
+/>
+
+## Key Features
+
+### Cross-Chain Messaging
+Send and receive messages across different blockchain networks.
+
+### Event System
+Robust event emission and listening system for contract communication.
+
+### Signal Routing
+Intelligent routing of signals to appropriate destination contracts.
+
+### State Sync
+Synchronize state across multiple chains for consistency.
+
+## Main Functions
+
+### emitSignal
+
+Emit a signal to other contracts or chains.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import IntegraSignalABI from './abis/IntegraSignalV4_5.json';
+
+const contract = new ethers.Contract(
+  INTEGRA_SIGNAL_ADDRESS,
+  IntegraSignalABI.abi,
+  signer
+);
+
+const tx = await contract.emitSignal(
+  targetChainId,
+  signalType,
+  payload
+);
+
+await tx.wait();
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+contract = w3.eth.contract(address=INTEGRA_SIGNAL_ADDRESS, abi=abi)
+
+tx_hash = contract.functions.emitSignal(
+    target_chain_id,
+    signal_type,
+    payload
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+```
+</Tabs.Tab>
+</Tabs>
+
+### listenForSignal
+
+Register to listen for specific signals.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+// Listen for signals
+const filter = contract.filters.SignalEmitted(targetChainId);
+contract.on(filter, (chainId, signalType, payload, event) => {
+  console.log('Signal received:', { chainId, signalType, payload });
+});
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Create event filter
+event_filter = contract.events.SignalEmitted.create_filter(
+    fromBlock='latest',
+    argument_filters={'targetChainId': target_chain_id}
+)
+
+# Poll for events
+for event in event_filter.get_all_entries():
+    print(f'Signal received: {event}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Events
+
+### SignalEmitted
+```solidity
+event SignalEmitted(
+    uint256 indexed targetChainId,
+    bytes32 indexed signalType,
+    bytes payload,
+    uint256 timestamp
+);
+```
+
+### SignalReceived
+```solidity
+event SignalReceived(
+    uint256 indexed sourceChainId,
+    bytes32 indexed signalType,
+    bytes payload
+);
+```
+
+## Related Contracts
+
+- [IntegraLedger V4.5](./integra-ledger) - Core ledger
+- [IntegraMessage V4.5](./integra-message) - Messaging system
+
+## Support
+
+Need help with IntegraSignal?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)

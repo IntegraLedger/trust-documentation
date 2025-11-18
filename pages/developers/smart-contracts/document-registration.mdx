@@ -1,0 +1,1212 @@
+import { Tabs } from 'nextra/components'
+
+# Document Registration
+
+Learn how to register documents on the Integra blockchain for permanent, verifiable records.
+
+## Overview
+
+Document registration creates an immutable record that proves:
+- **Existence**: The document existed at a specific time
+- **Integrity**: The document hasn't been altered
+- **Ownership**: Who registered/owns the document
+
+## Quick Start
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Register a document via API
+curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "documentHash": "0x1234abcd...",
+    "uri": "ipfs://QmYourDocumentMetadata"
+  }'
+
+# Response:
+# {
+#   "transactionHash": "0xabc...",
+#   "attestationId": "0x123...",
+#   "blockNumber": 12345678
+# }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import * as fs from 'fs';
+
+// Setup (you learned this in Getting Started)
+const provider = new ethers.JsonRpcProvider(RPC_URL);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+
+// Integra Document Registry contract
+const registry = new ethers.Contract(REGISTRY_ADDRESS, ABI, wallet);
+
+// 1. Hash your document
+const document = fs.readFileSync('my-document.pdf');
+const documentHash = ethers.keccak256(document);
+
+// 2. Register it
+const tx = await registry.registerDocument(
+  documentHash,
+  "ipfs://QmYourDocumentMetadata" // Optional: where document is stored
+);
+
+// 3. Wait for confirmation
+const receipt = await tx.wait();
+console.log('Document registered! Transaction:', receipt.hash);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+from eth_account import Account
+import json
+
+# Setup
+w3 = Web3(Web3.HTTPProvider(RPC_URL))
+account = Account.from_key(PRIVATE_KEY)
+
+# Integra Document Registry contract
+registry = w3.eth.contract(address=REGISTRY_ADDRESS, abi=ABI)
+
+# 1. Hash your document
+with open('my-document.pdf', 'rb') as f:
+    document = f.read()
+document_hash = w3.keccak(document)
+
+# 2. Register it
+tx = registry.functions.registerDocument(
+    document_hash,
+    "ipfs://QmYourDocumentMetadata"  # Optional: where document is stored
+).build_transaction({
+    'from': account.address,
+    'nonce': w3.eth.get_transaction_count(account.address),
+})
+
+# Sign and send
+signed_tx = account.sign_transaction(tx)
+tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+
+# 3. Wait for confirmation
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f'Document registered! Transaction: {receipt["transactionHash"].hex()}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Step-by-Step Guide
+
+### Step 1: Prepare Your Document
+
+First, decide what you're registering:
+- PDF contract
+- Image file
+- JSON data
+- Any digital content
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Generate document hash using external tool or API
+# Example using sha256sum and keccak256 tool:
+keccak256 contract.pdf
+# Output: 0x1234abcd...
+
+# Or use API endpoint:
+curl -X POST https://api.trustwithintegra.com/v1/hash \
+  -F "file=@contract.pdf"
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import * as fs from 'fs';
+
+// Read your document
+const documentBuffer = fs.readFileSync('./contract.pdf');
+
+// Generate hash (document fingerprint)
+const documentHash = ethers.keccak256(documentBuffer);
+console.log('Document hash:', documentHash);
+// Output: 0x1234abcd...
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+
+# Read your document
+with open('./contract.pdf', 'rb') as f:
+    document_buffer = f.read()
+
+# Generate hash (document fingerprint)
+document_hash = Web3.keccak(document_buffer)
+print(f'Document hash: {document_hash.hex()}')
+# Output: 0x1234abcd...
+```
+</Tabs.Tab>
+</Tabs>
+
+**Important**: Save this hash! You'll need it to verify the document later.
+
+### Step 2: Prepare Metadata (Optional)
+
+Metadata provides context about your document:
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Create metadata JSON file
+cat > metadata.json <<EOF
+{
+  "title": "Employment Contract - John Doe",
+  "documentType": "Contract",
+  "createdAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "author": "ACME Corp",
+  "description": "Employment agreement effective 2024"
+}
+EOF
+
+# Upload to IPFS (using your preferred IPFS service)
+curl -X POST https://api.pinata.cloud/pinning/pinFileToIPFS \
+  -H "Authorization: Bearer YOUR_PINATA_JWT" \
+  -F "file=@metadata.json" \
+  -F "pinataMetadata={\"name\":\"contract-metadata.json\"}"
+
+# Response includes IPFS hash (CID):
+# { "IpfsHash": "QmXxx..." }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+const metadata = {
+  title: "Employment Contract - John Doe",
+  documentType: "Contract",
+  createdAt: new Date().toISOString(),
+  author: "ACME Corp",
+  description: "Employment agreement effective 2024"
+};
+
+// Store metadata (common options):
+// 1. IPFS (decentralized, recommended)
+const ipfsHash = await uploadToIPFS(JSON.stringify(metadata));
+const uri = `ipfs://${ipfsHash}`;
+
+// 2. Your server
+const uri = "https://yourdomain.com/metadata/123";
+
+// 3. On-chain (expensive, not recommended for large data)
+const uri = "data:application/json," + encodeURIComponent(JSON.stringify(metadata));
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from datetime import datetime
+import json
+
+metadata = {
+    "title": "Employment Contract - John Doe",
+    "documentType": "Contract",
+    "createdAt": datetime.utcnow().isoformat(),
+    "author": "ACME Corp",
+    "description": "Employment agreement effective 2024"
+}
+
+# Store metadata (common options):
+# 1. IPFS (decentralized, recommended)
+ipfs_hash = upload_to_ipfs(json.dumps(metadata))
+uri = f"ipfs://{ipfs_hash}"
+
+# 2. Your server
+uri = "https://yourdomain.com/metadata/123"
+
+# 3. On-chain (expensive, not recommended for large data)
+from urllib.parse import quote
+uri = "data:application/json," + quote(json.dumps(metadata))
+```
+</Tabs.Tab>
+</Tabs>
+
+### Step 3: Register on Blockchain
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Register document via API
+curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "documentHash": "0x1234abcd...",
+    "uri": "ipfs://QmXxx..."
+  }'
+
+# Response:
+# {
+#   "transactionHash": "0xabc123...",
+#   "attestationId": "0x456def...",
+#   "blockNumber": 12345678,
+#   "status": "confirmed"
+# }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Connect to contract
+const registry = new ethers.Contract(
+  REGISTRY_ADDRESS,
+  [
+    "function registerDocument(bytes32 documentHash, string uri) returns (bytes32 attestationId)",
+    "event DocumentRegistered(bytes32 indexed attestationId, bytes32 indexed documentHash, address indexed owner)"
+  ],
+  wallet
+);
+
+// Register
+const tx = await registry.registerDocument(documentHash, uri);
+console.log('Transaction sent:', tx.hash);
+
+// Wait for confirmation
+const receipt = await tx.wait();
+console.log('Confirmed in block:', receipt.blockNumber);
+
+// Get attestation ID from event
+const event = receipt.logs.find(log =>
+  log.topics[0] === ethers.id("DocumentRegistered(bytes32,bytes32,address)")
+);
+const attestationId = event.topics[1];
+console.log('Attestation ID:', attestationId);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+
+# Connect to contract
+registry = w3.eth.contract(
+    address=REGISTRY_ADDRESS,
+    abi=[
+        {
+            "name": "registerDocument",
+            "type": "function",
+            "inputs": [
+                {"name": "documentHash", "type": "bytes32"},
+                {"name": "uri", "type": "string"}
+            ],
+            "outputs": [{"name": "attestationId", "type": "bytes32"}]
+        }
+    ]
+)
+
+# Register
+tx = registry.functions.registerDocument(document_hash, uri).build_transaction({
+    'from': account.address,
+    'nonce': w3.eth.get_transaction_count(account.address),
+})
+
+# Sign and send
+signed_tx = account.sign_transaction(tx)
+tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+print(f'Transaction sent: {tx_hash.hex()}')
+
+# Wait for confirmation
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f'Confirmed in block: {receipt["blockNumber"]}')
+
+# Get attestation ID from event
+event_signature = w3.keccak(text="DocumentRegistered(bytes32,bytes32,address)")
+for log in receipt['logs']:
+    if log['topics'][0] == event_signature:
+        attestation_id = log['topics'][1]
+        print(f'Attestation ID: {attestation_id.hex()}')
+```
+</Tabs.Tab>
+</Tabs>
+
+### Step 4: Verify Registration
+
+Confirm your document is registered:
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Check if document is registered
+curl -X GET "https://api.trustwithintegra.com/v1/documents/verify?hash=0x1234abcd..." \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Get full attestation details
+curl -X GET "https://api.trustwithintegra.com/v1/attestations/0x456def..." \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+const isRegistered = await registry.isDocumentRegistered(documentHash);
+console.log('Document registered:', isRegistered); // true
+
+// Get full attestation details
+const attestation = await registry.getAttestation(attestationId);
+console.log('Registered by:', attestation.attester);
+console.log('Registered at:', new Date(Number(attestation.time) * 1000));
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from datetime import datetime
+
+is_registered = registry.functions.isDocumentRegistered(document_hash).call()
+print(f'Document registered: {is_registered}')  # True
+
+# Get full attestation details
+attestation = registry.functions.getAttestation(attestation_id).call()
+print(f'Registered by: {attestation[0]}')
+print(f'Registered at: {datetime.fromtimestamp(attestation[1])}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Advanced Registration
+
+### Batch Registration
+
+Register multiple documents in one transaction (saves gas):
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Batch register via API
+curl -X POST https://api.trustwithintegra.com/v1/documents/register/batch \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "documents": [
+      {"hash": "0xabc...", "uri": "ipfs://Qm1..."},
+      {"hash": "0xdef...", "uri": "ipfs://Qm2..."},
+      {"hash": "0x123...", "uri": "ipfs://Qm3..."}
+    ]
+  }'
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+const documents = [
+  { hash: ethers.id("doc1"), uri: "ipfs://..." },
+  { hash: ethers.id("doc2"), uri: "ipfs://..." },
+  { hash: ethers.id("doc3"), uri: "ipfs://..." }
+];
+
+const hashes = documents.map(d => d.hash);
+const uris = documents.map(d => d.uri);
+
+const tx = await registry.registerDocumentBatch(hashes, uris);
+await tx.wait();
+console.log('Registered', documents.length, 'documents');
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+documents = [
+    {"hash": w3.keccak(text="doc1"), "uri": "ipfs://..."},
+    {"hash": w3.keccak(text="doc2"), "uri": "ipfs://..."},
+    {"hash": w3.keccak(text="doc3"), "uri": "ipfs://..."}
+]
+
+hashes = [d["hash"] for d in documents]
+uris = [d["uri"] for d in documents]
+
+tx = registry.functions.registerDocumentBatch(hashes, uris).build_transaction({
+    'from': account.address,
+    'nonce': w3.eth.get_transaction_count(account.address),
+})
+
+signed_tx = account.sign_transaction(tx)
+tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f'Registered {len(documents)} documents')
+```
+</Tabs.Tab>
+</Tabs>
+
+### Registration with Namespace
+
+Register under a specific namespace (requires permission):
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Register in namespace via API
+curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "documentHash": "0x1234...",
+    "uri": "ipfs://...",
+    "namespace": "ACME_CORP"
+  }'
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// First, check you have permission
+const namespaceId = ethers.id("ACME_CORP");
+const canRegister = await registry.hasCapability(
+  walletAddress,
+  namespaceId,
+  ethers.id("REGISTER")
+);
+
+if (!canRegister) {
+  throw new Error("No permission to register in this namespace");
+}
+
+// Register with namespace
+const tx = await registry.registerDocumentInNamespace(
+  documentHash,
+  uri,
+  namespaceId
+);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# First, check you have permission
+namespace_id = w3.keccak(text="ACME_CORP")
+can_register = registry.functions.hasCapability(
+    account.address,
+    namespace_id,
+    w3.keccak(text="REGISTER")
+).call()
+
+if not can_register:
+    raise Exception("No permission to register in this namespace")
+
+# Register with namespace
+tx = registry.functions.registerDocumentInNamespace(
+    document_hash,
+    uri,
+    namespace_id
+).build_transaction({
+    'from': account.address,
+    'nonce': w3.eth.get_transaction_count(account.address),
+})
+
+signed_tx = account.sign_transaction(tx)
+tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+```
+</Tabs.Tab>
+</Tabs>
+
+### Registration with Custom Schema
+
+Use a custom attestation schema for specialized data:
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Register with custom schema via API
+curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "documentHash": "0x1234...",
+    "uri": "ipfs://...",
+    "schemaId": "0xabcd1234...",
+    "customData": "0x..."
+  }'
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Your custom schema ID (registered with EAS)
+const CUSTOM_SCHEMA = "0xabcd1234...";
+
+const tx = await registry.registerDocumentWithSchema(
+  documentHash,
+  uri,
+  CUSTOM_SCHEMA,
+  customData // Encoded data matching schema
+);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Your custom schema ID (registered with EAS)
+CUSTOM_SCHEMA = "0xabcd1234..."
+
+tx = registry.functions.registerDocumentWithSchema(
+    document_hash,
+    uri,
+    CUSTOM_SCHEMA,
+    custom_data  # Encoded data matching schema
+).build_transaction({
+    'from': account.address,
+    'nonce': w3.eth.get_transaction_count(account.address),
+})
+
+signed_tx = account.sign_transaction(tx)
+tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+```
+</Tabs.Tab>
+</Tabs>
+
+## Best Practices
+
+### 1. Always Hash Consistently
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# ✅ Good: Use consistent hashing tool
+keccak256 document.pdf
+
+# ❌ Bad: Using different hash algorithms
+sha256sum document.pdf  # Wrong algorithm!
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// ✅ Good: Consistent hashing
+const hash = ethers.keccak256(fileBuffer);
+
+// ❌ Bad: Hashing string representation
+const hash = ethers.id(fileBuffer.toString());
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# ✅ Good: Consistent hashing
+hash = w3.keccak(file_buffer)
+
+# ❌ Bad: Hashing string representation
+hash = w3.keccak(text=file_buffer.decode())
+```
+</Tabs.Tab>
+</Tabs>
+
+### 2. Store Documents Off-Chain
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# ✅ Good: Upload to IPFS, hash on-chain
+ipfs add document.pdf
+# Returns: QmXxx...
+
+curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -d '{"documentHash": "0x...", "uri": "ipfs://QmXxx..."}'
+
+# ❌ Bad: Don't try to store whole document on-chain
+# This would cost thousands in gas fees!
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// ✅ Good: Hash on-chain, document on IPFS
+const documentCid = await ipfs.add(document);
+await registry.registerDocument(hash, `ipfs://${documentCid}`);
+
+// ❌ Bad: Don't try to store whole document on-chain
+// This would cost thousands in gas fees!
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# ✅ Good: Hash on-chain, document on IPFS
+document_cid = ipfs_client.add(document)
+registry.functions.registerDocument(hash, f"ipfs://{document_cid}")
+
+# ❌ Bad: Don't try to store whole document on-chain
+# This would cost thousands in gas fees!
+```
+</Tabs.Tab>
+</Tabs>
+
+### 3. Include Meaningful URIs
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# ✅ Good: Descriptive, accessible URI
+uri="ipfs://Qm.../contract-john-doe-2024.json"
+
+# ⚠️ Acceptable: No URI (if document is private)
+uri=""
+
+# ❌ Bad: Broken or inaccessible URI
+uri="http://localhost:3000/doc.pdf"
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// ✅ Good: Descriptive, accessible URI
+const uri = "ipfs://Qm.../contract-john-doe-2024.json";
+
+// ⚠️ Acceptable: No URI (if document is private)
+const uri = "";
+
+// ❌ Bad: Broken or inaccessible URI
+const uri = "http://localhost:3000/doc.pdf";
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# ✅ Good: Descriptive, accessible URI
+uri = "ipfs://Qm.../contract-john-doe-2024.json"
+
+# ⚠️ Acceptable: No URI (if document is private)
+uri = ""
+
+# ❌ Bad: Broken or inaccessible URI
+uri = "http://localhost:3000/doc.pdf"
+```
+</Tabs.Tab>
+</Tabs>
+
+### 4. Handle Errors Gracefully
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Check response status
+response=$(curl -s -w "\n%{http_code}" -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -d '{"documentHash": "0x..."}')
+
+status_code=$(echo "$response" | tail -n1)
+body=$(echo "$response" | head -n-1)
+
+if [ "$status_code" -eq 200 ]; then
+  echo "Success: $body"
+elif [ "$status_code" -eq 400 ]; then
+  echo "Error: Document already registered"
+elif [ "$status_code" -eq 402 ]; then
+  echo "Error: Insufficient balance for gas"
+else
+  echo "Error: $body"
+fi
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+try {
+  const tx = await registry.registerDocument(documentHash, uri);
+  await tx.wait();
+} catch (error) {
+  if (error.code === 'INSUFFICIENT_FUNDS') {
+    console.error('Not enough ETH for gas fees');
+  } else if (error.message.includes('already registered')) {
+    console.error('Document already registered');
+  } else {
+    console.error('Registration failed:', error.message);
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+try:
+    tx = registry.functions.registerDocument(document_hash, uri).build_transaction({
+        'from': account.address,
+        'nonce': w3.eth.get_transaction_count(account.address),
+    })
+    signed_tx = account.sign_transaction(tx)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+except ValueError as e:
+    if 'insufficient funds' in str(e).lower():
+        print('Not enough ETH for gas fees')
+    elif 'already registered' in str(e).lower():
+        print('Document already registered')
+    else:
+        print(f'Registration failed: {e}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Common Patterns
+
+### Pattern 1: Notarization Service
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+#!/bin/bash
+notarize_document() {
+  file=$1
+  client_address=$2
+
+  # 1. Hash document
+  hash=$(keccak256 "$file")
+
+  # 2. Create metadata
+  metadata=$(cat <<EOF
+{
+  "timestamp": $(date +%s),
+  "client": "$client_address",
+  "notary": "$NOTARY_ADDRESS"
+}
+EOF
+)
+
+  # 3. Upload to IPFS
+  cid=$(echo "$metadata" | ipfs add -Q)
+
+  # 4. Register on blockchain
+  response=$(curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+    -H "Authorization: Bearer $API_KEY" \
+    -d "{\"documentHash\": \"$hash\", \"uri\": \"ipfs://$cid\"}")
+
+  echo "$response"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function notarizeDocument(file: Buffer, clientAddress: string) {
+  // 1. Hash document
+  const hash = ethers.keccak256(file);
+
+  // 2. Create metadata
+  const metadata = {
+    timestamp: Date.now(),
+    client: clientAddress,
+    notary: walletAddress
+  };
+
+  // 3. Upload to IPFS
+  const cid = await ipfs.add(JSON.stringify(metadata));
+
+  // 4. Register on blockchain
+  const tx = await registry.registerDocument(hash, `ipfs://${cid}`);
+  const receipt = await tx.wait();
+
+  // 5. Return certificate
+  return {
+    hash,
+    transactionHash: receipt.hash,
+    blockNumber: receipt.blockNumber,
+    timestamp: new Date()
+  };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from datetime import datetime
+
+async def notarize_document(file: bytes, client_address: str):
+    # 1. Hash document
+    hash = w3.keccak(file)
+
+    # 2. Create metadata
+    metadata = {
+        "timestamp": int(datetime.now().timestamp()),
+        "client": client_address,
+        "notary": wallet_address
+    }
+
+    # 3. Upload to IPFS
+    cid = await ipfs.add(json.dumps(metadata))
+
+    # 4. Register on blockchain
+    tx = registry.functions.registerDocument(hash, f"ipfs://{cid}").build_transaction({
+        'from': account.address,
+        'nonce': w3.eth.get_transaction_count(account.address),
+    })
+
+    signed_tx = account.sign_transaction(tx)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+    # 5. Return certificate
+    return {
+        "hash": hash.hex(),
+        "transactionHash": receipt["transactionHash"].hex(),
+        "blockNumber": receipt["blockNumber"],
+        "timestamp": datetime.now()
+    }
+```
+</Tabs.Tab>
+</Tabs>
+
+### Pattern 2: Document Versioning
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+create_version() {
+  new_content=$1
+  previous_hash=$2
+  previous_attestation=$3
+
+  # Hash new version
+  new_hash=$(echo "$new_content" | keccak256)
+
+  # Create metadata linking to previous version
+  metadata=$(cat <<EOF
+{
+  "version": 2,
+  "previousHash": "$previous_hash",
+  "previousAttestation": "$previous_attestation",
+  "changes": "Updated section 3.2"
+}
+EOF
+)
+
+  cid=$(echo "$metadata" | ipfs add -Q)
+
+  curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+    -d "{\"documentHash\": \"$new_hash\", \"uri\": \"ipfs://$cid\"}"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function createVersion(documentId: string, newContent: Buffer) {
+  // Hash new version
+  const newHash = ethers.keccak256(newContent);
+
+  // Create metadata linking to previous version
+  const metadata = {
+    version: 2,
+    previousHash: previousDocumentHash,
+    previousAttestation: previousAttestationId,
+    changes: "Updated section 3.2"
+  };
+
+  const cid = await ipfs.add(JSON.stringify(metadata));
+  await registry.registerDocument(newHash, `ipfs://${cid}`);
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+async def create_version(document_id: str, new_content: bytes):
+    # Hash new version
+    new_hash = w3.keccak(new_content)
+
+    # Create metadata linking to previous version
+    metadata = {
+        "version": 2,
+        "previousHash": previous_document_hash.hex(),
+        "previousAttestation": previous_attestation_id.hex(),
+        "changes": "Updated section 3.2"
+    }
+
+    cid = await ipfs.add(json.dumps(metadata))
+
+    tx = registry.functions.registerDocument(new_hash, f"ipfs://{cid}").build_transaction({
+        'from': account.address,
+        'nonce': w3.eth.get_transaction_count(account.address),
+    })
+
+    signed_tx = account.sign_transaction(tx)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+```
+</Tabs.Tab>
+</Tabs>
+
+### Pattern 3: Multi-Party Registration
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Each party registers independently using their own API key
+register_shared_document() {
+  hash=$1
+
+  # Party 1
+  curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+    -H "Authorization: Bearer $PARTY1_API_KEY" \
+    -d "{\"documentHash\": \"$hash\", \"uri\": \"ipfs://party1-metadata\"}"
+
+  # Party 2
+  curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+    -H "Authorization: Bearer $PARTY2_API_KEY" \
+    -d "{\"documentHash\": \"$hash\", \"uri\": \"ipfs://party2-metadata\"}"
+
+  # Party 3
+  curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+    -H "Authorization: Bearer $PARTY3_API_KEY" \
+    -d "{\"documentHash\": \"$hash\", \"uri\": \"ipfs://party3-metadata\"}"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function registerSharedDocument(document: Buffer, parties: Party[]) {
+  const hash = ethers.keccak256(document);
+
+  // Each party registers independently
+  const attestations = [];
+  for (const party of parties) {
+    const signer = new ethers.Wallet(party.privateKey, provider);
+    const contract = registry.connect(signer);
+
+    const tx = await contract.registerDocument(hash, party.uri);
+    const receipt = await tx.wait();
+    attestations.push(receipt);
+  }
+
+  // Now multiple parties have attested to the same document
+  return attestations;
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+async def register_shared_document(document: bytes, parties: list):
+    hash = w3.keccak(document)
+
+    # Each party registers independently
+    attestations = []
+    for party in parties:
+        party_account = Account.from_key(party["private_key"])
+
+        tx = registry.functions.registerDocument(hash, party["uri"]).build_transaction({
+            'from': party_account.address,
+            'nonce': w3.eth.get_transaction_count(party_account.address),
+        })
+
+        signed_tx = party_account.sign_transaction(tx)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        attestations.append(receipt)
+
+    # Now multiple parties have attested to the same document
+    return attestations
+```
+</Tabs.Tab>
+</Tabs>
+
+## Troubleshooting
+
+### "Document already registered"
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Check if already registered before attempting
+hash="0x1234..."
+response=$(curl -s "https://api.trustwithintegra.com/v1/documents/verify?hash=$hash")
+
+if echo "$response" | grep -q '"registered":true'; then
+  echo "Document already exists"
+  # Decide: skip, error, or retrieve existing attestation
+fi
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Check if already registered before attempting
+if (await registry.isDocumentRegistered(hash)) {
+  console.log('Document already exists');
+  // Decide: skip, error, or retrieve existing attestation
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Check if already registered before attempting
+if registry.functions.isDocumentRegistered(hash).call():
+    print('Document already exists')
+    # Decide: skip, error, or retrieve existing attestation
+```
+</Tabs.Tab>
+</Tabs>
+
+### "Insufficient gas"
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# API handles gas estimation automatically
+# Ensure your account has sufficient balance
+curl -X GET "https://api.trustwithintegra.com/v1/account/balance" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Estimate gas first
+const gasEstimate = await registry.registerDocument.estimateGas(hash, uri);
+const gasLimit = gasEstimate * 120n / 100n; // Add 20% buffer
+
+const tx = await registry.registerDocument(hash, uri, { gasLimit });
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Estimate gas first
+gas_estimate = registry.functions.registerDocument(hash, uri).estimate_gas({
+    'from': account.address
+})
+gas_limit = int(gas_estimate * 1.2)  # Add 20% buffer
+
+tx = registry.functions.registerDocument(hash, uri).build_transaction({
+    'from': account.address,
+    'nonce': w3.eth.get_transaction_count(account.address),
+    'gas': gas_limit
+})
+```
+</Tabs.Tab>
+</Tabs>
+
+### "Transaction reverted"
+
+Common causes:
+1. Not enough gas
+2. Insufficient permissions (namespace)
+3. Invalid parameters
+4. Contract paused
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Check API response for detailed error
+response=$(curl -s -w "\n%{http_code}" -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -d '{"documentHash": "0x..."}')
+
+status_code=$(echo "$response" | tail -n1)
+body=$(echo "$response" | head -n-1)
+
+if [ "$status_code" -ne 200 ]; then
+  echo "Error details: $body"
+fi
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Add better error handling
+try {
+  const tx = await registry.registerDocument(hash, uri);
+  await tx.wait();
+} catch (error) {
+  console.error('Full error:', error);
+  if (error.data) {
+    // Decode revert reason
+    const reason = ethers.toUtf8String(error.data);
+    console.error('Revert reason:', reason);
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Add better error handling
+try:
+    tx = registry.functions.registerDocument(hash, uri).build_transaction({
+        'from': account.address,
+        'nonce': w3.eth.get_transaction_count(account.address),
+    })
+    signed_tx = account.sign_transaction(tx)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+except Exception as e:
+    print(f'Full error: {e}')
+    # Check for revert reason in error message
+    if hasattr(e, 'args') and len(e.args) > 0:
+        print(f'Revert reason: {e.args[0]}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Gas Optimization Tips
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Tip 1: Use batch registration when possible
+# Single: ~80,000 gas
+# Batch of 5: ~120,000 gas (24k per document)
+
+# Tip 2: Use empty URI if not needed
+# Saves ~5,000 gas
+curl -X POST https://api.trustwithintegra.com/v1/documents/register \
+  -d '{"documentHash": "0x...", "uri": ""}'
+
+# Tip 3: Monitor gas prices
+curl -s https://api.etherscan.io/api?module=gastracker&action=gasoracle
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Tip 1: Batch when possible
+// Single: ~80,000 gas
+// Batch of 5: ~120,000 gas (24k per document)
+
+// Tip 2: Use empty URI if not needed
+await registry.registerDocument(hash, ""); // Saves ~5,000 gas
+
+// Tip 3: Register during low network activity
+// Check gas prices: https://etherscan.io/gastracker
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Tip 1: Batch when possible
+# Single: ~80,000 gas
+# Batch of 5: ~120,000 gas (24k per document)
+
+# Tip 2: Use empty URI if not needed
+registry.functions.registerDocument(hash, "")  # Saves ~5,000 gas
+
+# Tip 3: Register during low network activity
+# Check current gas price
+gas_price = w3.eth.gas_price
+print(f'Current gas price: {w3.from_wei(gas_price, "gwei")} gwei')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Next Steps
+
+- **[Document Verification](./document-verification)**: Verify registered documents
+- **[Working with Tokens](./working-with-tokens)**: Tokenize documents
+- **[API Reference](./api-reference)**: Full contract interface
+- **[Code Examples](./code-examples)**: Complete working examples
+
+---
+
+Need help? Email developers@integraledger.com

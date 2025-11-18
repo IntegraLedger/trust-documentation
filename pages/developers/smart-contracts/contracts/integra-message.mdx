@@ -1,0 +1,142 @@
+import { Tabs } from 'nextra/components'
+import AbiViewer from '../../../../components/AbiViewer'
+
+# IntegraMessage V4.5
+
+Decentralized messaging system for platform communications.
+
+## Overview
+
+IntegraMessage V4.5 provides:
+- Encrypted on-chain messaging
+- Message attestations and verification
+- Thread and conversation management
+- Access-controlled message delivery
+- Message history and retrieval
+
+## Contract Interface
+
+<AbiViewer
+  abiUrl="/abis/IntegraMessageV4_5.json"
+  contractName="IntegraMessage V4.5"
+/>
+
+## Key Features
+
+### Encrypted Messaging
+Send encrypted messages between addresses with on-chain proof.
+
+### Message Attestations
+Cryptographic attestations for message authenticity.
+
+### Thread Management
+Organize messages into threads and conversations.
+
+### Access Control
+Fine-grained permissions for message access and delivery.
+
+## Main Functions
+
+### sendMessage
+
+Send an encrypted message.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import IntegraMessageABI from './abis/IntegraMessageV4_5.json';
+
+const contract = new ethers.Contract(
+  INTEGRA_MESSAGE_ADDRESS,
+  IntegraMessageABI.abi,
+  signer
+);
+
+const tx = await contract.sendMessage(
+  recipientAddress,
+  encryptedContent,
+  threadId
+);
+
+await tx.wait();
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+contract = w3.eth.contract(address=INTEGRA_MESSAGE_ADDRESS, abi=abi)
+
+tx_hash = contract.functions.sendMessage(
+    recipient_address,
+    encrypted_content,
+    thread_id
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+```
+</Tabs.Tab>
+</Tabs>
+
+### getMessage
+
+Retrieve a message by ID.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+const message = await contract.getMessage(messageId);
+
+console.log({
+  sender: message.sender,
+  recipient: message.recipient,
+  content: message.encryptedContent,
+  timestamp: new Date(message.timestamp * 1000)
+});
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+message = contract.functions.getMessage(message_id).call()
+
+print({
+    'sender': message[0],
+    'recipient': message[1],
+    'content': message[2],
+    'timestamp': message[3]
+})
+```
+</Tabs.Tab>
+</Tabs>
+
+## Events
+
+### MessageSent
+```solidity
+event MessageSent(
+    uint256 indexed messageId,
+    address indexed sender,
+    address indexed recipient,
+    bytes32 threadId
+);
+```
+
+### MessageRead
+```solidity
+event MessageRead(
+    uint256 indexed messageId,
+    address indexed reader
+);
+```
+
+## Related Contracts
+
+- [IntegraLedger V4.5](./integra-ledger) - Core ledger
+- [IntegraSignal V4.5](./integra-signal) - Event signaling
+
+## Support
+
+Need help with IntegraMessage?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)

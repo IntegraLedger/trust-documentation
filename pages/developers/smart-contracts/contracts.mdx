@@ -1,0 +1,130 @@
+# Smart Contract ABIs
+
+Complete ABI (Application Binary Interface) reference for all Integra smart contracts v4.5.
+
+## Available Contracts
+
+### IntegraLedger V4.5
+The core ledger contract for document registration, verification, and management.
+
+[View ABI Reference →](./contracts/integra-ledger)
+
+**Key Features:**
+- Document registration with on-chain hashing
+- Multi-signature approvals
+- ERC-1155 token integration
+- Access control and verification
+
+### IntegraPayment V4.5
+Payment processing and fee management for Integra platform operations.
+
+[View ABI Reference →](./contracts/integra-payment)
+
+**Key Features:**
+- Payment processing
+- Fee distribution
+- Multi-token support
+- Escrow functionality
+
+### IntegraSignal V4.5
+Event signaling and cross-chain communication protocol.
+
+[View ABI Reference →](./contracts/integra-signal)
+
+**Key Features:**
+- Cross-chain messaging
+- Event emission and listening
+- Signal routing
+- State synchronization
+
+### IntegraMessage V4.5
+Decentralized messaging system for platform communications.
+
+[View ABI Reference →](./contracts/integra-message)
+
+**Key Features:**
+- Encrypted messaging
+- Message attestations
+- Thread management
+- Access control
+
+### IntegraVerifierRegistry V4.5
+Registry for managing authorized verifiers and attestation providers.
+
+[View ABI Reference →](./contracts/integra-verifier-registry)
+
+**Key Features:**
+- Verifier registration
+- Authorization management
+- Reputation tracking
+- Access control
+
+### BasicAccessV1Verifier V4.5
+Simple access control verifier implementation.
+
+[View ABI Reference →](./contracts/basic-access-verifier)
+
+**Key Features:**
+- Basic access verification
+- Role-based access control
+- Permission management
+- Integration with verifier registry
+
+## Using the ABIs
+
+### Download ABIs
+
+All contract ABIs are available for download:
+
+- [IntegraLedger V4.5](/abis/IntegraLedgerV4_5.json)
+- [IntegraPayment V4.5](/abis/IntegraPaymentV4_5.json)
+- [IntegraSignal V4.5](/abis/IntegraSignalV4_5.json)
+- [IntegraMessage V4.5](/abis/IntegraMessageV4_5.json)
+- [IntegraVerifierRegistry V4.5](/abis/IntegraVerifierRegistryV4_5.json)
+- [BasicAccessV1Verifier V4.5](/abis/BasicAccessV1VerifierV4_5.json)
+
+### TypeScript Usage
+
+```typescript
+import { ethers } from 'ethers';
+import IntegraLedgerABI from './abis/IntegraLedgerV4_5.json';
+
+const provider = new ethers.JsonRpcProvider(RPC_URL);
+const contract = new ethers.Contract(
+  CONTRACT_ADDRESS,
+  IntegraLedgerABI.abi,
+  provider
+);
+
+// Call contract methods
+const document = await contract.getDocument(documentHash);
+```
+
+### Python Usage
+
+```python
+from web3 import Web3
+import json
+
+# Load ABI
+with open('IntegraLedgerV4_5.json', 'r') as f:
+    contract_data = json.load(f)
+    abi = contract_data['abi']
+
+w3 = Web3(Web3.HTTPProvider(RPC_URL))
+contract = w3.eth.contract(address=CONTRACT_ADDRESS, abi=abi)
+
+# Call contract methods
+document = contract.functions.getDocument(document_hash).call()
+```
+
+## Contract Addresses
+
+Contract addresses vary by network. See [Network Configuration](../../architecture/namespace-precedents) for deployed addresses on each supported blockchain.
+
+## Support
+
+Need help with the smart contracts?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)
+- 📚 Guides: [Smart Contract Documentation](./getting-started)

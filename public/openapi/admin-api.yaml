@@ -1,0 +1,602 @@
+openapi: 3.0.3
+info:
+  title: Admin Backend API
+  version: 1.0.0
+  description: |
+    Administrative backend service for the Integra platform.
+    
+    This service handles:
+    - User authentication and session management
+    - Organization management
+    - Subscription and billing management
+    - Admin dashboard data
+    - User profile management
+    
+  contact:
+    name: Integra Development Team
+  license:
+    name: Proprietary
+
+servers:
+  - url: 'http://localhost:3000'
+    description: Local development
+  - url: 'http://admin-backend.integra-apps.svc.cluster.local:3000'
+    description: Kubernetes internal
+  - url: 'https://api.trustwithintegra.com'
+    description: Production (via APISIX)
+
+security:
+  - BearerAuth: []
+  - ServiceToken: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authenticated users
+    
+    ServiceToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Service-to-service JWT authentication token (same as BearerAuth but with X-Calling-Service header)
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - code
+            - correlationId
+            - timestamp
+          properties:
+            message:
+              type: string
+              example: "Invalid credentials"
+            code:
+              type: string
+              example: "AUTH_INVALID_CREDENTIALS"
+            correlationId:
+              type: string
+              format: uuid
+              example: "550e8400-e29b-41d4-a716-446655440000"
+            timestamp:
+              type: string
+              format: date-time
+              example: "2024-01-15T10:30:00Z"
+            details:
+              type: object
+              additionalProperties: true
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+        thumbnailUrl:
+          type: string
+          format: uri
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationMembership'
+        currentOrganization:
+          $ref: '#/components/schemas/Organization'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Organization:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum: [personal, business]
+        status:
+          type: string
+          enum: [active, suspended, deleted]
+        logoUrl:
+          type: string
+          format: uri
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+        createdAt:
+          type: string
+          format: date-time
+
+    OrganizationMembership:
+      type: object
+      required:
+        - organizationId
+        - organizationName
+        - role
+        - status
+      properties:
+        organizationId:
+          type: string
+          format: uuid
+        organizationName:
+          type: string
+        role:
+          type: string
+          enum: [owner, admin, member]
+        status:
+          type: string
+          enum: [active, suspended]
+        joinedAt:
+          type: string
+          format: date-time
+
+    Subscription:
+      type: object
+      required:
+        - id
+        - status
+        - plan
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [active, canceled, past_due, trialing]
+        plan:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            price:
+              type: number
+            interval:
+              type: string
+              enum: [month, year]
+        currentPeriodEnd:
+          type: string
+          format: date-time
+
+    AuthResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+        - user
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags:
+        - Monitoring
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  service:
+                    type: string
+                    example: admin-backend
+                  version:
+                    type: string
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: number
+                  dependencies:
+                    type: object
+                    properties:
+                      database:
+                        type: string
+                        example: healthy
+                      rabbitmq:
+                        type: string
+                        example: healthy
+                      redis:
+                        type: string
+                        example: healthy
+
+  /ready:
+    get:
+      summary: Readiness probe
+      tags:
+        - Monitoring
+      security: []
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ready:
+                    type: boolean
+                    example: true
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      tags:
+        - Monitoring
+      security: []
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /v1/auth/verify:
+    post:
+      summary: Verify Privy token and create session
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - privyToken
+              properties:
+                privyToken:
+                  type: string
+                referralCode:
+                  type: string
+                organizationId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/auth/refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        '401':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/auth/switch-organization:
+    post:
+      summary: Switch to a different organization
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - organizationId
+              properties:
+                organizationId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Organization switched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '403':
+          description: Access denied to organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/auth/user:
+    get:
+      summary: Get current user information
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/users/avatar:
+    post:
+      summary: Upload user avatar
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Avatar uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatarUrl:
+                    type: string
+                    format: uri
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+    
+    delete:
+      summary: Delete user avatar
+      tags:
+        - Users
+      responses:
+        '204':
+          description: Avatar deleted
+
+  /v1/organizations/{id}/logo:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    post:
+      summary: Upload organization logo
+      tags:
+        - Organizations
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Logo uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logoUrl:
+                    type: string
+                    format: uri
+    
+    delete:
+      summary: Delete organization logo
+      tags:
+        - Organizations
+      responses:
+        '204':
+          description: Logo deleted
+
+  /v1/subscriptions/plans:
+    get:
+      summary: Get available subscription plans
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: List of plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    price:
+                      type: number
+                    interval:
+                      type: string
+                      enum: [month, year]
+                    features:
+                      type: array
+                      items:
+                        type: string
+
+  /v1/subscriptions/current:
+    get:
+      summary: Get current subscription
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: Current subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+
+  /v1/subscriptions/checkout:
+    post:
+      summary: Create checkout session
+      tags:
+        - Subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - planId
+              properties:
+                planId:
+                  type: string
+                successUrl:
+                  type: string
+                  format: uri
+                cancelUrl:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+
+  /v1/subscriptions/portal:
+    post:
+      summary: Create customer portal session
+      tags:
+        - Subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                returnUrl:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Portal session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+
+tags:
+  - name: Monitoring
+    description: Health checks and metrics
+  - name: Authentication
+    description: User authentication and session management
+  - name: Users
+    description: User profile management
+  - name: Organizations
+    description: Organization management
+  - name: Subscriptions
+    description: Subscription and billing management

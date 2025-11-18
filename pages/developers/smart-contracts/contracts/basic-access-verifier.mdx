@@ -1,0 +1,178 @@
+import { Tabs } from 'nextra/components'
+import AbiViewer from '../../../../components/AbiViewer'
+
+# BasicAccessV1Verifier V4.5
+
+Simple access control verifier implementation for document verification.
+
+## Overview
+
+BasicAccessV1Verifier V4.5 provides:
+- Basic access verification logic
+- Role-based access control
+- Permission management
+- Integration with verifier registry
+- Simple verification workflows
+
+## Contract Interface
+
+<AbiViewer
+  abiUrl="/abis/BasicAccessV1VerifierV4_5.json"
+  contractName="BasicAccessV1Verifier V4.5"
+/>
+
+## Key Features
+
+### Basic Verification
+Simple implementation of access verification logic.
+
+### Role Management
+Role-based access control for different user types.
+
+### Permission Checks
+Verify user permissions before allowing operations.
+
+### Registry Integration
+Works seamlessly with IntegraVerifierRegistry.
+
+## Main Functions
+
+### verify
+
+Verify access for a given user and resource.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import BasicAccessVerifierABI from './abis/BasicAccessV1VerifierV4_5.json';
+
+const contract = new ethers.Contract(
+  BASIC_ACCESS_VERIFIER_ADDRESS,
+  BasicAccessVerifierABI.abi,
+  signer
+);
+
+const hasAccess = await contract.verify(
+  userAddress,
+  resourceId,
+  accessLevel
+);
+
+console.log('Access granted:', hasAccess);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+contract = w3.eth.contract(address=BASIC_ACCESS_VERIFIER_ADDRESS, abi=abi)
+
+has_access = contract.functions.verify(
+    user_address,
+    resource_id,
+    access_level
+).call()
+
+print(f'Access granted: {has_access}')
+```
+</Tabs.Tab>
+</Tabs>
+
+### grantAccess
+
+Grant access to a user for a specific resource.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+const tx = await contract.grantAccess(
+  userAddress,
+  resourceId,
+  accessLevel
+);
+
+await tx.wait();
+console.log('Access granted');
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+tx_hash = contract.functions.grantAccess(
+    user_address,
+    resource_id,
+    access_level
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print('Access granted')
+```
+</Tabs.Tab>
+</Tabs>
+
+### revokeAccess
+
+Revoke user access.
+
+<Tabs items={['TypeScript', 'Python']}>
+<Tabs.Tab>
+```typescript
+const tx = await contract.revokeAccess(
+  userAddress,
+  resourceId
+);
+
+await tx.wait();
+console.log('Access revoked');
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+tx_hash = contract.functions.revokeAccess(
+    user_address,
+    resource_id
+).transact({'from': account.address})
+
+receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print('Access revoked')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Events
+
+### AccessGranted
+```solidity
+event AccessGranted(
+    address indexed user,
+    bytes32 indexed resourceId,
+    uint8 accessLevel
+);
+```
+
+### AccessRevoked
+```solidity
+event AccessRevoked(
+    address indexed user,
+    bytes32 indexed resourceId
+);
+```
+
+## Access Levels
+
+- `0` - No access
+- `1` - Read access
+- `2` - Write access
+- `3` - Admin access
+
+## Related Contracts
+
+- [IntegraVerifierRegistry V4.5](./integra-verifier-registry) - Verifier registry
+- [IntegraLedger V4.5](./integra-ledger) - Core ledger
+
+## Support
+
+Need help with BasicAccessV1Verifier?
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)

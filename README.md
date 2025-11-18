@@ -4,7 +4,7 @@ This is a Nextra-powered documentation site for the Integra Trust Platform.
 
 ## Overview
 
-The documentation is built as a static site using Nextra (Next.js + MDX) and served from within the main Trust Platform application via an iframe.
+The documentation is built as a standalone static site using Nextra (Next.js + MDX) and deployed to Cloudflare Pages.
 
 ## Structure
 
@@ -14,11 +14,32 @@ trust-documentation/
 │   ├── index.mdx            # Home page
 │   ├── architecture/        # Architecture docs
 │   ├── observability/       # Observability docs
-│   └── workflows/           # Workflow docs
+│   ├── workflows/           # Workflow docs
+│   └── smart-contracts/     # Smart contract documentation
+│       ├── layer0/          # Attestation & Access Control
+│       ├── layer2/          # Document Registry & Resolvers
+│       ├── layer3/          # Tokenizers (13 types)
+│       ├── layer4/          # Message & Signal contracts
+│       ├── layer6/          # Executor contracts
+│       ├── guides/          # Integration, deployment, security guides
+│       └── patterns/        # Design patterns & best practices
 ├── theme.config.tsx         # Nextra theme configuration
 ├── next.config.mjs          # Next.js configuration
 └── package.json
 ```
+
+## Documentation Coverage
+
+The documentation includes comprehensive coverage of:
+
+- **Smart Contracts V7** - Complete reference for all contract layers (Layer 0-6)
+- **Architecture** - System design and architectural patterns
+- **Deployment Guides** - Step-by-step deployment instructions
+- **Integration Guides** - How to integrate with Integra contracts
+- **Security Best Practices** - Security patterns and recommendations
+- **Testing Guides** - Contract testing strategies
+- **Observability** - Monitoring and alerting documentation
+- **Workflows** - Process and workflow documentation
 
 ## Development
 
@@ -58,15 +79,6 @@ npm run build
 
 The static site is built to `out/` directory for deployment to Cloudflare Pages.
 
-## Integration with Trust Platform
-
-The documentation is deployed to Cloudflare Pages at `integra-documentation.pages.dev` and embedded in the Trust Platform at `/documentation` route using an iframe:
-
-- **Page Component**: `cf-integra-trust-platform/src/pages/DocumentationPage.tsx`
-- **Router**: Added to `cf-integra-trust-platform/src/router/index.tsx`
-- **Sidebar**: "Documentation" link in `cf-integra-trust-platform/src/components/Sidebar.tsx`
-- **Landing Page**: "Documentation" button on `cf-integra-trust-platform/src/pages/HomePage.tsx`
-
 ## Deployment
 
 Deploy to Cloudflare Pages:
@@ -75,7 +87,9 @@ Deploy to Cloudflare Pages:
 npm run deploy
 ```
 
-This builds the static site and deploys it to the `integra-documentation` Cloudflare Pages project.
+This builds the static site and deploys it to Cloudflare Pages as a standalone documentation site.
+
+The documentation will be accessible at your Cloudflare Pages URL (e.g., `integra-documentation.pages.dev`).
 
 ## Syncing Docs from Other Repos
 
@@ -93,4 +107,4 @@ npm run build
 
 - Uses Nextra v3 (requires `pages/_app.tsx` and `_meta.ts` files)
 - Static export configured for Cloudflare Pages compatibility
-- Base path set to `/docs` for iframe integration
+- Standalone deployment (not embedded in other applications)

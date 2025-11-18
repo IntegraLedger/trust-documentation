@@ -1,0 +1,23 @@
+export default {
+  welcome: 'Welcome',
+  purpose: 'Purpose',
+  privacy: 'Privacy',
+  security: 'Security',
+  automation: 'Automation',
+  'erc-standards': 'ERC Standards',
+  '---': {
+    type: 'separator',
+  },
+  index: 'Technical Overview',
+  'eas-attestations': 'EAS and Attestations',
+  'trust-graph': 'Contract Trust Graph',
+  'immutable-registries': 'Immutable Registries',
+  'document-registration': 'Document Registration',
+  'tokenizer-contracts': 'ERC Tokenizer Contracts',
+  messaging: 'Messaging',
+  'delegated-execution': 'Delegated Execution',
+  'web2-integration': 'Web2 Integration',
+  extensibility: 'Extensibility',
+  patterns: 'Patterns & Best Practices',
+  guides: 'Integration Guides',
+};

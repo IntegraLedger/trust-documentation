@@ -1,0 +1,1195 @@
+import { Tabs } from 'nextra/components'
+
+# Code Examples
+
+Complete, working examples you can use as starting points.
+
+## Example 1: Document Notary Service
+
+A complete service for notarizing and verifying documents on the blockchain.
+
+<Tabs items={['cURL', 'JavaScript', 'TypeScript', 'Python', 'C#', 'Java', 'Go', 'Kotlin', 'Swift', 'Rust']}>
+<Tabs.Tab>
+```bash
+# Register a document
+curl -X POST https://your-api.example.com/notarize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "documentHash": "0x1234...",
+    "uri": "ipfs://..."
+  }'
+
+# Verify a document
+curl -X GET "https://your-api.example.com/verify?hash=0x1234..."
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```javascript
+// notary-service.js
+const { ethers } = require('ethers');
+const fs = require('fs');
+
+class DocumentNotary {
+  constructor(registryAddress, privateKey, rpcUrl) {
+    this.provider = new ethers.JsonRpcProvider(rpcUrl);
+    this.wallet = new ethers.Wallet(privateKey, this.provider);
+    this.registry = new ethers.Contract(
+      registryAddress,
+      [/* ABI */],
+      this.wallet
+    );
+  }
+
+  async notarize(filePath) {
+    // Read and hash
+    const file = fs.readFileSync(filePath);
+    const hash = ethers.keccak256(file);
+
+    // Register
+    const tx = await this.registry.registerDocument(hash, "");
+    const receipt = await tx.wait();
+
+    return {
+      hash,
+      transactionHash: receipt.hash,
+      blockNumber: receipt.blockNumber,
+      timestamp: new Date()
+    };
+  }
+
+  async verify(filePath) {
+    const file = fs.readFileSync(filePath);
+    const hash = ethers.keccak256(file);
+
+    return await this.registry.isDocumentRegistered(hash);
+  }
+}
+
+// Usage
+const notary = new DocumentNotary(REGISTRY_ADDRESS, PRIVATE_KEY, RPC_URL);
+const certificate = await notary.notarize('./contract.pdf');
+console.log('Notarized:', certificate);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// notary-service.ts
+import { ethers } from 'ethers';
+import { readFileSync } from 'fs';
+
+interface NotarizationResult {
+  hash: string;
+  transactionHash: string;
+  blockNumber: number;
+  timestamp: Date;
+}
+
+class DocumentNotary {
+  private provider: ethers.JsonRpcProvider;
+  private wallet: ethers.Wallet;
+  private registry: ethers.Contract;
+
+  constructor(registryAddress: string, privateKey: string, rpcUrl: string) {
+    this.provider = new ethers.JsonRpcProvider(rpcUrl);
+    this.wallet = new ethers.Wallet(privateKey, this.provider);
+    this.registry = new ethers.Contract(
+      registryAddress,
+      [/* ABI */],
+      this.wallet
+    );
+  }
+
+  async notarize(filePath: string): Promise<NotarizationResult> {
+    const file = readFileSync(filePath);
+    const hash = ethers.keccak256(file);
+
+    const tx = await this.registry.registerDocument(hash, "");
+    const receipt = await tx.wait();
+
+    return {
+      hash,
+      transactionHash: receipt.hash,
+      blockNumber: receipt.blockNumber,
+      timestamp: new Date()
+    };
+  }
+
+  async verify(filePath: string): Promise<boolean> {
+    const file = readFileSync(filePath);
+    const hash = ethers.keccak256(file);
+
+    return await this.registry.isDocumentRegistered(hash);
+  }
+}
+
+// Usage
+const notary = new DocumentNotary(REGISTRY_ADDRESS, PRIVATE_KEY, RPC_URL);
+const certificate = await notary.notarize('./contract.pdf');
+console.log('Notarized:', certificate);
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# notary_service.py
+from web3 import Web3
+from eth_account import Account
+from datetime import datetime
+
+class DocumentNotary:
+    def __init__(self, registry_address, private_key, rpc_url):
+        self.w3 = Web3(Web3.HTTPProvider(rpc_url))
+        self.account = Account.from_key(private_key)
+        self.registry_address = Web3.to_checksum_address(registry_address)
+
+        # Contract ABI
+        self.contract = self.w3.eth.contract(
+            address=self.registry_address,
+            abi=[
+                {
+                    "inputs": [
+                        {"name": "documentHash", "type": "bytes32"},
+                        {"name": "uri", "type": "string"}
+                    ],
+                    "name": "registerDocument",
+                    "outputs": [{"name": "", "type": "bytes32"}],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [{"name": "documentHash", "type": "bytes32"}],
+                    "name": "isDocumentRegistered",
+                    "outputs": [{"name": "", "type": "bool"}],
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ]
+        )
+
+    def notarize(self, file_path):
+        # Read and hash file
+        with open(file_path, 'rb') as f:
+            file_bytes = f.read()
+
+        doc_hash = self.w3.keccak(file_bytes)
+
+        # Build transaction
+        tx = self.contract.functions.registerDocument(
+            doc_hash,
+            ""
+        ).build_transaction({
+            'from': self.account.address,
+            'nonce': self.w3.eth.get_transaction_count(self.account.address),
+            'gas': 3000000,
+            'gasPrice': self.w3.eth.gas_price
+        })
+
+        # Sign and send
+        signed_tx = self.w3.eth.account.sign_transaction(tx, self.account.key)
+        tx_hash = self.w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+
+        return {
+            'hash': doc_hash.hex(),
+            'transactionHash': receipt['transactionHash'].hex(),
+            'blockNumber': receipt['blockNumber'],
+            'timestamp': datetime.now()
+        }
+
+    def verify(self, file_path):
+        with open(file_path, 'rb') as f:
+            file_bytes = f.read()
+
+        doc_hash = self.w3.keccak(file_bytes)
+        return self.contract.functions.isDocumentRegistered(doc_hash).call()
+
+# Usage
+notary = DocumentNotary(REGISTRY_ADDRESS, PRIVATE_KEY, RPC_URL)
+certificate = notary.notarize('./contract.pdf')
+print(f'Notarized: {certificate}')
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```csharp
+using Nethereum.Web3;
+using Nethereum.Hex.HexConvertors.Extensions;
+using System.Security.Cryptography;
+
+public class DocumentNotary
+{
+    private readonly Web3 web3;
+    private readonly string contractAddress;
+
+    public DocumentNotary(string rpcUrl, string privateKey, string contractAddress)
+    {
+        var account = new Nethereum.Web3.Accounts.Account(privateKey);
+        this.web3 = new Web3(account, rpcUrl);
+        this.contractAddress = contractAddress;
+    }
+
+    public async Task<NotarizationResult> Notarize(string filePath)
+    {
+        // Read and hash file
+        byte[] fileBytes = File.ReadAllBytes(filePath);
+        byte[] hash = SHA3Keccak.Current.CalculateHash(fileBytes);
+        string hashHex = "0x" + hash.ToHex();
+
+        // Register document
+        var contract = web3.Eth.GetContract(ABI, contractAddress);
+        var registerFunction = contract.GetFunction("registerDocument");
+        var receipt = await registerFunction.SendTransactionAndWaitForReceiptAsync(
+            web3.TransactionManager.Account.Address,
+            new HexBigInteger(3000000),
+            null,
+            null,
+            hashHex,
+            ""
+        );
+
+        return new NotarizationResult
+        {
+            Hash = hashHex,
+            TransactionHash = receipt.TransactionHash,
+            BlockNumber = (int)receipt.BlockNumber.Value,
+            Timestamp = DateTime.Now
+        };
+    }
+
+    public async Task<bool> Verify(string filePath)
+    {
+        byte[] fileBytes = File.ReadAllBytes(filePath);
+        byte[] hash = SHA3Keccak.Current.CalculateHash(fileBytes);
+        string hashHex = "0x" + hash.ToHex();
+
+        var contract = web3.Eth.GetContract(ABI, contractAddress);
+        var isRegisteredFunction = contract.GetFunction("isDocumentRegistered");
+        return await isRegisteredFunction.CallAsync<bool>(hashHex);
+    }
+}
+
+public class NotarizationResult
+{
+    public string Hash { get; set; }
+    public string TransactionHash { get; set; }
+    public int BlockNumber { get; set; }
+    public DateTime Timestamp { get; set; }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```java
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.utils.Numeric;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+
+public class DocumentNotary {
+    private final Web3j web3;
+    private final Credentials credentials;
+    private final String contractAddress;
+
+    public DocumentNotary(String rpcUrl, String privateKey, String contractAddress) {
+        this.web3 = Web3j.build(new HttpService(rpcUrl));
+        this.credentials = Credentials.create(privateKey);
+        this.contractAddress = contractAddress;
+    }
+
+    public NotarizationResult notarize(String filePath) throws Exception {
+        // Read and hash file
+        byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+        byte[] hash = keccak256(fileBytes);
+        String hashHex = Numeric.toHexString(hash);
+
+        // Load contract
+        DocumentRegistry contract = DocumentRegistry.load(
+            contractAddress,
+            web3,
+            credentials,
+            new DefaultGasProvider()
+        );
+
+        // Register document
+        var receipt = contract.registerDocument(hash, "").send();
+
+        return new NotarizationResult(
+            hashHex,
+            receipt.getTransactionHash(),
+            receipt.getBlockNumber().intValue(),
+            System.currentTimeMillis()
+        );
+    }
+
+    public boolean verify(String filePath) throws Exception {
+        byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+        byte[] hash = keccak256(fileBytes);
+
+        DocumentRegistry contract = DocumentRegistry.load(
+            contractAddress,
+            web3,
+            credentials,
+            new DefaultGasProvider()
+        );
+
+        return contract.isDocumentRegistered(hash).send();
+    }
+
+    private byte[] keccak256(byte[] input) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("KECCAK-256");
+        return digest.digest(input);
+    }
+}
+
+class NotarizationResult {
+    public final String hash;
+    public final String transactionHash;
+    public final int blockNumber;
+    public final long timestamp;
+
+    public NotarizationResult(String hash, String txHash, int block, long time) {
+        this.hash = hash;
+        this.transactionHash = txHash;
+        this.blockNumber = block;
+        this.timestamp = time;
+    }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```go
+package main
+
+import (
+    "context"
+    "crypto/sha3"
+    "io/ioutil"
+    "math/big"
+    "time"
+
+    "github.com/ethereum/go-ethereum/accounts/abi/bind"
+    "github.com/ethereum/go-ethereum/common"
+    "github.com/ethereum/go-ethereum/crypto"
+    "github.com/ethereum/go-ethereum/ethclient"
+)
+
+type DocumentNotary struct {
+    client          *ethclient.Client
+    auth            *bind.TransactOpts
+    contractAddress common.Address
+}
+
+type NotarizationResult struct {
+    Hash            string
+    TransactionHash string
+    BlockNumber     uint64
+    Timestamp       time.Time
+}
+
+func NewDocumentNotary(rpcURL, privateKey, contractAddress string) (*DocumentNotary, error) {
+    client, err := ethclient.Dial(rpcURL)
+    if err != nil {
+        return nil, err
+    }
+
+    key, err := crypto.HexToECDSA(privateKey)
+    if err != nil {
+        return nil, err
+    }
+
+    auth, err := bind.NewKeyedTransactorWithChainID(key, big.NewInt(1))
+    if err != nil {
+        return nil, err
+    }
+
+    return &DocumentNotary{
+        client:          client,
+        auth:            auth,
+        contractAddress: common.HexToAddress(contractAddress),
+    }, nil
+}
+
+func (dn *DocumentNotary) Notarize(filePath string) (*NotarizationResult, error) {
+    // Read and hash file
+    fileBytes, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        return nil, err
+    }
+
+    hash := keccak256(fileBytes)
+
+    // Register document
+    contract, err := NewDocumentRegistry(dn.contractAddress, dn.client)
+    if err != nil {
+        return nil, err
+    }
+
+    tx, err := contract.RegisterDocument(dn.auth, hash, "")
+    if err != nil {
+        return nil, err
+    }
+
+    receipt, err := bind.WaitMined(context.Background(), dn.client, tx)
+    if err != nil {
+        return nil, err
+    }
+
+    return &NotarizationResult{
+        Hash:            common.Bytes2Hex(hash[:]),
+        TransactionHash: tx.Hash().Hex(),
+        BlockNumber:     receipt.BlockNumber.Uint64(),
+        Timestamp:       time.Now(),
+    }, nil
+}
+
+func (dn *DocumentNotary) Verify(filePath string) (bool, error) {
+    fileBytes, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        return false, err
+    }
+
+    hash := keccak256(fileBytes)
+
+    contract, err := NewDocumentRegistry(dn.contractAddress, dn.client)
+    if err != nil {
+        return false, err
+    }
+
+    return contract.IsDocumentRegistered(&bind.CallOpts{}, hash)
+}
+
+func keccak256(data []byte) [32]byte {
+    hash := sha3.NewLegacyKeccak256()
+    hash.Write(data)
+    var result [32]byte
+    copy(result[:], hash.Sum(nil))
+    return result
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```kotlin
+import org.web3j.crypto.Credentials
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.http.HttpService
+import org.web3j.tx.gas.DefaultGasProvider
+import org.web3j.utils.Numeric
+import java.io.File
+import java.security.MessageDigest
+import java.util.Date
+
+class DocumentNotary(
+    rpcUrl: String,
+    privateKey: String,
+    private val contractAddress: String
+) {
+    private val web3: Web3j = Web3j.build(HttpService(rpcUrl))
+    private val credentials: Credentials = Credentials.create(privateKey)
+
+    data class NotarizationResult(
+        val hash: String,
+        val transactionHash: String,
+        val blockNumber: Int,
+        val timestamp: Date
+    )
+
+    suspend fun notarize(filePath: String): NotarizationResult {
+        // Read and hash file
+        val fileBytes = File(filePath).readBytes()
+        val hash = keccak256(fileBytes)
+        val hashHex = Numeric.toHexString(hash)
+
+        // Load contract
+        val contract = DocumentRegistry.load(
+            contractAddress,
+            web3,
+            credentials,
+            DefaultGasProvider()
+        )
+
+        // Register document
+        val receipt = contract.registerDocument(hash, "").sendAsync().await()
+
+        return NotarizationResult(
+            hash = hashHex,
+            transactionHash = receipt.transactionHash,
+            blockNumber = receipt.blockNumber.toInt(),
+            timestamp = Date()
+        )
+    }
+
+    suspend fun verify(filePath: String): Boolean {
+        val fileBytes = File(filePath).readBytes()
+        val hash = keccak256(fileBytes)
+
+        val contract = DocumentRegistry.load(
+            contractAddress,
+            web3,
+            credentials,
+            DefaultGasProvider()
+        )
+
+        return contract.isDocumentRegistered(hash).sendAsync().await()
+    }
+
+    private fun keccak256(input: ByteArray): ByteArray {
+        val digest = MessageDigest.getInstance("KECCAK-256")
+        return digest.digest(input)
+    }
+}
+
+// Usage
+val notary = DocumentNotary(RPC_URL, PRIVATE_KEY, CONTRACT_ADDRESS)
+val certificate = notary.notarize("./contract.pdf")
+println("Notarized: $certificate")
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```swift
+import Web3
+import Foundation
+
+class DocumentNotary {
+    private let web3: Web3
+    private let privateKey: EthereumPrivateKey
+    private let contractAddress: EthereumAddress
+
+    struct NotarizationResult {
+        let hash: String
+        let transactionHash: String
+        let blockNumber: Int
+        let timestamp: Date
+    }
+
+    init(rpcUrl: String, privateKey: String, contractAddress: String) throws {
+        self.web3 = Web3(rpcURL: rpcUrl)
+        self.privateKey = try EthereumPrivateKey(hexPrivateKey: privateKey)
+        self.contractAddress = try EthereumAddress(hex: contractAddress, eip55: false)
+    }
+
+    func notarize(filePath: String) async throws -> NotarizationResult {
+        // Read and hash file
+        let fileData = try Data(contentsOf: URL(fileURLWithPath: filePath))
+        let hash = keccak256(fileData)
+
+        // Create contract instance
+        let contract = web3.eth.Contract(
+            json: ABI_JSON,
+            abiKey: nil,
+            address: contractAddress
+        )
+
+        // Register document
+        let transaction = try contract["registerDocument"]?(hash, "").createTransaction(
+            nonce: try await web3.eth.getTransactionCount(
+                address: privateKey.address,
+                block: .latest
+            ),
+            from: privateKey.address,
+            value: 0,
+            gas: 3000000,
+            gasPrice: try await web3.eth.getGasPrice()
+        )
+
+        let signedTx = try transaction?.sign(with: privateKey)
+        let txHash = try await web3.eth.sendRawTransaction(transaction: signedTx!)
+
+        // Wait for receipt
+        let receipt = try await waitForReceipt(txHash: txHash)
+
+        return NotarizationResult(
+            hash: hash.toHexString(),
+            transactionHash: txHash,
+            blockNumber: receipt.blockNumber,
+            timestamp: Date()
+        )
+    }
+
+    func verify(filePath: String) async throws -> Bool {
+        let fileData = try Data(contentsOf: URL(fileURLWithPath: filePath))
+        let hash = keccak256(fileData)
+
+        let contract = web3.eth.Contract(
+            json: ABI_JSON,
+            abiKey: nil,
+            address: contractAddress
+        )
+
+        let response = try await contract["isDocumentRegistered"]?(hash).call()
+        return response["0"] as? Bool ?? false
+    }
+
+    private func keccak256(_ data: Data) -> Data {
+        return data.web3.keccak256
+    }
+}
+
+// Usage
+let notary = try DocumentNotary(
+    rpcUrl: RPC_URL,
+    privateKey: PRIVATE_KEY,
+    contractAddress: CONTRACT_ADDRESS
+)
+let certificate = try await notary.notarize(filePath: "./contract.pdf")
+print("Notarized: \(certificate)")
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```rust
+use ethers::{
+    prelude::*,
+    utils::keccak256,
+};
+use std::fs;
+use std::sync::Arc;
+
+abigen!(
+    DocumentRegistry,
+    r#"[
+        function registerDocument(bytes32 documentHash, string memory uri) external returns (bytes32)
+        function isDocumentRegistered(bytes32 documentHash) external view returns (bool)
+    ]"#,
+);
+
+pub struct DocumentNotary {
+    client: Arc<SignerMiddleware<Provider<Http>, LocalWallet>>,
+    contract_address: Address,
+}
+
+pub struct NotarizationResult {
+    pub hash: String,
+    pub transaction_hash: String,
+    pub block_number: u64,
+    pub timestamp: chrono::DateTime<chrono::Utc>,
+}
+
+impl DocumentNotary {
+    pub fn new(
+        rpc_url: &str,
+        private_key: &str,
+        contract_address: &str,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let provider = Provider::<Http>::try_from(rpc_url)?;
+        let wallet: LocalWallet = private_key.parse()?;
+        let client = Arc::new(SignerMiddleware::new(provider, wallet));
+        let contract_address = contract_address.parse()?;
+
+        Ok(Self {
+            client,
+            contract_address,
+        })
+    }
+
+    pub async fn notarize(
+        &self,
+        file_path: &str,
+    ) -> Result<NotarizationResult, Box<dyn std::error::Error>> {
+        // Read and hash file
+        let file_bytes = fs::read(file_path)?;
+        let hash = keccak256(&file_bytes);
+
+        // Create contract instance
+        let contract = DocumentRegistry::new(self.contract_address, self.client.clone());
+
+        // Register document
+        let tx = contract.register_document(hash.into(), String::new()).send().await?;
+        let receipt = tx.await?.ok_or("Transaction failed")?;
+
+        Ok(NotarizationResult {
+            hash: format!("0x{}", hex::encode(hash)),
+            transaction_hash: format!("{:?}", receipt.transaction_hash),
+            block_number: receipt.block_number.ok_or("No block number")?.as_u64(),
+            timestamp: chrono::Utc::now(),
+        })
+    }
+
+    pub async fn verify(
+        &self,
+        file_path: &str,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let file_bytes = fs::read(file_path)?;
+        let hash = keccak256(&file_bytes);
+
+        let contract = DocumentRegistry::new(self.contract_address, self.client.clone());
+        let is_registered = contract.is_document_registered(hash.into()).call().await?;
+
+        Ok(is_registered)
+    }
+}
+
+// Usage
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let notary = DocumentNotary::new(RPC_URL, PRIVATE_KEY, CONTRACT_ADDRESS)?;
+    let certificate = notary.notarize("./contract.pdf").await?;
+    println!("Notarized: {:?}", certificate);
+    Ok(())
+}
+```
+</Tabs.Tab>
+</Tabs>
+
+## Example 2: Simple Document Verification
+
+Quick verification without wallet integration.
+
+<Tabs items={['cURL', 'JavaScript', 'TypeScript', 'Python', 'C#', 'Java', 'Go', 'Kotlin', 'Swift', 'Rust']}>
+<Tabs.Tab>
+```bash
+# Hash a file and verify
+HASH=$(sha256sum document.pdf | awk '{print $1}')
+curl -X GET "https://api.example.com/verify?hash=0x${HASH}"
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```javascript
+const { ethers } = require('ethers');
+const fs = require('fs');
+
+async function verifyDocument(filePath, registryAddress, rpcUrl) {
+  const file = fs.readFileSync(filePath);
+  const hash = ethers.keccak256(file);
+
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  const registry = new ethers.Contract(
+    registryAddress,
+    ["function isDocumentRegistered(bytes32) view returns (bool)"],
+    provider
+  );
+
+  const isRegistered = await registry.isDocumentRegistered(hash);
+
+  return {
+    hash,
+    isRegistered,
+    status: isRegistered ? 'VERIFIED' : 'NOT FOUND'
+  };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import { readFileSync } from 'fs';
+
+interface VerificationResult {
+  hash: string;
+  isRegistered: boolean;
+  status: 'VERIFIED' | 'NOT FOUND';
+}
+
+async function verifyDocument(
+  filePath: string,
+  registryAddress: string,
+  rpcUrl: string
+): Promise<VerificationResult> {
+  const file = readFileSync(filePath);
+  const hash = ethers.keccak256(file);
+
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  const registry = new ethers.Contract(
+    registryAddress,
+    ["function isDocumentRegistered(bytes32) view returns (bool)"],
+    provider
+  );
+
+  const isRegistered = await registry.isDocumentRegistered(hash);
+
+  return {
+    hash,
+    isRegistered,
+    status: isRegistered ? 'VERIFIED' : 'NOT FOUND'
+  };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+
+def verify_document(file_path, registry_address, rpc_url):
+    # Read and hash file
+    with open(file_path, 'rb') as f:
+        file_bytes = f.read()
+
+    w3 = Web3(Web3.HTTPProvider(rpc_url))
+    doc_hash = w3.keccak(file_bytes)
+
+    # Create contract instance
+    contract = w3.eth.contract(
+        address=Web3.to_checksum_address(registry_address),
+        abi=[{
+            "inputs": [{"name": "documentHash", "type": "bytes32"}],
+            "name": "isDocumentRegistered",
+            "outputs": [{"name": "", "type": "bool"}],
+            "stateMutability": "view",
+            "type": "function"
+        }]
+    )
+
+    is_registered = contract.functions.isDocumentRegistered(doc_hash).call()
+
+    return {
+        'hash': doc_hash.hex(),
+        'isRegistered': is_registered,
+        'status': 'VERIFIED' if is_registered else 'NOT FOUND'
+    }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```csharp
+using Nethereum.Web3;
+using Nethereum.Hex.HexConvertors.Extensions;
+using System.Security.Cryptography;
+
+public async Task<VerificationResult> VerifyDocument(
+    string filePath,
+    string registryAddress,
+    string rpcUrl)
+{
+    // Read and hash file
+    byte[] fileBytes = File.ReadAllBytes(filePath);
+    byte[] hash = SHA3Keccak.Current.CalculateHash(fileBytes);
+    string hashHex = "0x" + hash.ToHex();
+
+    // Connect to provider
+    var web3 = new Web3(rpcUrl);
+    var contract = web3.Eth.GetContract(ABI, registryAddress);
+    var isRegisteredFunction = contract.GetFunction("isDocumentRegistered");
+
+    bool isRegistered = await isRegisteredFunction.CallAsync<bool>(hashHex);
+
+    return new VerificationResult
+    {
+        Hash = hashHex,
+        IsRegistered = isRegistered,
+        Status = isRegistered ? "VERIFIED" : "NOT FOUND"
+    };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```java
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.http.HttpService;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public VerificationResult verifyDocument(
+    String filePath,
+    String registryAddress,
+    String rpcUrl
+) throws Exception {
+    byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+    byte[] hash = keccak256(fileBytes);
+    String hashHex = Numeric.toHexString(hash);
+
+    Web3j web3 = Web3j.build(new HttpService(rpcUrl));
+    DocumentRegistry contract = DocumentRegistry.load(
+        registryAddress,
+        web3,
+        new ReadonlyTransactionManager(web3, registryAddress),
+        new DefaultGasProvider()
+    );
+
+    boolean isRegistered = contract.isDocumentRegistered(hash).send();
+
+    return new VerificationResult(
+        hashHex,
+        isRegistered,
+        isRegistered ? "VERIFIED" : "NOT FOUND"
+    );
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```go
+func VerifyDocument(filePath, registryAddress, rpcURL string) (*VerificationResult, error) {
+    fileBytes, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        return nil, err
+    }
+
+    hash := keccak256(fileBytes)
+
+    client, err := ethclient.Dial(rpcURL)
+    if err != nil {
+        return nil, err
+    }
+
+    contractAddr := common.HexToAddress(registryAddress)
+    contract, err := NewDocumentRegistry(contractAddr, client)
+    if err != nil {
+        return nil, err
+    }
+
+    isRegistered, err := contract.IsDocumentRegistered(&bind.CallOpts{}, hash)
+    if err != nil {
+        return nil, err
+    }
+
+    status := "NOT FOUND"
+    if isRegistered {
+        status = "VERIFIED"
+    }
+
+    return &VerificationResult{
+        Hash:         common.Bytes2Hex(hash[:]),
+        IsRegistered: isRegistered,
+        Status:       status,
+    }, nil
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```kotlin
+suspend fun verifyDocument(
+    filePath: String,
+    registryAddress: String,
+    rpcUrl: String
+): VerificationResult {
+    val fileBytes = File(filePath).readBytes()
+    val hash = keccak256(fileBytes)
+    val hashHex = Numeric.toHexString(hash)
+
+    val web3 = Web3j.build(HttpService(rpcUrl))
+    val contract = DocumentRegistry.load(
+        registryAddress,
+        web3,
+        ReadonlyTransactionManager(web3, registryAddress),
+        DefaultGasProvider()
+    )
+
+    val isRegistered = contract.isDocumentRegistered(hash).sendAsync().await()
+
+    return VerificationResult(
+        hash = hashHex,
+        isRegistered = isRegistered,
+        status = if (isRegistered) "VERIFIED" else "NOT FOUND"
+    )
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```swift
+func verifyDocument(
+    filePath: String,
+    registryAddress: String,
+    rpcUrl: String
+) async throws -> VerificationResult {
+    let fileData = try Data(contentsOf: URL(fileURLWithPath: filePath))
+    let hash = keccak256(fileData)
+
+    let web3 = Web3(rpcURL: rpcUrl)
+    let contractAddress = try EthereumAddress(hex: registryAddress, eip55: false)
+    let contract = web3.eth.Contract(json: ABI_JSON, abiKey: nil, address: contractAddress)
+
+    let response = try await contract["isDocumentRegistered"]?(hash).call()
+    let isRegistered = response["0"] as? Bool ?? false
+
+    return VerificationResult(
+        hash: hash.toHexString(),
+        isRegistered: isRegistered,
+        status: isRegistered ? "VERIFIED" : "NOT FOUND"
+    )
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```rust
+pub async fn verify_document(
+    file_path: &str,
+    registry_address: &str,
+    rpc_url: &str,
+) -> Result<VerificationResult, Box<dyn std::error::Error>> {
+    let file_bytes = fs::read(file_path)?;
+    let hash = keccak256(&file_bytes);
+
+    let provider = Provider::<Http>::try_from(rpc_url)?;
+    let contract_address: Address = registry_address.parse()?;
+    let contract = DocumentRegistry::new(contract_address, Arc::new(provider));
+
+    let is_registered = contract.is_document_registered(hash.into()).call().await?;
+
+    Ok(VerificationResult {
+        hash: format!("0x{}", hex::encode(hash)),
+        is_registered,
+        status: if is_registered { "VERIFIED" } else { "NOT FOUND" }.to_string(),
+    })
+}
+```
+</Tabs.Tab>
+</Tabs>
+
+## Example 3: Batch Registration
+
+Register multiple documents in a single transaction.
+
+<Tabs items={['JavaScript', 'TypeScript', 'Python', 'Go', 'Rust']}>
+<Tabs.Tab>
+```javascript
+async function registerMultipleDocuments(files, registry) {
+  const hashes = [];
+  const uris = [];
+
+  for (const file of files) {
+    const content = fs.readFileSync(file);
+    hashes.push(ethers.keccak256(content));
+    uris.push(""); // or IPFS URIs
+  }
+
+  const tx = await registry.registerDocumentBatch(hashes, uris);
+  const receipt = await tx.wait();
+
+  console.log(`Registered ${files.length} documents in block ${receipt.blockNumber}`);
+  return receipt;
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function registerMultipleDocuments(
+  files: string[],
+  registry: ethers.Contract
+): Promise<ethers.ContractReceipt> {
+  const hashes: string[] = [];
+  const uris: string[] = [];
+
+  for (const file of files) {
+    const content = readFileSync(file);
+    hashes.push(ethers.keccak256(content));
+    uris.push("");
+  }
+
+  const tx = await registry.registerDocumentBatch(hashes, uris);
+  const receipt = await tx.wait();
+
+  console.log(`Registered ${files.length} documents in block ${receipt.blockNumber}`);
+  return receipt;
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+def register_multiple_documents(files, contract, account, w3):
+    hashes = []
+    uris = []
+
+    for file_path in files:
+        with open(file_path, 'rb') as f:
+            content = f.read()
+        hashes.append(w3.keccak(content))
+        uris.append("")
+
+    tx = contract.functions.registerDocumentBatch(hashes, uris).build_transaction({
+        'from': account.address,
+        'nonce': w3.eth.get_transaction_count(account.address),
+        'gas': 3000000,
+        'gasPrice': w3.eth.gas_price
+    })
+
+    signed_tx = w3.eth.account.sign_transaction(tx, account.key)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+    print(f"Registered {len(files)} documents in block {receipt['blockNumber']}")
+    return receipt
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```go
+func RegisterMultipleDocuments(
+    files []string,
+    contract *DocumentRegistry,
+    auth *bind.TransactOpts,
+) (*types.Receipt, error) {
+    var hashes [][32]byte
+    var uris []string
+
+    for _, file := range files {
+        fileBytes, err := ioutil.ReadFile(file)
+        if err != nil {
+            return nil, err
+        }
+        hash := keccak256(fileBytes)
+        hashes = append(hashes, hash)
+        uris = append(uris, "")
+    }
+
+    tx, err := contract.RegisterDocumentBatch(auth, hashes, uris)
+    if err != nil {
+        return nil, err
+    }
+
+    receipt, err := bind.WaitMined(context.Background(), contract.client, tx)
+    if err != nil {
+        return nil, err
+    }
+
+    fmt.Printf("Registered %d documents in block %d\n", len(files), receipt.BlockNumber.Uint64())
+    return receipt, nil
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```rust
+pub async fn register_multiple_documents(
+    files: Vec<String>,
+    contract: &DocumentRegistry<SignerMiddleware<Provider<Http>, LocalWallet>>,
+) -> Result<TransactionReceipt, Box<dyn std::error::Error>> {
+    let mut hashes = Vec::new();
+    let mut uris = Vec::new();
+
+    for file in &files {
+        let file_bytes = fs::read(file)?;
+        let hash = keccak256(&file_bytes);
+        hashes.push(hash.into());
+        uris.push(String::new());
+    }
+
+    let tx = contract.register_document_batch(hashes, uris).send().await?;
+    let receipt = tx.await?.ok_or("Transaction failed")?;
+
+    println!("Registered {} documents in block {:?}",
+        files.len(),
+        receipt.block_number
+    );
+
+    Ok(receipt)
+}
+```
+</Tabs.Tab>
+</Tabs>
+
+## More Examples
+
+For more examples including:
+- NFT tokenization
+- Multi-signature registration
+- Mobile app integration
+- API servers
+
+Contact: developers@integraledger.com or visit our GitHub

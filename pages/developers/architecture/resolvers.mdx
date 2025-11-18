@@ -1,0 +1,80 @@
+# Resolver Layer
+
+## Overview
+
+The resolver layer binds custom smart contracts to real-world contracts, enabling programmability and automation of contract terms.
+
+## Capabilities
+
+### Automated Payments
+
+Release payment upon milestone completion:
+
+```solidity
+contract MilestonePayment {
+    function releaseMilestone(bytes32 documentHash, uint256 milestoneId) external {
+        require(milestones[milestoneId].approved, "Not approved");
+        payable(contractor).transfer(milestones[milestoneId].amount);
+    }
+}
+```
+
+### Multi-Signature Approvals
+
+Require multiple parties to approve modifications:
+
+```solidity
+contract MultiSigContract {
+    function approveModification(bytes32 documentHash) external {
+        require(isAuthorized[msg.sender], "Not authorized");
+        approvals[documentHash]++;
+        if (approvals[documentHash] >= threshold) {
+            executeModification(documentHash);
+        }
+    }
+}
+```
+
+### Time-Locked Access
+
+Reveal contract terms after specific time:
+
+```solidity
+contract TimeLockContract {
+    function revealTerms(bytes32 documentHash) external {
+        require(block.timestamp >= revealTime, "Too early");
+        // Reveal encrypted terms
+    }
+}
+```
+
+### Conditional Execution
+
+Execute based on external events:
+
+```solidity
+contract ConditionalContract {
+    function executeIfConditionMet(bytes32 documentHash) external {
+        require(oracle.checkCondition(), "Condition not met");
+        // Execute contract terms
+    }
+}
+```
+
+## Integration
+
+Resolvers integrate with:
+- `IntegraLedgerV4_5` for document verification
+- `IntegraPaymentV4_5` for payment automation
+- `IntegraVerifierRegistryV4_5` for access control
+
+## Related Topics
+
+- [Tokenization Layer](./tokenization)
+- [Communication Layer](./communication)
+- [Smart Contract Examples](../smart-contracts/code-examples)
+
+## Support
+
+- 📧 Email: developers@integraledger.com
+- 💬 Discord: [Join our community](https://discord.gg/integra)

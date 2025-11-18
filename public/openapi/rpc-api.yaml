@@ -1,0 +1,466 @@
+openapi: 3.0.3
+info:
+  title: RPC Service API
+  description: Blockchain RPC proxy service for multi-chain support
+  version: 1.0.0
+  contact:
+    name: Integra Engineering
+    email: engineering@integraledger.com
+
+servers:
+  - url: http://localhost:3000
+    description: Local development
+  - url: http://rpc-service:3000
+    description: Kubernetes internal
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for user authentication
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+        code:
+          type: integer
+        details:
+          type: object
+
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+        service:
+          type: string
+        version:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        uptime:
+          type: number
+        dependencies:
+          type: object
+          properties:
+            database:
+              type: string
+            rabbitmq:
+              type: string
+            redis:
+              type: string
+
+    Ready:
+      type: object
+      properties:
+        ready:
+          type: boolean
+
+    JsonRpcRequest:
+      type: object
+      required:
+        - jsonrpc
+        - method
+        - params
+        - id
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        method:
+          type: string
+        params:
+          type: array
+          items:
+            type: object
+        id:
+          oneOf:
+            - type: string
+            - type: number
+
+    JsonRpcResponse:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        result:
+          type: object
+        error:
+          type: object
+        id:
+          oneOf:
+            - type: string
+            - type: number
+
+    Chain:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        network:
+          type: string
+        rpcUrl:
+          type: string
+        wsUrl:
+          type: string
+        explorerUrl:
+          type: string
+        nativeCurrency:
+          type: object
+          properties:
+            name:
+              type: string
+            symbol:
+              type: string
+            decimals:
+              type: integer
+
+    ChainStats:
+      type: object
+      properties:
+        chainId:
+          type: string
+        latestBlock:
+          type: integer
+        gasPrice:
+          type: string
+        requestCount:
+          type: integer
+        errorCount:
+          type: integer
+        avgResponseTime:
+          type: number
+
+    ProvidersHealth:
+      type: object
+      properties:
+        providers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              chain:
+                type: string
+              status:
+                type: string
+                enum: [healthy, degraded, unhealthy]
+              latency:
+                type: number
+              errorRate:
+                type: number
+
+paths:
+  # Public endpoints (no auth required)
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Check if the service and its dependencies are healthy
+      operationId: getHealth
+      tags:
+        - Infrastructure
+      security: []  # Public endpoint - no auth required
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ready:
+    get:
+      summary: Readiness check endpoint
+      description: Check if the service is ready to accept requests
+      operationId: getReady
+      tags:
+        - Infrastructure
+      security: []  # Public endpoint - no auth required
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ready'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint
+      description: Export service metrics in Prometheus format
+      operationId: getMetrics
+      tags:
+        - Infrastructure
+      security: []  # Public endpoint - no auth required
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  # RPC endpoints (v1)
+  /v1/rpc:
+    post:
+      summary: JSON-RPC endpoint
+      description: Proxy JSON-RPC requests to blockchain networks
+      operationId: jsonRpc
+      tags:
+        - RPC
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonRpcRequest'
+      responses:
+        '201':
+          description: JSON-RPC response created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/rpc/batch:
+    post:
+      summary: Batch JSON-RPC endpoint
+      description: Process multiple JSON-RPC requests in a single call
+      operationId: batchJsonRpc
+      tags:
+        - RPC
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/JsonRpcRequest'
+      responses:
+        '201':
+          description: Batch JSON-RPC responses created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JsonRpcResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/internal/providers/health:
+    get:
+      summary: RPC providers health status
+      description: Get health status of all configured RPC providers
+      operationId: getProvidersHealth
+      tags:
+        - Internal
+      security: []
+      responses:
+        '200':
+          description: Providers health status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvidersHealth'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Chains endpoints (v1)
+  /v1/chains:
+    get:
+      summary: List supported chains
+      description: Get a list of all blockchain networks supported by this service
+      operationId: listChains
+      tags:
+        - Chains
+      security: []
+      responses:
+        '200':
+          description: List of supported chains
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chain'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/chains/{chain-id}:
+    get:
+      summary: Get chain configuration
+      description: Get configuration details for a specific blockchain network
+      operationId: getChain
+      tags:
+        - Chains
+      security: []
+      parameters:
+        - name: chain-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Chain ID (e.g., '137' for Polygon)
+      responses:
+        '200':
+          description: Chain configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chain'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chain not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/chains/{chain-id}/stats:
+    get:
+      summary: Get chain statistics
+      description: Get current statistics for a specific blockchain network
+      operationId: getChainStats
+      tags:
+        - Chains
+      security: []
+      parameters:
+        - name: chain-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Chain ID (e.g., '137' for Polygon)
+      responses:
+        '200':
+          description: Chain statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChainStats'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chain not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # WebSocket endpoint (v1)
+  /v1/chains/{chain-id}/transactions/stream:
+    get:
+      summary: WebSocket stream for blockchain transactions
+      description: Stream real-time blockchain transactions for Integra contracts via WebSocket
+      operationId: streamTransactions
+      tags:
+        - WebSocket
+      security: []
+      parameters:
+        - name: chain-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Chain ID (e.g., '137' for Polygon)
+        - name: Upgrade
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [websocket]
+        - name: Connection
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [Upgrade]
+      responses:
+        '101':
+          description: Switching Protocols to WebSocket
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+tags:
+  - name: Infrastructure
+    description: Health and monitoring endpoints
+  - name: RPC
+    description: JSON-RPC proxy endpoints
+  - name: Chains
+    description: Blockchain chain management
+  - name: Internal
+    description: Internal service-to-service endpoints
+  - name: WebSocket
+    description: Real-time data streaming

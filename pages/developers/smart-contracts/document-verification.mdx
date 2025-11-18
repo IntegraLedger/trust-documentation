@@ -1,0 +1,635 @@
+import { Tabs } from 'nextra/components'
+
+# Document Verification
+
+Learn how to verify document authenticity using Integra's blockchain records.
+
+## Why Verify?
+
+Verification proves:
+- **Authenticity**: Document hasn't been tampered with
+- **Timestamp**: When document was registered
+- **Ownership**: Who registered it
+- **Status**: Whether it's been revoked
+
+## Quick Verification
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Hash the document
+document_hash=$(keccak256 document.pdf)
+
+# Check if registered
+curl -X GET "https://api.trustwithintegra.com/v1/documents/verify?hash=$document_hash" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Response:
+# {
+#   "registered": true,
+#   "attestationId": "0x123...",
+#   "registeredAt": "2024-01-15T10:30:00Z",
+#   "registeredBy": "0xabc..."
+# }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+import { ethers } from 'ethers';
+import * as fs from 'fs';
+
+// 1. Hash the document you want to verify
+const document = fs.readFileSync('document.pdf');
+const documentHash = ethers.keccak256(document);
+
+// 2. Check if registered
+const registry = new ethers.Contract(REGISTRY_ADDRESS, ABI, provider);
+const isRegistered = await registry.isDocumentRegistered(documentHash);
+
+if (isRegistered) {
+  console.log('✅ Document is registered and verified');
+} else {
+  console.log('❌ Document is NOT registered');
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from web3 import Web3
+
+# 1. Hash the document you want to verify
+with open('document.pdf', 'rb') as f:
+    document = f.read()
+document_hash = w3.keccak(document)
+
+# 2. Check if registered
+registry = w3.eth.contract(address=REGISTRY_ADDRESS, abi=ABI)
+is_registered = registry.functions.isDocumentRegistered(document_hash).call()
+
+if is_registered:
+    print('✅ Document is registered and verified')
+else:
+    print('❌ Document is NOT registered')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Detailed Verification
+
+### Get Full Attestation
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Get attestation details
+attestation_id="0x123..."
+curl -X GET "https://api.trustwithintegra.com/v1/attestations/$attestation_id" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Response:
+# {
+#   "attestationId": "0x123...",
+#   "attester": "0xabc...",
+#   "timestamp": "2024-01-15T10:30:00Z",
+#   "recipient": "0xdef...",
+#   "revoked": false,
+#   "expirationTime": null,
+#   "data": "0x..."
+# }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Get attestation ID for document
+const attestationId = await registry.getAttestationId(documentHash);
+
+// Get full attestation details
+const attestation = await registry.getAttestation(attestationId);
+
+console.log({
+  registeredBy: attestation.attester,
+  registeredAt: new Date(Number(attestation.time) * 1000),
+  recipient: attestation.recipient,
+  revoked: attestation.revocationTime > 0,
+  expirationTime: attestation.expirationTime,
+  data: attestation.data // Custom data in attestation
+});
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+from datetime import datetime
+
+# Get attestation ID for document
+attestation_id = registry.functions.getAttestationId(document_hash).call()
+
+# Get full attestation details
+attestation = registry.functions.getAttestation(attestation_id).call()
+
+print({
+    "registeredBy": attestation[0],
+    "registeredAt": datetime.fromtimestamp(attestation[1]),
+    "recipient": attestation[2],
+    "revoked": attestation[3] > 0,
+    "expirationTime": attestation[4],
+    "data": attestation[5].hex()
+})
+```
+</Tabs.Tab>
+</Tabs>
+
+### Check Revocation Status
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Check revocation status
+attestation_id="0x123..."
+curl -X GET "https://api.trustwithintegra.com/v1/attestations/$attestation_id/revocation" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Response:
+# {
+#   "revoked": true,
+#   "revokedAt": "2024-02-01T15:45:00Z",
+#   "revokedBy": "0xabc..."
+# }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// Check if attestation has been revoked
+const isRevoked = await registry.isAttestationRevoked(attestationId);
+
+if (isRevoked) {
+  const revokedAt = await registry.getRevocationTime(attestationId);
+  console.log('⚠️ Document was revoked on:', new Date(revokedAt * 1000));
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# Check if attestation has been revoked
+is_revoked = registry.functions.isAttestationRevoked(attestation_id).call()
+
+if is_revoked:
+    revoked_at = registry.functions.getRevocationTime(attestation_id).call()
+    print(f'⚠️ Document was revoked on: {datetime.fromtimestamp(revoked_at)}')
+```
+</Tabs.Tab>
+</Tabs>
+
+## Verification Methods
+
+### Method 1: By Document Hash
+
+Most common - verify you have the correct file:
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+verify_document_file() {
+  file_path=$1
+
+  # Read and hash file
+  hash=$(keccak256 "$file_path")
+
+  # Check registration
+  response=$(curl -s "https://api.trustwithintegra.com/v1/documents/verify?hash=$hash" \
+    -H "Authorization: Bearer $API_KEY")
+
+  registered=$(echo "$response" | jq -r '.registered')
+  timestamp=$(echo "$response" | jq -r '.registeredAt')
+
+  echo "Valid: $registered"
+  echo "Hash: $hash"
+  echo "Timestamp: $timestamp"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function verifyDocumentFile(filePath: string) {
+  // Read and hash file
+  const file = fs.readFileSync(filePath);
+  const hash = ethers.keccak256(file);
+
+  // Check registration
+  const registered = await registry.isDocumentRegistered(hash);
+
+  return {
+    isValid: registered,
+    hash,
+    timestamp: registered ? await getRegistrationTime(hash) : null
+  };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+async def verify_document_file(file_path: str):
+    # Read and hash file
+    with open(file_path, 'rb') as f:
+        file = f.read()
+    hash = w3.keccak(file)
+
+    # Check registration
+    registered = registry.functions.isDocumentRegistered(hash).call()
+
+    return {
+        "isValid": registered,
+        "hash": hash.hex(),
+        "timestamp": await get_registration_time(hash) if registered else None
+    }
+```
+</Tabs.Tab>
+</Tabs>
+
+### Method 2: By Attestation ID
+
+When you have the attestation ID (from QR code, certificate, etc.):
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+verify_by_attestation_id() {
+  attestation_id=$1
+
+  response=$(curl -s "https://api.trustwithintegra.com/v1/attestations/$attestation_id" \
+    -H "Authorization: Bearer $API_KEY")
+
+  exists=$(echo "$response" | jq -r '.exists')
+  attester=$(echo "$response" | jq -r '.attester')
+  revoked=$(echo "$response" | jq -r '.revoked')
+  expired=$(echo "$response" | jq -r '.expired')
+
+  echo "Exists: $exists"
+  echo "Attester: $attester"
+  echo "Revoked: $revoked"
+  echo "Expired: $expired"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function verifyByAttestationId(attestationId: string) {
+  const attestation = await registry.getAttestation(attestationId);
+
+  return {
+    exists: attestation.time > 0,
+    attester: attestation.attester,
+    isRevoked: attestation.revocationTime > 0,
+    isExpired: attestation.expirationTime > 0 &&
+               attestation.expirationTime < Date.now() / 1000
+  };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+async def verify_by_attestation_id(attestation_id: str):
+    attestation = registry.functions.getAttestation(attestation_id).call()
+
+    return {
+        "exists": attestation[1] > 0,  # time > 0
+        "attester": attestation[0],
+        "isRevoked": attestation[3] > 0,  # revocationTime > 0
+        "isExpired": attestation[4] > 0 and attestation[4] < int(datetime.now().timestamp())
+    }
+```
+</Tabs.Tab>
+</Tabs>
+
+### Method 3: Batch Verification
+
+Verify multiple documents at once:
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Batch verify via API
+curl -X POST https://api.trustwithintegra.com/v1/documents/verify/batch \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "hashes": [
+      "0xabc...",
+      "0xdef...",
+      "0x123..."
+    ]
+  }'
+
+# Response:
+# {
+#   "results": [
+#     {"hash": "0xabc...", "registered": true},
+#     {"hash": "0xdef...", "registered": false},
+#     {"hash": "0x123...", "registered": true}
+#   ]
+# }
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function verifyMultiple(documents: Buffer[]) {
+  const hashes = documents.map(doc => ethers.keccak256(doc));
+
+  // Call batch verification (if available)
+  const results = await registry.areDocumentsRegistered(hashes);
+
+  return documents.map((doc, i) => ({
+    document: doc,
+    hash: hashes[i],
+    isRegistered: results[i]
+  }));
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+async def verify_multiple(documents: list):
+    hashes = [w3.keccak(doc) for doc in documents]
+
+    # Call batch verification (if available)
+    results = registry.functions.areDocumentsRegistered(hashes).call()
+
+    return [
+        {
+            "document": doc,
+            "hash": hashes[i].hex(),
+            "isRegistered": results[i]
+        }
+        for i, doc in enumerate(documents)
+    ]
+```
+</Tabs.Tab>
+</Tabs>
+
+## Building a Verification UI
+
+### Simple Web Verifier
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Command-line verifier script
+#!/bin/bash
+
+echo "=== Document Verifier ==="
+echo "Drop your file path:"
+read file_path
+
+echo "Hashing document..."
+hash=$(keccak256 "$file_path")
+
+echo "Checking blockchain..."
+response=$(curl -s "https://api.trustwithintegra.com/v1/documents/verify?hash=$hash" \
+  -H "Authorization: Bearer $API_KEY")
+
+if [ "$(echo "$response" | jq -r '.registered')" = "true" ]; then
+  echo "✅ Document verified!"
+  echo "Registered on: $(echo "$response" | jq -r '.registeredAt')"
+  echo "Registered by: $(echo "$response" | jq -r '.registeredBy')"
+else
+  echo "❌ Document not found in registry"
+fi
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+// verification-ui.ts
+async function verifyDocument(file: File) {
+  // Show loading state
+  showStatus('Hashing document...');
+
+  // Hash file
+  const buffer = await file.arrayBuffer();
+  const hash = ethers.keccak256(new Uint8Array(buffer));
+
+  showStatus('Checking blockchain...');
+
+  // Verify
+  const isRegistered = await registry.isDocumentRegistered(hash);
+
+  if (isRegistered) {
+    const attestation = await getAttestationDetails(hash);
+    showSuccess({
+      message: 'Document verified!',
+      registeredOn: attestation.timestamp,
+      registeredBy: attestation.attester
+    });
+  } else {
+    showError('Document not found in registry');
+  }
+}
+
+// HTML: Drag & drop file upload
+// <div id="dropzone">
+//   Drop document here to verify
+// </div>
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+# verification_ui.py
+import asyncio
+from web3 import Web3
+
+async def verify_document(file_path: str):
+    """Simple document verifier"""
+    # Show loading state
+    print('Hashing document...')
+
+    # Hash file
+    with open(file_path, 'rb') as f:
+        buffer = f.read()
+    hash = w3.keccak(buffer)
+
+    print('Checking blockchain...')
+
+    # Verify
+    is_registered = registry.functions.isDocumentRegistered(hash).call()
+
+    if is_registered:
+        attestation = await get_attestation_details(hash)
+        print('✅ Document verified!')
+        print(f'Registered on: {attestation["timestamp"]}')
+        print(f'Registered by: {attestation["attester"]}')
+    else:
+        print('❌ Document not found in registry')
+
+# Usage
+# asyncio.run(verify_document('document.pdf'))
+```
+</Tabs.Tab>
+</Tabs>
+
+### QR Code Verification
+
+Generate and scan verification QR codes:
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+# Generate QR code using qrencode
+generate_verification_qr() {
+  attestation_id=$1
+  verify_url="https://verify.integraledger.com/$attestation_id"
+
+  # Generate QR code as PNG
+  echo "$verify_url" | qrencode -o verification_qr.png
+  echo "QR code saved to verification_qr.png"
+}
+
+# Verify from QR scan
+verify_from_qr() {
+  scanned_url=$1
+  attestation_id=$(basename "$scanned_url")
+
+  curl -s "https://api.trustwithintegra.com/v1/attestations/$attestation_id" \
+    -H "Authorization: Bearer $API_KEY"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+import QRCode from 'qrcode';
+
+// Generate verification QR
+async function generateVerificationQR(attestationId: string): Promise<string> {
+  const verifyUrl = `https://verify.integraledger.com/${attestationId}`;
+  const qrDataUrl = await QRCode.toDataURL(verifyUrl);
+  return qrDataUrl; // Display as image
+}
+
+// Verify from QR scan
+async function verifyFromQR(scannedUrl: string) {
+  const attestationId = scannedUrl.split('/').pop()!;
+  return await verifyByAttestationId(attestationId);
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+import qrcode
+from io import BytesIO
+
+# Generate verification QR
+def generate_verification_qr(attestation_id: str) -> bytes:
+    verify_url = f"https://verify.integraledger.com/{attestation_id}"
+
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(verify_url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Return as bytes
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    return buffer.getvalue()
+
+# Verify from QR scan
+async def verify_from_qr(scanned_url: str):
+    attestation_id = scanned_url.split('/')[-1]
+    return await verify_by_attestation_id(attestation_id)
+```
+</Tabs.Tab>
+</Tabs>
+
+## Trust Chains
+
+Verify chains of attestations (document → signer → authority):
+
+<Tabs items={['cURL', 'TypeScript', 'Python']}>
+<Tabs.Tab>
+```bash
+verify_trust_chain() {
+  document_hash=$1
+
+  # Get document attestation
+  doc_response=$(curl -s "https://api.trustwithintegra.com/v1/documents/verify?hash=$document_hash" \
+    -H "Authorization: Bearer $API_KEY")
+
+  attester=$(echo "$doc_response" | jq -r '.registeredBy')
+
+  # Get signer's credential
+  signer_response=$(curl -s "https://api.trustwithintegra.com/v1/credentials/$attester" \
+    -H "Authorization: Bearer $API_KEY")
+
+  # Verify chain
+  doc_valid=$(echo "$doc_response" | jq -r '.registered')
+  signer_verified=$(echo "$signer_response" | jq -r '.verified')
+
+  echo "Document valid: $doc_valid"
+  echo "Signer verified: $signer_verified"
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```typescript
+async function verifyTrustChain(documentHash: string) {
+  // Get document attestation
+  const docAttestation = await registry.getAttestation(
+    await registry.getAttestationId(documentHash)
+  );
+
+  // Get signer's credential attestation
+  const signerCredential = await getSignerCredential(docAttestation.attester);
+
+  // Verify entire chain
+  return {
+    documentValid: !docAttestation.revoked,
+    signerVerified: signerCredential && !signerCredential.revoked,
+    authorityTrusted: await isAuthorityTrusted(signerCredential.attester)
+  };
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```python
+async def verify_trust_chain(document_hash: bytes):
+    # Get document attestation
+    attestation_id = registry.functions.getAttestationId(document_hash).call()
+    doc_attestation = registry.functions.getAttestation(attestation_id).call()
+
+    # Get signer's credential attestation
+    signer_credential = await get_signer_credential(doc_attestation[0])
+
+    # Verify entire chain
+    return {
+        "documentValid": doc_attestation[3] == 0,  # not revoked
+        "signerVerified": signer_credential and signer_credential[3] == 0,
+        "authorityTrusted": await is_authority_trusted(signer_credential[0])
+    }
+```
+</Tabs.Tab>
+</Tabs>
+
+## Next Steps
+
+- **[Working with Tokens](./working-with-tokens)**: Tokenize verified documents
+- **[Code Examples](./code-examples)**: Complete verification apps
+- **[API Reference](./api-reference)**: Full contract methods
+
+---
+
+Questions? developers@integraledger.com
