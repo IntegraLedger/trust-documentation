@@ -1,5 +1,4 @@
 export default {
-  index: 'Overview',
   'smart-contracts': 'Smart Contracts',
   'api-reference': 'API Reference',
   architecture: 'Architecture',

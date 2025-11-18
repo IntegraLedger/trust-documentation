@@ -11,4 +11,8 @@ export default withNextra({
     unoptimized: true,
   },
   distDir: 'out',
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
 });
