@@ -1081,10 +1081,10 @@ This is what makes Real World Contracts possible at planetary scale.
 
 ## Learn More
 
-- [Privacy Architecture](/developers/privacy/architecture.md) - Foundational privacy philosophy
-- [Document-Token Binding](/developers/document-token-binding.md) - Identity foundation
-- [ProcessHash Integration](/developers/process-hash-integration.md) - Workflow correlation
-- [Reserve-Claim Pattern](/developers/reserve-claim-pattern.md) - Mainstream onboarding
-- [Document vs Token Ownership](/developers/document-vs-token-ownership.md) - Sophisticated ownership model
-- [Resolver Composition](/developers/patterns/resolvers.md) - Extensibility
-- [Trust Graph](/developers/trust-graph/overview.md) - Privacy-preserving reputation
+- [Privacy Architecture](/core-concepts/02-privacy-first-architecture) - Foundational privacy philosophy
+- [Document-Token Binding](/core-concepts/03-document-token-binding) - Identity foundation
+- [ProcessHash Integration](/core-concepts/06-process-hash-integration) - Workflow correlation
+- [Reserve-Claim Pattern](/core-concepts/05-reserve-claim-pattern) - Mainstream onboarding
+- [Document vs Token Ownership](/core-concepts/04-document-vs-token-ownership) - Sophisticated ownership model
+- [Resolver Composition](/patterns/resolvers) - Extensibility
+- [Trust Graph](/core-concepts/07-trust-graph) - Privacy-preserving reputation

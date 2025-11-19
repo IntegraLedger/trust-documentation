@@ -495,7 +495,7 @@ struct Attestation {
 }
 ```
 
-[Learn more about EAS →](/smart-contracts/eas-reference)
+[Learn more about EAS →](/core-contracts/eas-reference)
 
 ## Standard Evolution
 
@@ -562,14 +562,14 @@ describe("ERC-721 Compliance", () => {
 - [Access Control](https://docs.openzeppelin.com/contracts/4.x/access-control)
 
 ### Integra Documentation
-- [Tokenizer Overview →](/smart-contracts/layer3/overview)
-- [Tokenizer Comparison →](/smart-contracts/layer3/tokenizer-comparison)
-- [Integration Guide →](/smart-contracts/guides/integration)
+- [Tokenizer Overview →](/tokenizers/overview)
+- [Tokenizer Comparison →](/tokenizers/choosing-a-tokenizer)
+- [Integration Guide →](/guides/integration)
 
 ### Related Topics
-- [Purpose →](./introduction/why-real-world-contracts)
-- [Security →](/smart-contracts/security/overview)
-- [Automation →](/smart-contracts/automation/overview)
+- [Purpose →](/introduction/why-real-world-contracts)
+- [Security →](/security/overview)
+- [Automation →](/automation/overview)
 
 ---
 

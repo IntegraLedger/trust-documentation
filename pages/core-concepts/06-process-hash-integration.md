@@ -883,7 +883,7 @@ This simple pattern makes Integra contracts **integration-ready** for CRM, ERP, 
 
 ## Learn More
 
-- [Integration Guide](/developers/guides/integration.md) - Detailed integration examples
-- [Batch Operations](/developers/patterns/batch-operations.md) - Batch processing with processHash
-- [Messaging](/developers/messaging/overview.md) - ProcessHash in messaging contracts
-- [Web2 Integration](/developers/web2-integration/overview.md) - Connecting traditional systems
+- [Integration Guide](/guides/integration) - Detailed integration examples
+- [Batch Operations](/patterns/batch-operations) - Batch processing with processHash
+- [Messaging](/communication/overview) - ProcessHash in messaging contracts
+- [Web2 Integration](/integration/overview) - Connecting traditional systems

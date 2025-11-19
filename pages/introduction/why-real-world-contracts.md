@@ -98,7 +98,7 @@ Not everything belongs on a public blockchain. We provide:
 - **Encrypted Metadata**: Sensitive data stays private
 - **Zero-Knowledge Proofs**: Prove facts without revealing data
 
-[Learn more about Privacy →](./privacy/overview)
+[Learn more about Privacy →](/privacy/overview)
 
 ### 2. Security by Design
 Security isn't added later - it's built into every layer:
@@ -106,7 +106,7 @@ Security isn't added later - it's built into every layer:
 - **Professional Audits**: Multiple independent security reviews
 - **Battle-Tested Patterns**: Based on proven industry standards
 
-[Learn more about Security →](/smart-contracts/security/overview)
+[Learn more about Security →](/security/overview)
 
 ### 3. Automation Powered
 Smart contracts eliminate manual processes:
@@ -114,7 +114,7 @@ Smart contracts eliminate manual processes:
 - **24/7 Operation**: No downtime, no holidays
 - **Instant Settlement**: No waiting for business hours
 
-[Learn more about Automation →](/smart-contracts/automation/overview)
+[Learn more about Automation →](/automation/overview)
 
 ### 4. Standards Compliant
 We build on proven standards:
@@ -122,7 +122,7 @@ We build on proven standards:
 - **ERC-1155**: Multi-token standard for flexibility
 - **EAS**: Ethereum Attestation Service for verifications
 
-[Learn more about ERC Standards →](/smart-contracts/erc-standards/overview)
+[Learn more about ERC Standards →](/tokenizers/erc-standards/overview)
 
 ## The Integra Difference
 
@@ -197,11 +197,11 @@ We're building permanent infrastructure for the next century of real-world asset
 
 Ready to dive deeper?
 
-- **Understand Privacy**: [How we protect sensitive data →](./privacy/overview)
-- **Explore Security**: [Our security architecture →](/smart-contracts/security/overview)
-- **See Automation**: [Smart contract capabilities →](/smart-contracts/automation/overview)
-- **Learn Standards**: [ERC token standards →](/smart-contracts/erc-standards/overview)
-- **Technical Details**: [Architecture overview →](/smart-contracts/index)
+- **Understand Privacy**: [How we protect sensitive data →](/privacy/overview)
+- **Explore Security**: [Our security architecture →](/security/overview)
+- **See Automation**: [Smart contract capabilities →](/automation/overview)
+- **Learn Standards**: [ERC token standards →](/tokenizers/erc-standards/overview)
+- **Technical Details**: [Architecture overview →](/architecture/overview)
 
 ---
 
