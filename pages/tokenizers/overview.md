@@ -42,6 +42,10 @@ Every Integra tokenizer inherits from `BaseTokenizerV7`, which provides the crit
    All tied to document lifecycle
 ```
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/tokenizer-overview-1.png" alt="Tokenizer Overview" style="width: 90%; height: auto;" />
+</div>
+
 ### Document-Token Binding
 
 Every tokenizer maintains the critical link between documents and tokens:
