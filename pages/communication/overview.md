@@ -142,6 +142,10 @@ Token-to-token payment request system with encrypted payloads.
 └─────────────────────────────────────────────────┘
 ```
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/communication-1.png" alt="Communication Architecture" style="width: 90%; height: auto;" />
+</div>
+
 ### Workflow Correlation
 
 ```
