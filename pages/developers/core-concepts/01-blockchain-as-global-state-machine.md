@@ -30,6 +30,10 @@ Traditional solutions: ALL FAIL
 
 ### Integra's Solution: Global State Machine
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/global-state-machine-1.png" alt="Global State Machine" style="width: 90%; height: auto;" />
+</div>
+
 **Use blockchain as shared, immutable, trustless coordination layer:**
 
 ```
@@ -57,6 +61,10 @@ Result: Ad hoc coordination across unlimited parties
 
 ### The State Machine Model
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/state=machine-model-1.png" alt="State Machine Model" style="width: 90%; height: auto;" />
+</div>
+
 **Traditional state machines:**
 ```
 Application → Database → State
@@ -75,6 +83,10 @@ Any Application → Blockchain → Global State
 ```
 
 ### Integra's State Components
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/state-compontnts-1.png" alt="Integra State Components" style="width: 90%; height: auto;" />
+</div>
 
 **1. Document State (Identity Layer)**
 
@@ -361,6 +373,10 @@ courtSystem.watchAgreementCompletion() {
 ```
 
 ## The Ad Hoc Coordination Breakthrough
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/coordination-1.png" alt="Ad Hoc Coordination" style="width: 90%; height: auto;" />
+</div>
 
 ### Traditional Approach: Point-to-Point Integration
 
