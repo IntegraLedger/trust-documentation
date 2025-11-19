@@ -116,6 +116,10 @@ Off-Chain (Indexer):
   - Privacy preserved: No one can see which contract
 ```
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/trust-graph-1.png" alt="Trust Graph" style="width: 90%; height: auto;" />
+</div>
+
 ## The Social Attestation Pattern
 
 ### What Gets Attested
