@@ -2,6 +2,10 @@
 
 ## The Foundational Problem
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/foundational-problem-1.png" alt="The Foundational Problem" style="width: 90%; height: auto;" />
+</div>
+
 ### Why Integra Exists
 
 Integra was created to solve a fundamental privacy paradox in document automation:
@@ -26,6 +30,10 @@ Result: Manual processes, no automation possible
 - Government agencies can't share classified documents in shared systems
 
 ### The Foundational Insight
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/foundational-insite-1.png" alt="The Foundational Insight" style="width: 90%; height: auto;" />
+</div>
 
 **Parties don't need to share the document - they need to share a reference to the document.**
 
@@ -58,6 +66,10 @@ Payment details → Encrypted payload → Payment signal (on-chain)
 **What's enabled:** Coordination, automation, verification
 
 ## Privacy Layers in Integra
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/privacy-layers-1.png" alt="Privacy Layers in Integra" style="width: 90%; height: auto;" />
+</div>
 
 ### Layer 1: Document Privacy
 
