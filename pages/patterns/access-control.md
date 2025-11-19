@@ -23,6 +23,10 @@ The Integra V7 access control system implements a sophisticated multi-layer secu
 - Contract executor support (DAOs, multisigs, escrows)
 - Owner maintains ultimate control
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/access-control-pattern.png" alt="Access Control Patterns" style="width: 90%; height: auto;" />
+</div>
+
 ## Foundation: Attestation-Based Capabilities
 
 ### Capability Namespace Architecture
