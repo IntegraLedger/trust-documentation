@@ -22,6 +22,11 @@ Token Contract
 - Each token contract is isolated
 
 ### Integra's Document-Bound Approach
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/document-bound-1.png" alt="Integra's Document-Bound Approach" style="width: 90%; height: auto;" />
+</div>
+
 ```
 Document Registry (Immutable Identity Layer)
   ├─ integraHash: 0xabc... → Document Record
