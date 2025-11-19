@@ -14,6 +14,10 @@ The Integra V7 system uses a hybrid upgradeability model combining:
 
 This approach balances **flexibility during early stages** with **immutability at maturity**.
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/upgradability-pattern.png" alt="Upgradeability Patterns" style="width: 90%; height: auto;" />
+</div>
+
 ## Pattern 1: UUPS Proxy Pattern
 
 ### Description
