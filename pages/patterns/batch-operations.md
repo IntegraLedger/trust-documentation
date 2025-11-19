@@ -19,6 +19,10 @@ The Integra V7 system implements comprehensive batch operations for gas efficien
 - Resolver configuration
 - Token operations (reserve, claim, cancel)
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/batch-pattern.png" alt="Batch Operation Patterns" style="width: 90%; height: auto;" />
+</div>
+
 ## Pattern: Document Batch Registration
 
 ### Use Cases
