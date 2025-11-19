@@ -4,6 +4,10 @@ The foundational concepts that make Integra's Real World Contracts revolutionary
 
 ## The Journey
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/journey-1.png" alt="The Journey" style="width: 90%; height: auto;" />
+</div>
+
 These concepts build on each other - we recommend reading in order:
 
 ### 1. Blockchain as Global State Machine
