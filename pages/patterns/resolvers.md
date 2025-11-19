@@ -16,6 +16,10 @@ Resolvers transform static documents into **programmable, service-rich contracts
 
 All without touching the core document registry.
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/resolver-pattern.png" alt="Resolver Patterns" style="width: 90%; height: auto;" />
+</div>
+
 ## How Resolvers Work
 
 ### Document-Resolver Binding
