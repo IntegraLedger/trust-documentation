@@ -168,6 +168,10 @@ Document: deedHash
        └─ Status: Reserved (not claimed)
 ```
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/house-sale-1.png" alt="House Sale Example" style="width: 90%; height: auto;" />
+</div>
+
 **Step 3: Seller Creates Claim Attestation**
 
 ```solidity
