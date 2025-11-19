@@ -20,6 +20,10 @@ The Integra system uses a **unified immutable registry** contract to manage crit
 3. **RESOLVER** type: Document resolvers (lifecycle, compliance, custom)
 4. **TOKENIZER** type: Token implementations (ERC-721, ERC-1155, ERC-20)
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/registry-pattern.png" alt="Registry Patterns" style="width: 90%; height: auto;" />
+</div>
+
 ## Why an Immutable Unified Registry?
 
 ### Trust Guarantees
