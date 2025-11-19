@@ -4,24 +4,9 @@ Multi-layer access control architecture implementing zero-trust security across 
 
 ## Overview
 
-The Integra V7 access control system implements a sophisticated multi-layer security model:
+The Integra V7 access control system implements a sophisticated multi-layer security model that combines attestation-based capabilities, document ownership validation, and per-document executor authorization to create a comprehensive zero-trust security architecture. Each layer operates independently while complementing the others, ensuring that sensitive operations require multiple forms of validation before execution. This defense-in-depth approach means that even if one security layer is compromised, the remaining layers continue to protect system integrity.
 
-**Foundation: Attestation-Based Capabilities**
-- Fine-grained permissions via attestation proofs
-- 256-bit capability bitmask with organized namespace
-- Provider abstraction (EAS, VCs, ZK proofs, DIDs)
-- Front-running protection via recipient validation
-
-**Document Ownership: Document Ownership Model**
-- Coarse-grained permissions based on document ownership
-- Immutable after deployment (trust model preservation)
-- Owner sovereignty guaranteed
-
-**Per-Document Authorization: Per-Document Executor Authorization**
-- Delegated permissions with opt-in model
-- Zero-trust default (no global privileges)
-- Contract executor support (DAOs, multisigs, escrows)
-- Owner maintains ultimate control
+The three-tiered model provides different levels of granularity for access control across the platform. At the foundation level, attestation-based capabilities enable fine-grained permissions through 256-bit capability bitmasks, supporting multiple attestation providers including EAS, Verifiable Credentials, ZK proofs, and DIDs with built-in front-running protection. The document ownership layer provides coarse-grained permissions based on immutable ownership records, guaranteeing owner sovereignty over document configuration and lifecycle. Finally, the per-document executor authorization layer enables secure delegation of operational authority through an opt-in model that supports EOAs, DAOs, multisigs, and custom contract executors while maintaining zero-trust defaults and preserving ultimate owner control.
 
 <div style="display: flex; justify-content: center; margin: 2rem 0;">
   <img src="/diagrams/access-control-pattern.png" alt="Access Control Patterns" style="width: 90%; height: auto;" />

@@ -4,20 +4,9 @@ Gas-optimized batch processing for enterprise-scale document management.
 
 ## Overview
 
-The Integra V7 system implements comprehensive batch operations for gas efficiency:
+The Integra V7 system implements comprehensive batch operations for gas efficiency, achieving 85-90% cost savings compared to individual operations through optimized batching strategies. These patterns enable enterprise-scale document management by processing multiple operations in a single transaction, with built-in safeguards including array validation, configurable batch size limits, and sophisticated failure handling that can either revert entire batches or continue with partial success depending on the operation type.
 
-- **Gas Optimization**: 85-90% gas savings vs individual operations
-- **Array Validation**: Length checks and bounds enforcement
-- **Partial Failure Handling**: Continue on errors or revert entire batch
-- **Event Emission**: Efficient logging strategies
-- **Unchecked Arithmetic**: Safe loop counters with unchecked increment
-- **Configurable Batch Sizes**: Maximum limits per operation type
-
-**Key Batch Operations**:
-- Document registration (50 documents)
-- Executor authorization
-- Resolver configuration
-- Token operations (reserve, claim, cancel)
+Batch operations leverage multiple optimization techniques to maximize efficiency while maintaining security and reliability. Unchecked arithmetic safely increments loop counters without overflow protection overhead, saving approximately 100 gas per iteration across potentially thousands of operations. Standardized array validation prevents common errors through length checks and bounds enforcement, while configurable batch sizes (typically 50 documents maximum) ensure operations stay within gas limits across all supported chains. Event emission strategies balance detailed tracking with gas costs, providing comprehensive audit trails without excessive overhead. Key batch operations include document registration, executor authorization, resolver configuration, and all token operations including reserve, claim, and cancel actions.
 
 <div style="display: flex; justify-content: center; margin: 2rem 0;">
   <img src="/diagrams/batch-pattern.png" alt="Batch Operation Patterns" style="width: 90%; height: auto;" />

@@ -2,19 +2,9 @@
 
 ## Overview
 
-The **Resolver Pattern** is Integra's powerful extensibility system that lets you attach custom services to documents without modifying core contracts. This enables unlimited functionality while keeping the document registry immutable and secure.
+The Resolver Pattern is Integra's powerful extensibility system that lets you attach custom services to documents without modifying core contracts, enabling unlimited functionality while keeping the document registry immutable and secure. This architecture separates document identity from document services, allowing the core registry to remain simple and unchangeable while resolvers provide sophisticated features like workflow automation, compliance enforcement, and custom business logic. Developers can create new resolvers at any time and attach them to documents through a simple registration process, building a rich ecosystem of interoperable services.
 
-### The Power of Resolvers
-
-Resolvers transform static documents into **programmable, service-rich contracts** that can:
-
-- **Automate workflows** (expiry notifications, renewal reminders)
-- **Store metadata** (contact info, compliance records)
-- **Enforce rules** (geographic restrictions, accreditation requirements)
-- **Trigger actions** (payments, notifications, integrations)
-- **Extend functionality** (custom business logic)
-
-All without touching the core document registry.
+Resolvers transform static documents into programmable, service-rich contracts that can automate workflows such as expiry notifications and renewal reminders, store encrypted metadata including contact information and compliance records, enforce complex rules like geographic restrictions and accreditation requirements, trigger actions including payments and external system integrations, and extend functionality through unlimited custom business logic. The system supports both primary resolvers that must succeed for critical operations and additional resolvers that provide optional best-effort services. Each resolver implements lifecycle hooks that execute at key moments including document registration, ownership transfers, and tokenizer association, creating powerful automation without requiring any changes to the immutable core document registry.
 
 <div style="display: flex; justify-content: center; margin: 2rem 0;">
   <img src="/diagrams/resolvers-1.png" alt="How Resolvers Work" style="width: 90%; height: auto;" />

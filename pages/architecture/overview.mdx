@@ -4,18 +4,9 @@ Understanding how Integra's smart contracts work together to enable document tok
 
 ## Overview
 
-Integra provides a layered architecture for tokenizing real-world documents on the blockchain. As a developer, you'll interact with contracts across different layers depending on your use case.
+Integra provides a layered architecture for tokenizing real-world documents on the blockchain, enabling developers to build applications that bridge traditional legal agreements with decentralized finance and NFT ecosystems. The system's modular design separates concerns across distinct layers, with immutable foundation contracts providing security and identity, a flexible application layer handling tokenization and communication, and extensible resolver patterns enabling custom business logic without modifying core infrastructure. As a developer, you'll interact with contracts across different layers depending on your use case, from simple document registration to complex multi-party agreements with automated workflows.
 
-### The Core Innovation: Document-Token Binding
-
-Integra's unique architecture **permanently binds ERC tokens to real-world documents** through a two-layer system:
-
-1. **Document Registry Layer**: Immutable document identity with cryptographic proof of content
-2. **Tokenizer Layer**: Standard ERC tokens (ERC-721, ERC-1155, ERC-20) bound to document identity
-
-This means tokens aren't just NFTs with metadata - they're **cryptographically verifiable representations of real-world assets** that work with any ERC-compatible wallet or marketplace.
-
-[Learn more about Document-Token Binding →](./concepts/document-token-binding)
+Integra's unique architecture permanently binds ERC tokens to real-world documents through a two-layer system that combines the Document Registry Layer for immutable document identity with cryptographic proof of content, and the Tokenizer Layer for standard ERC tokens (ERC-721, ERC-1155, ERC-20) that are cryptographically bound to document identity. This fundamental innovation means that tokens aren't just NFTs with metadata - they're cryptographically verifiable representations of real-world assets such as property deeds, rental agreements, and business contracts that work seamlessly with any ERC-compatible wallet, marketplace, or DeFi protocol while maintaining permanent linkage to their source documents. The bidirectional binding ensures every token knows its document and every document knows its token(s), creating an immutable audit trail that proves ownership and authenticity.
 
 ## Contract Layers
 

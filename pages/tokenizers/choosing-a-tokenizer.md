@@ -2,7 +2,9 @@
 
 ## Overview
 
-This guide helps you choose the right tokenizer for your use case by comparing all 11 tokenizer implementations in Integra V7.
+This guide helps you choose the right tokenizer for your use case by comparing all 11 tokenizer implementations in Integra V7, analyzing their features, gas costs, token standards, and ideal applications. Understanding the differences between tokenizers is critical for building efficient and appropriate solutions, as each tokenizer is optimized for specific ownership models and use cases ranging from simple single-owner documents to complex multi-party agreements with revenue sharing.
+
+The tokenizer selection process involves evaluating several key factors including the ownership model (single party, multiple parties, or fractional), the appropriate token standard (ERC-721 for unique ownership, ERC-1155 for multi-role scenarios, or ERC-20 for fungible shares), required features such as transferability and trust graph integration, and gas efficiency considerations for high-volume applications. This comprehensive comparison examines each tokenizer's characteristics, benefits, limitations, and real-world applications to help you make an informed decision that balances functionality with cost-effectiveness while meeting your specific business requirements.
 
 ## Quick Selection Matrix
 

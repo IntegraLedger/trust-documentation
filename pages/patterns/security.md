@@ -4,16 +4,9 @@ Comprehensive security patterns implemented across all Integra V7 smart contract
 
 ## Overview
 
-The Integra V7 smart contract system implements defense-in-depth security with multiple layers of protection:
+The Integra V7 smart contract system implements defense-in-depth security with multiple independent layers of protection that work together to prevent exploits and maintain system integrity even under attack. This comprehensive security architecture combines battle-tested patterns from OpenZeppelin with custom protections designed specifically for real-world contract tokenization, creating a robust defense against the full spectrum of smart contract vulnerabilities including reentrancy, access control bypass, front-running, and denial-of-service attacks.
 
-- **Reentrancy Protection**: `nonReentrant` modifier on all state-changing functions
-- **Access Control**: Role-based, attestation-based, and document-level authorization
-- **Pausability**: Emergency circuit breakers for all contracts
-- **Checks-Effects-Interactions**: State updates before external calls
-- **Front-running Protection**: Attestation recipient validation
-- **Code Hash Verification**: Registry pattern prevents malicious upgrades
-- **Graceful Degradation**: Safe failure modes instead of DOS
-- **Emergency Controls**: Time-limited multisig powers with progressive expiry
+Each security layer operates independently to provide redundant protection, ensuring that the failure of any single mechanism does not compromise the entire system. All state-changing functions use reentrancy guards to prevent recursive call attacks, while multi-layer access control combines role-based permissions, attestation-based capabilities, and document-level authorization. The pausability pattern enables emergency shutdowns across all contracts, and the checks-effects-interactions model ensures state updates occur before external calls. Code hash verification in the registry prevents malicious contract upgrades, front-running protection validates attestation recipients, and graceful degradation returns safe default values instead of reverting to prevent denial-of-service. Finally, time-limited emergency controls with progressive expiry provide rapid incident response capability while ensuring eventual complete decentralization.
 
 <div style="display: flex; justify-content: center; margin: 2rem 0;">
   <img src="/diagrams/security-pattern.png" alt="Security Patterns" style="width: 90%; height: auto;" />

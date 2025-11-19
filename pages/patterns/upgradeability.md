@@ -4,15 +4,9 @@ Progressive decentralization and upgrade patterns in Integra V7 smart contracts.
 
 ## Overview
 
-The Integra V7 system uses a hybrid upgradeability model combining:
+The Integra V7 system uses a hybrid upgradeability model that strategically combines upgradeable and immutable contracts to balance innovation with security. This dual approach allows application-layer contracts to evolve through the UUPS proxy pattern while keeping foundational infrastructure permanently immutable, creating a system that can adapt to changing requirements during early stages while progressively hardening toward complete immutability at maturity. The model implements storage gap management for safe upgrades, stage-gated authorization that respects governance evolution, and clear separation between upgradeable application logic and immutable core infrastructure.
 
-- **UUPS Proxy Pattern**: Upgradeable contracts with storage gaps
-- **Progressive Ossification**: Time-gated governance evolution (BOOTSTRAP → MULTISIG → DAO → OSSIFIED)
-- **Immutable Registries**: Non-upgradeable infrastructure contracts
-- **Storage Gap Management**: Reserved storage slots for future upgrades
-- **Upgrade Authorization**: Stage-gated upgrade permissions
-
-This approach balances **flexibility during early stages** with **immutability at maturity**.
+Progressive ossification provides a time-tested path from centralized deployment to complete decentralization through four distinct governance stages. The BOOTSTRAP stage (0-6 months) enables rapid iteration and bug fixes under team control, transitioning to MULTISIG governance (6-12 months) through a guardian multisig for increased safety and deliberation. The DAO stage (12-24 months) achieves full community governance with on-chain voting, culminating in the OSSIFIED stage (24+ months) where contracts become permanently frozen and no further upgrades are possible. This progression is one-way and irreversible, preventing governance capture while giving users absolute confidence in the final system state. Meanwhile, critical infrastructure contracts including capability namespaces, component registries, and the document registry deploy as immutable from day one, providing permanent security guarantees that never change regardless of governance transitions.
 
 <div style="display: flex; justify-content: center; margin: 2rem 0;">
   <img src="/diagrams/upgradability-pattern.png" alt="Upgradeability Patterns" style="width: 90%; height: auto;" />

@@ -4,21 +4,9 @@ Immutable registry architecture with code hash verification for secure infrastru
 
 ## Overview
 
-The Integra system uses a **unified immutable registry** contract to manage critical infrastructure:
+The Integra system uses a unified immutable registry contract to manage critical infrastructure components across the entire platform, providing a single source of truth for component discovery and validation. This registry architecture captures and verifies contract code hashes at registration time, preventing malicious upgrades and metamorphic contract attacks while enabling graceful degradation when components become unavailable. The immutable nature of the registry itself ensures that the validation logic can never be compromised, creating ultimate trust in the infrastructure lookup system.
 
-- **Code Hash Verification**: Captures and validates contract code at registration
-- **Active/Inactive Status**: Lifecycle management without removal
-- **Graceful Degradation**: Returns `address(0)` instead of reverting
-- **Metadata Storage**: Human-readable descriptions and categorization
-- **Enumeration Support**: Off-chain discovery and monitoring
-- **Immutable Pattern**: Registry cannot be upgraded (ultimate trust)
-- **Type Categorization**: Single registry supports multiple component types
-
-**IntegraRegistryV7_Immutable** (Unified Registry) supports:
-1. **PROVIDER** type: Attestation system providers (EAS, VCs, ZK, DIDs)
-2. **VERIFIER** type: ZK proof verifiers (Groth16, PLONK, Poseidon)
-3. **RESOLVER** type: Document resolvers (lifecycle, compliance, custom)
-4. **TOKENIZER** type: Token implementations (ERC-721, ERC-1155, ERC-20)
+The IntegraRegistryV7_Immutable contract supports four distinct component types through a unified interface, eliminating the need for separate registries per component category. PROVIDER components manage attestation systems including EAS, Verifiable Credentials, ZK proofs, and DIDs. VERIFIER components handle ZK proof verification for systems like Groth16, PLONK, and Poseidon hash functions. RESOLVER components extend document functionality through lifecycle management, compliance checking, and custom business logic hooks. TOKENIZER components are registered for validation and discovery, supporting all ERC standards including ERC-721, ERC-1155, and ERC-20 implementations. Each component registration includes code hash verification, active/inactive lifecycle status, human-readable metadata, and enumeration support for off-chain discovery and monitoring.
 
 <div style="display: flex; justify-content: center; margin: 2rem 0;">
   <img src="/diagrams/registry-pattern.png" alt="Registry Patterns" style="width: 90%; height: auto;" />

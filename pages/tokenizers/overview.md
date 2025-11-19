@@ -2,15 +2,9 @@
 
 ## Overview
 
-Tokenizers are smart contracts that create the bridge between real-world documents and blockchain tokens. They transform static legal agreements into programmable, tradeable digital assets while maintaining the security and immutability of the underlying document registry.
+Tokenizers are smart contracts that create the bridge between real-world documents and blockchain tokens, transforming static legal agreements into programmable, tradeable digital assets while maintaining the security and immutability of the underlying document registry. This architecture enables traditional contracts such as property deeds, rental agreements, and business partnerships to exist as standard ERC tokens that work with any compatible wallet, marketplace, or DeFi protocol while remaining cryptographically bound to their source documents for verifiable authenticity.
 
-### The Core Innovation
-
-Every Integra tokenizer inherits from `BaseTokenizerV7`, which provides the critical **document-token binding mechanism**. This ensures that:
-
-1. **Tokens are permanently bound to documents** - Each token is cryptographically linked to an `integraHash` in the document registry
-2. **Documents dictate token behavior** - The document's properties determine tokenization rules
-3. **Ownership is verifiable** - Token ownership proves participation in or ownership of the underlying real-world contract
+Every Integra tokenizer inherits from BaseTokenizerV7, which provides the critical document-token binding mechanism ensuring permanent, bidirectional linkage between tokens and documents. This binding guarantees that tokens are permanently bound to documents through cryptographic linkage to an integraHash in the document registry, that document properties dictate token behavior including transferability rules and ownership restrictions, and that token ownership provides verifiable proof of participation in or ownership of the underlying real-world contract. The system supports all major token standards including ERC-721 for unique ownership, ERC-1155 for multi-party scenarios, and ERC-20 for fractional ownership, with 11 specialized tokenizer implementations covering use cases from simple property deeds to complex royalty distribution agreements.
 
 ## How Tokenizers Work
 
