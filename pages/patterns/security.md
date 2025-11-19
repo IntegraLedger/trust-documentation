@@ -15,6 +15,10 @@ The Integra V7 smart contract system implements defense-in-depth security with m
 - **Graceful Degradation**: Safe failure modes instead of DOS
 - **Emergency Controls**: Time-limited multisig powers with progressive expiry
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/security-pattern.png" alt="Security Patterns" style="width: 90%; height: auto;" />
+</div>
+
 ## Pattern 1: Reentrancy Protection
 
 ### Description
