@@ -32,6 +32,10 @@ The Reserve-Claim pattern:
 5. Token MINTED to their new wallet
 ```
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/reserve-claim-pattern-1.png" alt="Reserve-Claim Pattern" style="width: 90%; height: auto;" />
+</div>
+
 **Result:** Blockchain adoption without requiring upfront crypto knowledge.
 
 ## How It Works
