@@ -1,0 +1,13 @@
+/* Override Nextra's max-width constraint to make content wider */
+._max-w-\[90rem\] {
+  max-width: none !important;
+}
+
+/* Ensure containers take full width */
+.nextra-container,
+main,
+article {
+  max-width: 95% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

@@ -2,6 +2,10 @@
 
 ## The Problem We Solve
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/problems-solve-1.png" alt="Problems We Solve" style="width: 90%; height: auto;" />
+</div>
+
 Real-world documents and assets exist in physical or digital form, but they lack several critical capabilities:
 
 ### 1. **Provable Ownership**
@@ -20,6 +24,10 @@ Traditional documents are static. They can't automatically execute actions, enfo
 Every organization has its own database, format, and process. Nothing talks to anything else. Integration is painful and expensive.
 
 ## Our Solution: Real World Contracts (RWC)
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/solution-1.png" alt="Our Solution" style="width: 90%; height: auto;" />
+</div>
 
 Integra smart contracts bridge the gap between the physical world and blockchain by providing:
 
@@ -49,6 +57,10 @@ We use proven ERC standards (ERC-721, ERC-1155) so tokens work everywhere - wall
 
 ## Who Benefits?
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/benefits-1.png" alt="Who Benefits" style="width: 90%; height: auto;" />
+</div>
+
 ### Real Estate
 - **Property Owners**: Prove ownership instantly, transfer without intermediaries
 - **Renters**: Automated rent payment, verifiable rental history
@@ -75,6 +87,10 @@ We use proven ERC standards (ERC-721, ERC-1155) so tokens work everywhere - wall
 - **Consumers**: Verify product authenticity
 
 ## Core Principles
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/core-principles-1.png" alt="Core Principles" style="width: 90%; height: auto;" />
+</div>
 
 ### 1. Privacy First
 Not everything belongs on a public blockchain. We provide:

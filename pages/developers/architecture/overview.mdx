@@ -352,16 +352,43 @@ When integrating with Integra:
 
 Use the Integra Chain Registry to get current contract addresses:
 
-```typescript
-// Via API
-const addresses = await fetch(
-  'https://integra-chain-registry-worker.dfisher-3f3.workers.dev/v1/chains/polygon/contracts'
-).then(r => r.json());
+import { Tabs } from 'nextra/components'
 
-// Or via SDK
-import { getContractAddresses } from '@integra/sdk';
-const addresses = await getContractAddresses('polygon');
-```
+<Tabs items={['curl', 'TypeScript', 'Python']}>
+  <Tabs.Tab>
+    ```bash
+    # Get contract addresses for a specific chain
+    curl https://integra-chain-registry-worker.dfisher-3f3.workers.dev/v1/chains/polygon/contracts
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```typescript
+    // Via API
+    const addresses = await fetch(
+      'https://integra-chain-registry-worker.dfisher-3f3.workers.dev/v1/chains/polygon/contracts'
+    ).then(r => r.json());
+
+    // Or via SDK
+    import { getContractAddresses } from '@integra/sdk';
+    const addresses = await getContractAddresses('polygon');
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```python
+    import requests
+
+    # Get contract addresses for a specific chain
+    response = requests.get(
+        'https://integra-chain-registry-worker.dfisher-3f3.workers.dev/v1/chains/polygon/contracts'
+    )
+    addresses = response.json()
+
+    # Or using the SDK (if available)
+    # from integra_sdk import get_contract_addresses
+    # addresses = get_contract_addresses('polygon')
+    ```
+  </Tabs.Tab>
+</Tabs>
 
 ## Next Steps
 

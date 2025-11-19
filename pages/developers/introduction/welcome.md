@@ -1,9 +1,7 @@
-# Welcome to Integra Smart Contracts
+# Introducing Real World Contracts
 
-<div className="rwc-hero" style="text-align: center;">
-  <h2 style="font-size: 1.5rem; margin-bottom: 1rem; opacity: 0.9;">Introducing</h2>
-  <div style="font-size: 35vh; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">RWC</div>
-  <h2 style="font-size: 3rem; margin-top: 1rem; opacity: 0.9;">Real World Contracts</h2>
+<div className="rwc-hero" style="text-align: center; display: flex; justify-content: center; align-items: center;">
+  <div style="font-size: 8.75vh; font-weight: 200; line-height: 1; letter-spacing: -0.02em; margin: 0;">RWC</div>
 </div>
 
 ## What is Integra?
@@ -15,6 +13,9 @@ Integra provides blockchain infrastructure for tokenizing real-world documents a
 Integra uses the **blockchain as a global state machine** to solve the impossible coordination problem: How do millions of parties with different software, security policies, and no trust coordinate contract execution?
 
 **The foundational challenge Integra solves:**
+
+
+
 ```
 Traditional approach: Requires shared systems
   → Cloud collaboration (violates privacy policies)
@@ -28,7 +29,9 @@ Integra approach: Blockchain as coordination layer
   → Any software can read/write global state
   → Ad hoc coordination across unlimited parties
 ```
-
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/smart-contracts-1.png" alt="Integra Coordination Approach" style="width: 90%; height: auto;" />
+</div>
 **The breakthrough:** Privacy-preserving coordination at planetary scale - parties coordinate using blockchain identifiers without sharing documents, using any software, with no direct integrations.
 
 [Learn about Blockchain as Global State Machine →](./core-concepts/blockchain-as-global-state-machine)
@@ -49,6 +52,10 @@ Integra was born from the need to enable document automation when privacy/securi
 Each party keeps documents in their secure environment, coordinates using blockchain, preserves privacy.
 
 [Learn about Privacy Architecture →](./privacy/architecture)
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/privacy-first.png" alt="Privacy-First Architecture" style="width: 80%; height: auto;" />
+</div>
 
 ### The Unique Pattern: Document-Token Binding
 
@@ -171,9 +178,17 @@ Integra separates **document control** from **economic interests** - a critical 
 **Philosophy:**
 Integra binds blockchain functionality to traditional contracts - it doesn't replace them. Tokens represent roles and interests in real-world agreements, not speculative assets for trading.
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/philosphy-1.png" alt="Integra Philosophy" style="width: 90%; height: auto;" />
+</div>
+
 [Learn about Document vs Token Ownership →](./core-concepts/document-vs-token-ownership)
 
 ## Why Smart Contracts Matter
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/Smart-Contracts-Matter-1.png" alt="Why Smart Contracts Matter" style="width: 90%; height: auto;" />
+</div>
 
 Smart contracts are self-executing programs on the blockchain that run exactly as written, without the possibility of downtime, censorship, fraud, or third-party interference. For real-world documents and assets, this means:
 
@@ -245,6 +260,10 @@ Dive into the technical architecture and contract details.
 
 ## Core Features
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/core-features-1.png" alt="Integra Core Features" style="width: 90%; height: auto;" />
+</div>
+
 ### Document Tokenization
 Convert real-world documents into blockchain tokens with verifiable ownership and transfer capabilities.
 
@@ -262,6 +281,10 @@ Battle-tested patterns, formal verification, and comprehensive security audits.
 
 ## Use Cases
 
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/use-cases-1.png" alt="Integra Use Cases" style="width: 90%; height: auto;" />
+</div>
+
 - **Real Estate** - Property deeds, titles, and rental agreements
 - **Legal Documents** - Contracts, wills, and legal agreements
 - **Credentials** - Certificates, licenses, and diplomas
@@ -270,6 +293,10 @@ Battle-tested patterns, formal verification, and comprehensive security audits.
 - **Healthcare** - Medical records and consent forms
 
 ## Philosophy
+
+<div style="display: flex; justify-content: center; margin: 2rem 0;">
+  <img src="/diagrams/philosphy-1.png" alt="Integra Philosophy" style="width: 90%; height: auto;" />
+</div>
 
 ### 永久 (Permanent)
 Our foundation contracts are immutable - deployed once and never upgraded. This provides long-term stability and trust.

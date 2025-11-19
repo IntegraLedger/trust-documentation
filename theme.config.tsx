@@ -61,6 +61,25 @@ const config: DocsThemeConfig = {
           background-color: rgba(0, 65, 177, 0.1);
           color: var(--integra-blue);
         }
+
+        /* Make content area wider - 90% of viewport */
+        .nextra-container {
+          max-width: 100% !important;
+        }
+
+        main {
+          max-width: 100% !important;
+        }
+
+        article {
+          max-width: 100% !important;
+          padding-left: 2rem !important;
+          padding-right: 2rem !important;
+        }
+
+        .nextra-content {
+          max-width: 100% !important;
+        }
       `}</style>
     </>
   ),
