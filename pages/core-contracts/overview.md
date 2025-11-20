@@ -14,16 +14,16 @@ The core contracts form three distinct pillars that work together to create a se
 
 The heart of the system - manages document identity and lifecycle.
 
-[IntegraDocumentRegistryV7 →](./document-registry/IntegraDocumentRegistryV7)
+[IntegraDocumentRegistry →](./document-registry/IntegraDocumentRegistry)
 
 ### Component Registry
 
 Unified registry for all infrastructure components (providers, verifiers, resolvers, tokenizers).
 
-[IntegraRegistryV7 →](./component-registry/IntegraRegistryV7)
+[IntegraRegistry →](./component-registry/IntegraRegistry)
 
 ### Capabilities
 
 Permission system defining what actions users can perform.
 
-[CapabilityNamespaceV7 →](./capabilities/CapabilityNamespaceV7)
+[CapabilityNamespace →](./capabilities/CapabilityNamespace)

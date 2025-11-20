@@ -1,8 +1,8 @@
-# IntegraResolverRegistryV7_Immutable
+# IntegraResolverRegistry_Immutable
 
 ## Overview
 
-The IntegraResolverRegistryV7_Immutable contract is an immutable registry for document resolver contracts with comprehensive code integrity verification. It enables service composition for documents while preventing malicious resolver upgrades through code hash validation.
+The IntegraResolverRegistry_Immutable contract is an immutable registry for document resolver contracts with comprehensive code integrity verification. It enables service composition for documents while preventing malicious resolver upgrades through code hash validation.
 
 **Status**: Immutable (deployed once per chain, never upgraded)
 **Version**: 7.0.0
@@ -61,7 +61,7 @@ function registerResolver(
 ```
 
 **Parameters**:
-- `resolverId`: Unique identifier (e.g., `keccak256("SimpleContactResolverV7")`)
+- `resolverId`: Unique identifier (e.g., `keccak256("SimpleContactResolver")`)
 - `resolver`: Contract address of resolver
 - `resolverType`: Type of resolver (see Resolver Types below)
 - `description`: Human-readable description
@@ -74,7 +74,7 @@ function registerResolver(
 
 **Example**:
 ```solidity
-bytes32 resolverId = keccak256("SimpleContactResolverV7");
+bytes32 resolverId = keccak256("SimpleContactResolver");
 
 resolverRegistry.registerResolver(
     resolverId,
@@ -326,7 +326,7 @@ Provides contact endpoints:
 - URL endpoints
 - Encrypted contact data
 
-**Example**: `SimpleContactResolverV7`
+**Example**: `SimpleContactResolver`
 
 ### Compliance
 Enforces regulatory requirements:
@@ -568,13 +568,13 @@ All state-changing functions require `GOVERNOR_ROLE`:
 ### Basic Integration
 
 ```solidity
-import "@integra/contracts/layer2/IntegraResolverRegistryV7_Immutable.sol";
+import "@integra/contracts/layer2/IntegraResolverRegistry_Immutable.sol";
 
 contract MyContract {
-    IntegraResolverRegistryV7_Immutable public resolverRegistry;
+    IntegraResolverRegistry_Immutable public resolverRegistry;
 
     constructor(address _resolverRegistry) {
-        resolverRegistry = IntegraResolverRegistryV7_Immutable(_resolverRegistry);
+        resolverRegistry = IntegraResolverRegistry_Immutable(_resolverRegistry);
     }
 
     function useResolver(bytes32 resolverId, bytes32 integraHash) external {
@@ -720,7 +720,7 @@ async function getCommunicationResolvers() {
 
 2. **Naming Conventions**
    - Use descriptive resolver IDs
-   - Include version in ID: `keccak256("SimpleContactResolverV7")`
+   - Include version in ID: `keccak256("SimpleContactResolver")`
    - Document resolver purpose clearly
 
 3. **Metadata Quality**
@@ -779,11 +779,11 @@ async function getCommunicationResolvers() {
 
 ```solidity
 contract ResolverRegistryTest is Test {
-    IntegraResolverRegistryV7_Immutable registry;
+    IntegraResolverRegistry_Immutable registry;
     address mockResolver;
 
     function setUp() public {
-        registry = new IntegraResolverRegistryV7_Immutable(governor);
+        registry = new IntegraResolverRegistry_Immutable(governor);
 
         // Deploy mock resolver
         mockResolver = address(new MockResolver());
@@ -874,14 +874,14 @@ constructor(address _governor)
 
 ```solidity
 // Deploy resolver registry
-IntegraResolverRegistryV7_Immutable resolverRegistry =
-    new IntegraResolverRegistryV7_Immutable(governorAddress);
+IntegraResolverRegistry_Immutable resolverRegistry =
+    new IntegraResolverRegistry_Immutable(governorAddress);
 
 // Verify on block explorer
 // ...
 
 // Register initial resolvers
-bytes32 contactResolverId = keccak256("SimpleContactResolverV7");
+bytes32 contactResolverId = keccak256("SimpleContactResolver");
 resolverRegistry.registerResolver(
     contactResolverId,
     contactResolverAddress,
@@ -900,7 +900,7 @@ resolverRegistry.registerResolver(
 
 ## Resources
 
-- [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/IntegraResolverRegistryV7_Immutable.sol)
+- [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/IntegraResolverRegistry_Immutable.sol)
 - [Document Registry Documentation](./document-registry)
 - [IDocumentResolver Interface](./interfaces/document-resolver)
 - [Resolver Development Guide](../guides/resolver-development)

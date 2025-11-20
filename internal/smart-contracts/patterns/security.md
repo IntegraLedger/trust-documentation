@@ -1,10 +1,10 @@
 # Security Patterns
 
-Comprehensive security patterns implemented across all Integra V7 smart contracts.
+Comprehensive security patterns implemented across all Integra smart contracts.
 
 ## Overview
 
-The Integra V7 smart contract system implements defense-in-depth security with multiple layers of protection:
+The Integra smart contract system implements defense-in-depth security with multiple layers of protection:
 
 - **Reentrancy Protection**: `nonReentrant` modifier on all state-changing functions
 - **Access Control**: Role-based, attestation-based, and document-level authorization
@@ -27,7 +27,7 @@ All state-changing functions use OpenZeppelin's `ReentrancyGuard` to prevent ree
 // All contracts inherit ReentrancyGuard
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-abstract contract AttestationAccessControlV7 is
+abstract contract AttestationAccessControl is
     UUPSUpgradeable,
     AccessControlUpgradeable,
     ReentrancyGuardUpgradeable,  // ✅ Reentrancy protection
@@ -60,12 +60,12 @@ abstract contract AttestationAccessControlV7 is
 
 ### Contracts Using Pattern
 
-- `AttestationAccessControlV7` (Layer 0) - All verification functions
-- `IntegraDocumentRegistryV7` (Layer 2) - Registration, transfers, executor authorization
-- `BaseTokenizerV7` (Layer 3) - Token reserve, claim, cancel operations
-- `IntegraMessageV7` (Layer 4) - Message sending
-- `IntegraSignalV7` (Layer 4) - Payment request operations
-- `IntegraExecutorV7` (Layer 6) - Meta-transaction execution
+- `AttestationAccessControl` (Layer 0) - All verification functions
+- `IntegraDocumentRegistry` (Layer 2) - Registration, transfers, executor authorization
+- `BaseTokenizer` (Layer 3) - Token reserve, claim, cancel operations
+- `IntegraMessage` (Layer 4) - Message sending
+- `IntegraSignal` (Layer 4) - Payment request operations
+- `IntegraExecutor` (Layer 6) - Meta-transaction execution
 
 ### Testing Strategy
 
@@ -125,8 +125,8 @@ function _issueCredentialsToAllParties(bytes32 integraHash) internal {
 ### Critical Locations
 
 1. **Trust Credential Issuance** (`TrustGraphIntegration.sol:182-198`)
-2. **Resolver Calls** (`IntegraDocumentRegistryV7.sol:1004-1071`)
-3. **Fee Collection** (`IntegraDocumentRegistryV7.sol`)
+2. **Resolver Calls** (`IntegraDocumentRegistry.sol:1004-1071`)
+3. **Fee Collection** (`IntegraDocumentRegistry.sol`)
 
 ## Pattern 3: Access Control Layers
 
@@ -154,7 +154,7 @@ modifier requiresCapability(
     _;
 }
 
-// 13-Step Verification (EASAttestationProviderV7.sol:279-402)
+// 13-Step Verification (EASAttestationProvider.sol:279-402)
 function verifyCapabilities(...) external view returns (bool, uint256) {
     // 1. ✅ Fetch attestation from EAS
     // 2. ✅ Verify attestation exists
@@ -175,7 +175,7 @@ function verifyCapabilities(...) external view returns (bool, uint256) {
 ### Layer 2: Document Ownership
 
 ```solidity
-// IntegraDocumentRegistryV7.sol - Three access paths
+// IntegraDocumentRegistry.sol - Three access paths
 function getDocumentOwner(bytes32 integraHash) public view returns (address) {
     DocumentRecord storage doc = documents[integraHash];
     if (!doc.exists) revert DocumentNotRegistered(integraHash);
@@ -202,7 +202,7 @@ function transferDocumentOwnership(
 ### Layer 3: Per-Document Executor Authorization
 
 ```solidity
-// BaseTokenizerV7.sol - Zero-trust executor model
+// BaseTokenizer.sol - Zero-trust executor model
 modifier requireOwnerOrExecutor(bytes32 integraHash) {
     // VALIDATION: Ensure document uses THIS tokenizer
     address documentTokenizer = documentRegistry.getTokenizer(integraHash);
@@ -270,7 +270,7 @@ Emergency circuit breaker pattern using OpenZeppelin's `Pausable`. All state-cha
 ```solidity
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
-abstract contract AttestationAccessControlV7 is
+abstract contract AttestationAccessControl is
     UUPSUpgradeable,
     AccessControlUpgradeable,
     ReentrancyGuardUpgradeable,
@@ -307,11 +307,11 @@ abstract contract AttestationAccessControlV7 is
 ### Contracts with Pausability
 
 All contracts support pausability:
-- Layer 0: `AttestationAccessControlV7`, `EASAttestationProviderV7`
-- Layer 2: `IntegraDocumentRegistryV7_Immutable`
-- Layer 3: All tokenizers (via `BaseTokenizerV7`)
-- Layer 4: `IntegraMessageV7`, `IntegraSignalV7`
-- Layer 6: `IntegraExecutorV7`
+- Layer 0: `AttestationAccessControl`, `EASAttestationProvider`
+- Layer 2: `IntegraDocumentRegistry_Immutable`
+- Layer 3: All tokenizers (via `BaseTokenizer`)
+- Layer 4: `IntegraMessage`, `IntegraSignal`
+- Layer 6: `IntegraExecutor`
 
 ## Pattern 5: Code Hash Verification
 
@@ -322,7 +322,7 @@ Registry pattern that captures and validates contract code hashes, preventing ma
 ### Implementation
 
 ```solidity
-// AttestationProviderRegistryV7_Immutable.sol
+// AttestationProviderRegistry_Immutable.sol
 function registerProvider(
     bytes32 providerId,
     address provider,
@@ -378,9 +378,9 @@ function getProvider(bytes32 providerId) external view returns (address) {
 
 ### Registries Using Pattern
 
-1. `AttestationProviderRegistryV7_Immutable` - Attestation system providers
-2. `IntegraVerifierRegistryV7_Immutable` - ZK proof verifiers
-3. `IntegraResolverRegistryV7_Immutable` - Document resolvers
+1. `AttestationProviderRegistry_Immutable` - Attestation system providers
+2. `IntegraVerifierRegistry_Immutable` - ZK proof verifiers
+3. `IntegraResolverRegistry_Immutable` - Document resolvers
 
 ### Testing Strategy
 
@@ -409,7 +409,7 @@ Attestation-based access control includes recipient validation to prevent front-
 ### Implementation
 
 ```solidity
-// EASAttestationProviderV7.sol - Step 6 of 13-step verification
+// EASAttestationProvider.sol - Step 6 of 13-step verification
 function verifyCapabilities(
     bytes calldata proof,
     address recipient,
@@ -506,7 +506,7 @@ Time-limited emergency powers with progressive expiry, allowing rapid response w
 ### Implementation
 
 ```solidity
-// IntegraDocumentRegistryV7_Immutable.sol
+// IntegraDocumentRegistry_Immutable.sol
 address public immutable emergencyAddress;  // IMMUTABLE
 uint256 public immutable emergencyExpiry;   // Set at deployment
 

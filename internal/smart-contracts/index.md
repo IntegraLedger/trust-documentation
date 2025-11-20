@@ -29,22 +29,22 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 ### Tier 1: The Immutable Quad
 Permanent foundation contracts deployed once per chain:
 
-- **[CapabilityNamespaceV7_Immutable](/smart-contracts/layer0/CapabilityNamespaceV7_Immutable)** - 256-bit capability bit definitions
-- **[AttestationProviderRegistryV7_Immutable](/smart-contracts/layer0/AttestationProviderRegistryV7_Immutable)** - Provider registry with code hash verification
-- **[IntegraVerifierRegistryV7_Immutable](/smart-contracts/layer0/IntegraVerifierRegistryV7_Immutable)** - ZK proof verifier registry
-- **[IntegraResolverRegistryV7_Immutable](/smart-contracts/layer2/resolver-registry)** - Document resolver registry
+- **[CapabilityNamespace_Immutable](/smart-contracts/layer0/CapabilityNamespace_Immutable)** - 256-bit capability bit definitions
+- **[AttestationProviderRegistry_Immutable](/smart-contracts/layer0/AttestationProviderRegistry_Immutable)** - Provider registry with code hash verification
+- **[IntegraVerifierRegistry_Immutable](/smart-contracts/layer0/IntegraVerifierRegistry_Immutable)** - ZK proof verifier registry
+- **[IntegraResolverRegistry_Immutable](/smart-contracts/layer2/resolver-registry)** - Document resolver registry
 
 ### Tier 2: Ossifiable Foundation
 Contracts with progressive governance evolution:
 
-- **[AttestationAccessControlV7](/smart-contracts/layer0/AttestationAccessControlV7)** - Provider-agnostic access control (UUPS upgradeable → Ossified)
-- **[IntegraDocumentRegistryV7_Immutable](/smart-contracts/layer2/document-registry)** - Pure document identity registry (immutable deployment)
+- **[AttestationAccessControl](/smart-contracts/layer0/AttestationAccessControl)** - Provider-agnostic access control (UUPS upgradeable → Ossified)
+- **[IntegraDocumentRegistry_Immutable](/smart-contracts/layer2/document-registry)** - Pure document identity registry (immutable deployment)
 
 ### Tier 3: Application Layer
 Continuously upgradeable service contracts:
 
-- **[EASAttestationProviderV7](/smart-contracts/layer0/EASAttestationProviderV7)** - EAS-based attestation provider
-- **[SimpleContactResolverV7](/smart-contracts/layer2/simple-contact-resolver)** - Encrypted URL contact provider
+- **[EASAttestationProvider](/smart-contracts/layer0/EASAttestationProvider)** - EAS-based attestation provider
+- **[SimpleContactResolver](/smart-contracts/layer2/simple-contact-resolver)** - Encrypted URL contact provider
 - **[Tokenizers](/smart-contracts/layer3/overview)** - Document tokenization implementations
 - **[Communication](/smart-contracts/layer4/overview)** - Messaging and signaling
 - **[Execution](/smart-contracts/layer6/overview)** - Gasless operations
@@ -99,8 +99,8 @@ Service composition via primary and additional resolver pattern with configurabl
 
 ```solidity
 // Import core contracts
-import "@integra/contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
-import "@integra/contracts/layer3/OwnershipTokenizerV7.sol";
+import "@integra/contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
+import "@integra/contracts/layer3/OwnershipTokenizer.sol";
 
 // Register document
 bytes32 integraHash = documentRegistry.registerDocument(
@@ -137,7 +137,7 @@ The protocol follows a phased deployment approach:
 
 ## Version
 
-**Current Version**: V7.0.0
+**Current Version**: 1.0.0
 **Solidity Version**: 0.8.28
 **License**: MIT
 

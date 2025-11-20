@@ -194,7 +194,7 @@ interface ITokenizerV6 {
 
 **V7**:
 ```solidity
-interface IDocumentTokenizerV7 {
+interface IDocumentTokenizer {
     function reserveToken(
         bytes32 integraHash,
         uint256 tokenId,
@@ -304,7 +304,7 @@ modifier requiresCapability(
 
 ### Deployment
 
-- [ ] Deploy V7 contracts (if self-hosting)
+- [ ] Deploy contracts (if self-hosting)
 - [ ] Update frontend contracts
 - [ ] Update backend services
 - [ ] Migrate user data
@@ -757,7 +757,7 @@ describe("V7 Migration: Complete Workflow", () => {
 
 If migration fails, follow these steps to rollback:
 
-#### Step 1: Pause V7 Contracts
+#### Step 1: Pause current version Contracts
 
 ```javascript
 const governor = new ethers.Wallet(GOVERNOR_PRIVATE_KEY, provider);
@@ -833,7 +833,7 @@ cast tx $FAILED_TX_HASH --trace
 
 ### Rollback Checklist
 
-- [ ] Pause V7 contracts
+- [ ] Pause current version contracts
 - [ ] Revert frontend to V6.2
 - [ ] Revert backend to V6.2
 - [ ] Restore data if needed
@@ -872,7 +872,7 @@ A: We have rollback procedures to revert to V6.2.
 ## Next Steps
 
 - [Integration Guide](./integration.md) - Learn V7 integration
-- [Deployment Guide](./deployment.md) - Deploy V7 contracts
+- [Deployment Guide](./deployment.md) - Deploy contracts
 - [Architecture Guide](./architecture.md) - Understand V7 design
 - [Testing Guide](./testing.md) - Test your migration
 - [Security Guide](./security.md) - Secure your integration

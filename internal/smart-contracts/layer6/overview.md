@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Layer 6 provides the execution infrastructure for the Integra V7 smart contract system. This layer enables gasless operations, meta-transaction relaying, and whitelisted contract execution, abstracting gas costs from end users while maintaining security through strict access controls.
+Layer 6 provides the execution infrastructure for the Integra smart contract system. This layer enables gasless operations, meta-transaction relaying, and whitelisted contract execution, abstracting gas costs from end users while maintaining security through strict access controls.
 
 ## Architecture Philosophy
 
@@ -16,7 +16,7 @@ Layer 6 follows a **gas abstraction** strategy:
 
 ## Layer Components
 
-### 1. IntegraExecutorV7 (Meta-Transaction Executor)
+### 1. IntegraExecutor (Meta-Transaction Executor)
 
 Execution layer for gasless/meta-transactions with whitelisted contract calls.
 
@@ -29,7 +29,7 @@ Execution layer for gasless/meta-transactions with whitelisted contract calls.
 - Role-based access control
 - Emergency pause mechanism
 
-[View Full Documentation →](./IntegraExecutorV7.md)
+[View Full Documentation →](./IntegraExecutor.md)
 
 ## Execution Patterns
 
@@ -85,14 +85,14 @@ User pays: $0 (backend pays gas)
 **3. Payment Marking**:
 ```
 User signs: markPaid(...)
-Backend relays to: IntegraSignalV7
+Backend relays to: IntegraSignal
 User pays: $0 (backend pays gas)
 ```
 
 **4. Message Registration**:
 ```
 User signs: registerMessage(...)
-Backend relays to: IntegraMessageV7
+Backend relays to: IntegraMessage
 User pays: $0 (backend pays gas)
 ```
 
@@ -103,13 +103,13 @@ User pays: $0 (backend pays gas)
 ```
 ┌─────────────────────────────────────────────────┐
 │  Layer 6: Execution                             │
-│  - IntegraExecutorV7 (meta-transactions)        │
+│  - IntegraExecutor (meta-transactions)        │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
 │  Layer 4: Communication                         │
-│  - IntegraMessageV7 (via executor)              │
-│  - IntegraSignalV7 (via executor)               │
+│  - IntegraMessage (via executor)              │
+│  - IntegraSignal (via executor)               │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
@@ -129,10 +129,10 @@ User pays: $0 (backend pays gas)
 Governor sets whitelists:
 
 Allowed Targets:
-- IntegraDocumentRegistryV7_Immutable
-- IntegraMessageV7
-- IntegraSignalV7
-- DocumentTokenizerV7 instances
+- IntegraDocumentRegistry_Immutable
+- IntegraMessage
+- IntegraSignal
+- DocumentTokenizer instances
 - Other approved contracts
 
 Allowed Selectors:
@@ -283,7 +283,7 @@ class IntegraRelayer {
     constructor(executorAddress, relayerSigner) {
         this.executor = new ethers.Contract(
             executorAddress,
-            IntegraExecutorV7ABI,
+            IntegraExecutorABI,
             relayerSigner
         );
     }
@@ -529,7 +529,7 @@ await executor.connect(governor).unpause();
 
 ### Deployment
 
-- [ ] Deploy IntegraExecutorV7 proxy
+- [ ] Deploy IntegraExecutor proxy
 - [ ] Initialize with governor address
 - [ ] Verify contract on block explorer
 - [ ] Grant EXECUTOR_ROLE to relayer addresses
@@ -549,7 +549,7 @@ await executor.connect(governor).unpause();
 
 ### UUPS Upgradeable
 
-IntegraExecutorV7 is UUPS upgradeable:
+IntegraExecutor is UUPS upgradeable:
 
 **Upgrade Process**:
 1. Deploy new implementation
@@ -568,24 +568,24 @@ IntegraExecutorV7 is UUPS upgradeable:
 
 ## Migration Guide
 
-### From V6 to V7
+### Migration from V6
 
 **Key Changes**:
 - V6: Basic executor
-- V7: Enhanced whitelist management, improved gas efficiency
+- Current: Enhanced whitelist management, improved gas efficiency
 
 **Migration Steps**:
-1. Deploy V7 executor
+1. Deploy executor
 2. Migrate whitelists
-3. Update backend to use V7
-4. Update frontend to use V7
+3. Update backend to use current version
+4. Update frontend to use current version
 5. Test end-to-end
 6. Deprecate V6 executor
 
 ## Resources
 
 ### Contract Documentation
-- [IntegraExecutorV7](./IntegraExecutorV7.md)
+- [IntegraExecutor](./IntegraExecutor.md)
 
 ### Related Layers
 - [Layer 2: Document Identity Layer](../layer2/overview.md)
@@ -599,7 +599,7 @@ IntegraExecutorV7 is UUPS upgradeable:
 
 ## Version
 
-**Current Version**: V7.0.0
+**Current Version**: 1.0.0
 **Solidity Version**: 0.8.28
 **License**: MIT
 

@@ -1,3 +1,3 @@
 export default {
-  TokenClaimResolverV7: 'TokenClaimResolverV7',
+  TokenClaimResolver: 'TokenClaimResolver',
 };

@@ -45,9 +45,9 @@ TrustGraphIntegration uses the mixin pattern instead of inheritance chain becaus
 ### Integration Pattern
 
 ```solidity
-contract MultiPartyTokenizerV7 is
+contract MultiPartyTokenizer is
     ERC1155Upgradeable,
-    BaseTokenizerV7,
+    BaseTokenizer,
     TrustGraphIntegration  // ← Add mixin
 {
     function claimToken(...) {
@@ -572,9 +572,9 @@ __TrustGraph_init(
 ### Enable Trust Graph
 
 ```solidity
-contract MultiPartyTokenizerV7 is
+contract MultiPartyTokenizer is
     ERC1155Upgradeable,
-    BaseTokenizerV7,
+    BaseTokenizer,
     TrustGraphIntegration
 {
     IEAS private eas;
@@ -741,8 +741,8 @@ if (!_isPartyTracked(integraHash, party)) {
 
 ## Related Contracts
 
-- [BaseTokenizerV7](./BaseTokenizerV7.md) - Often used together
-- [MultiPartyTokenizerV7](./MultiPartyTokenizerV7.md) - Example integration
+- [BaseTokenizer](./BaseTokenizer.md) - Often used together
+- [MultiPartyTokenizer](./MultiPartyTokenizer.md) - Example integration
 - [Layer 3 Overview](./overview.md) - Tokenization architecture
 - [EAS Documentation](https://docs.attest.sh/) - External attestation system
 

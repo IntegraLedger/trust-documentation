@@ -101,7 +101,7 @@ State: integraHash → DocumentRecord
 
 Global question answered:
   "What is the current state of document 0xABC...?"
-  → Owner: 0x123..., Tokenizer: OwnershipTokenizerV7, Registered: 1700000000
+  → Owner: 0x123..., Tokenizer: OwnershipTokenizer, Registered: 1700000000
 ```
 
 **2. Token State (Economic Layer)**

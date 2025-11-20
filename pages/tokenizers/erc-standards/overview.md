@@ -72,10 +72,10 @@ Property Deed Token #12345
 ```
 
 **Integra Contracts Using ERC-721**:
-- OwnershipTokenizerV7
-- SoulboundTokenizerV7 (non-transferable variant)
-- BadgeTokenizerV7
-- VaultTokenizerV7
+- OwnershipTokenizer
+- SoulboundTokenizer (non-transferable variant)
+- BadgeTokenizer
+- VaultTokenizer
 
 [Learn more about ERC-721 →](https://eips.ethereum.org/EIPS/eip-721)
 
@@ -131,12 +131,12 @@ Token Type #2: Unique Properties (non-fungible)
 ```
 
 **Integra Contracts Using ERC-1155**:
-- SemiFungibleTokenizerV7
-- SharesTokenizerV7
-- RentalTokenizerV7
-- RoyaltyTokenizerV7
-- MultiPartyTokenizerV7
-- SecurityTokenTokenizerV7
+- SemiFungibleTokenizer
+- SharesTokenizer
+- RentalTokenizer
+- RoyaltyTokenizer
+- MultiPartyTokenizer
+- SecurityTokenTokenizer
 
 [Learn more about ERC-1155 →](https://eips.ethereum.org/EIPS/eip-1155)
 
@@ -207,7 +207,7 @@ function royaltyInfo(uint256 tokenId, uint256 salePrice)
 ```
 
 **Integra Support**:
-- RoyaltyTokenizerV7 implements ERC-2981
+- RoyaltyTokenizer implements ERC-2981
 - Supports perpetual creator royalties
 - Marketplace-compatible
 
@@ -245,7 +245,7 @@ interface IERC5192 {
 ```
 
 **Integra Implementation**:
-- SoulboundTokenizerV7 uses ERC-5192
+- SoulboundTokenizer uses ERC-5192
 - Credentials that can't be transferred
 - Attestations tied to identity
 
@@ -303,7 +303,7 @@ New tools, wallets, and platforms will automatically work with Integra because t
 ### Example: Document Token
 
 ```solidity
-contract OwnershipTokenizerV7 is
+contract OwnershipTokenizer is
     ERC721Upgradeable,        // Core NFT functionality
     ERC721URIStorageUpgradeable,  // Metadata support
     IERC165,                  // Interface detection
@@ -385,26 +385,26 @@ contract OwnershipTokenizerV7 is
 
 | Contract | Standard | Use Case |
 |----------|----------|----------|
-| OwnershipTokenizerV7 | ERC-721 | Unique document ownership |
-| SoulboundTokenizerV7 | ERC-721 + ERC-5192 | Non-transferable credentials |
-| VaultTokenizerV7 | ERC-721 | Secure asset storage |
+| OwnershipTokenizer | ERC-721 | Unique document ownership |
+| SoulboundTokenizer | ERC-721 + ERC-5192 | Non-transferable credentials |
+| VaultTokenizer | ERC-721 | Secure asset storage |
 
 ### Fungible (ERC-20)
 
 | Contract | Standard | Use Case |
 |----------|----------|----------|
-| SharesTokenizerV7 | ERC-20 | Fractional ownership shares |
-| SecurityTokenTokenizerV7 | ERC-20 | Regulated securities with compliance |
+| SharesTokenizer | ERC-20 | Fractional ownership shares |
+| SecurityTokenTokenizer | ERC-20 | Regulated securities with compliance |
 
 ### Multi-Token (ERC-1155)
 
 | Contract | Standard | Use Case |
 |----------|----------|----------|
-| SemiFungibleTokenizerV7 | ERC-1155 | Mixed fungible/unique tokens |
-| RentalTokenizerV7 | ERC-1155 | Rental agreements |
-| RoyaltyTokenizerV7 | ERC-1155 + ERC-2981 | Revenue sharing |
-| MultiPartyTokenizerV7 | ERC-1155 | Multi-party agreements |
-| BadgeTokenizerV7 | ERC-1155 | Achievement badges |
+| SemiFungibleTokenizer | ERC-1155 | Mixed fungible/unique tokens |
+| RentalTokenizer | ERC-1155 | Rental agreements |
+| RoyaltyTokenizer | ERC-1155 + ERC-2981 | Revenue sharing |
+| MultiPartyTokenizer | ERC-1155 | Multi-party agreements |
+| BadgeTokenizer | ERC-1155 | Achievement badges |
 
 ## Benefits of Standard Compliance
 

@@ -1,8 +1,8 @@
-# IntegraDocumentRegistryV7_Immutable
+# IntegraDocumentRegistry_Immutable
 
 ## Overview
 
-The IntegraDocumentRegistryV7_Immutable contract is the core document identity registry for Integra V7. It is a non-upgradeable, immutable contract that maintains pure document identity records with resolver composition for service orchestration.
+The IntegraDocumentRegistry_Immutable contract is the core document identity registry for Integra V7. It is a non-upgradeable, immutable contract that maintains pure document identity records with resolver composition for service orchestration.
 
 **Status**: Immutable (deployed once per chain, never upgraded)
 **Version**: 7.0.0
@@ -725,8 +725,8 @@ Per-document executor authorization and whitelist.
 ### Registry References
 
 ```solidity
-IntegraVerifierRegistryV7_Immutable public immutable verifierRegistry;
-IntegraResolverRegistryV7_Immutable public immutable resolverRegistry;
+IntegraVerifierRegistry_Immutable public immutable verifierRegistry;
+IntegraResolverRegistry_Immutable public immutable resolverRegistry;
 ```
 
 Immutable references to dependency registries.
@@ -1126,13 +1126,13 @@ Multiple layers of access control:
 ### Basic Integration
 
 ```solidity
-import "@integra/contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
+import "@integra/contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
 
 contract MyIntegration {
-    IntegraDocumentRegistryV7_Immutable public documentRegistry;
+    IntegraDocumentRegistry_Immutable public documentRegistry;
 
     constructor(address _documentRegistry) {
-        documentRegistry = IntegraDocumentRegistryV7_Immutable(_documentRegistry);
+        documentRegistry = IntegraDocumentRegistry_Immutable(_documentRegistry);
     }
 
     function registerMyDocument(
@@ -1259,7 +1259,7 @@ documentRegistry.registerDocumentBatch{value: fee * 50}(
 
 ```solidity
 contract DocumentRegistryTest is Test {
-    IntegraDocumentRegistryV7_Immutable registry;
+    IntegraDocumentRegistry_Immutable registry;
 
     function testRegisterDocument() public {
         bytes32 hash = keccak256("document");
@@ -1317,11 +1317,11 @@ constructor(
 
 ```solidity
 // Deploy dependencies first
-IntegraVerifierRegistryV7_Immutable verifierRegistry = new IntegraVerifierRegistryV7_Immutable(governor);
-IntegraResolverRegistryV7_Immutable resolverRegistry = new IntegraResolverRegistryV7_Immutable(governor);
+IntegraVerifierRegistry_Immutable verifierRegistry = new IntegraVerifierRegistry_Immutable(governor);
+IntegraResolverRegistry_Immutable resolverRegistry = new IntegraResolverRegistry_Immutable(governor);
 
 // Deploy document registry
-IntegraDocumentRegistryV7_Immutable documentRegistry = new IntegraDocumentRegistryV7_Immutable(
+IntegraDocumentRegistry_Immutable documentRegistry = new IntegraDocumentRegistry_Immutable(
     governorAddress,
     address(verifierRegistry),
     address(resolverRegistry),
@@ -1342,7 +1342,7 @@ IntegraDocumentRegistryV7_Immutable documentRegistry = new IntegraDocumentRegist
 
 ## Resources
 
-- [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/IntegraDocumentRegistryV7_Immutable.sol)
+- [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/IntegraDocumentRegistry_Immutable.sol)
 - [Resolver Registry Documentation](./resolver-registry)
 - [Integration Guide](../guides/layer2-integration)
 - [Security Audit](../audits/layer2)

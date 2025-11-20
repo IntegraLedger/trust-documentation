@@ -2,7 +2,7 @@
 
 ## Overview
 
-Layer 3 provides tokenization strategies for different document types in the Integra V7 system. Each tokenizer implements the token lifecycle (reserve → claim) with attestation-based access control and optional trust graph integration.
+Layer 3 provides tokenization strategies for different document types in the Integra system. Each tokenizer implements the token lifecycle (reserve → claim) with attestation-based access control and optional trust graph integration.
 
 ### Purpose
 
@@ -47,9 +47,9 @@ claimToken(integraHash, tokenId, capabilityAttestationUID, processHash)
 
 ## Base Contracts
 
-### BaseTokenizerV7
+### BaseTokenizer
 Abstract base providing common tokenizer functionality:
-- Attestation-based access control (via AttestationAccessControlV7)
+- Attestation-based access control (via AttestationAccessControl)
 - Per-document executor authorization
 - Immutable document registry reference
 - Validation helpers
@@ -65,7 +65,7 @@ Abstract mixin for trust credential issuance:
 
 **Code Reduction**: Eliminates ~100 lines of duplication per tokenizer
 
-### IDocumentTokenizerV7
+### IDocumentTokenizer
 Standard interface implemented by all tokenizers:
 - Core functions: `reserveToken`, `reserveTokenAnonymous`, `claimToken`, `cancelReservation`
 - View functions: `getTokenInfo`, `getAllEncryptedLabels`, `getClaimStatus`
@@ -73,7 +73,7 @@ Standard interface implemented by all tokenizers:
 
 ## Tokenizer Implementations
 
-### 1. OwnershipTokenizerV7 (ERC-721)
+### 1. OwnershipTokenizer (ERC-721)
 **Single ownership NFTs**
 
 **Use Cases**: Real estate deeds, vehicle titles, copyright ownership, exclusive licenses
@@ -90,7 +90,7 @@ Claim   → Recipient claims NFT
 Result  → Single NFT minted to claimant
 ```
 
-### 2. MultiPartyTokenizerV7 (ERC-1155)
+### 2. MultiPartyTokenizer (ERC-1155)
 **Multi-stakeholder documents**
 
 **Use Cases**: Purchase agreements (buyer + seller), lease contracts (tenant + landlord + guarantor), partnership agreements
@@ -109,7 +109,7 @@ Result  → Multi-party document with role-based tokens
 Trust   → Credentials issued when complete
 ```
 
-### 3. MultiPartyTokenizerV7Lite (ERC-6909)
+### 3. MultiPartyTokenizerLite (ERC-6909)
 **Gas-optimized multi-party**
 
 **Use Cases**: High-volume multi-party documents, gas-sensitive applications
@@ -122,7 +122,7 @@ Trust   → Credentials issued when complete
 
 **Trade-offs**: Fewer features than full MultiPartyTokenizer
 
-### 4. SharesTokenizerV7 (ERC-20)
+### 4. SharesTokenizer (ERC-20)
 **Fractional ownership**
 
 **Use Cases**: Company shares, partnership interests, cooperative memberships, fractional real estate
@@ -139,7 +139,7 @@ Claim   → Shareholders claim their portions
 Result  → Fungible tokens distributed proportionally
 ```
 
-### 5. RoyaltyTokenizerV7 (ERC-1155)
+### 5. RoyaltyTokenizer (ERC-1155)
 **Revenue split agreements**
 
 **Use Cases**: Music royalties (artist 40%, producer 30%, label 30%), content revenue, IP licensing
@@ -156,7 +156,7 @@ Claim   → Rights holders claim their shares
 Result  → Revenue split tokens (4000 = 40%, etc.)
 ```
 
-### 6. RentalTokenizerV7 (ERC-1155)
+### 6. RentalTokenizer (ERC-1155)
 **Time-based access**
 
 **Use Cases**: Property rentals, equipment leases, subscription access, temporary licenses
@@ -173,7 +173,7 @@ Claim   → Tenant claims access token
 Result  → Time-limited access NFT
 ```
 
-### 7. BadgeTokenizerV7 (ERC-1155)
+### 7. BadgeTokenizer (ERC-1155)
 **Achievement badges**
 
 **Use Cases**: Course completion, skill credentials, access levels (bronze/silver/gold), event attendance
@@ -190,7 +190,7 @@ Claim   → Achiever claims badge
 Result  → Achievement NFT + trust credential
 ```
 
-### 8. SoulboundTokenizerV7 (ERC-721)
+### 8. SoulboundTokenizer (ERC-721)
 **Non-transferable credentials**
 
 **Use Cases**: Degrees, certifications, identity documents, verified memberships
@@ -207,7 +207,7 @@ Claim   → Recipient claims (permanently bound)
 Result  → Non-transferable NFT
 ```
 
-### 9. VaultTokenizerV7 (ERC-721)
+### 9. VaultTokenizer (ERC-721)
 **Custody/escrow agreements**
 
 **Use Cases**: Escrow agreements, custody documents, vault access, collateral agreements
@@ -224,7 +224,7 @@ Claim   → Custodian claims custody token
 Result  → Custody NFT
 ```
 
-### 10. SecurityTokenTokenizerV7 (ERC-20)
+### 10. SecurityTokenTokenizer (ERC-20)
 **Regulatory-compliant securities**
 
 **Use Cases**: Regulated stocks/bonds, compliant token offerings, accredited investor shares
@@ -241,7 +241,7 @@ Claim   → Accredited investors claim (with compliance attestations)
 Result  → Compliant security tokens
 ```
 
-### 11. SemiFungibleTokenizerV7 (ERC-1155)
+### 11. SemiFungibleTokenizer (ERC-1155)
 **Semi-fungible tokens**
 
 **Use Cases**: Event tickets (seat types with quantities), game items, limited editions
@@ -262,7 +262,7 @@ Result  → Semi-fungible tokens
 
 ### Access Control Hierarchy
 
-All tokenizers inherit from BaseTokenizerV7, which implements a zero-trust model:
+All tokenizers inherit from BaseTokenizer, which implements a zero-trust model:
 
 **Priority Order**:
 1. Document Owner (highest priority, always authorized)
@@ -339,17 +339,17 @@ Each tokenizer implements `_isDocumentComplete`:
 
 ### V7 Optimizations
 
-**BaseTokenizerV7**:
+**BaseTokenizer**:
 - Unchecked loop increments (safe, bounded iterations)
 - Single-condition validation checks (early exit)
 - Storage packing where possible
 
-**MultiPartyTokenizerV7 Bitmap**:
+**MultiPartyTokenizer Bitmap**:
 - O(1) completion check vs O(100) loop
 - 95% gas savings for document completion
 - Self-healing (idempotent bit operations)
 
-**MultiPartyTokenizerV7Lite**:
+**MultiPartyTokenizerLite**:
 - ERC-6909 instead of ERC-1155 (50% cheaper)
 - No holder tracking (saves storage)
 - Minimal callbacks
@@ -367,7 +367,7 @@ TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
 );
 
 // 2. Initialize
-OwnershipTokenizerV7(proxy).initialize(
+OwnershipTokenizer(proxy).initialize(
     "Integra Property Deeds",
     "IPROP",
     "ipfs://base-uri/",
@@ -533,17 +533,17 @@ soulboundTokenizer.claimToken(integraHash, tokenId, attestationUID, processHash)
 
 | Use Case | Tokenizer | Token Standard |
 |----------|-----------|----------------|
-| Single owner (deed, title) | OwnershipTokenizerV7 | ERC-721 |
-| Multi-party contract | MultiPartyTokenizerV7 | ERC-1155 |
-| Multi-party (gas-sensitive) | MultiPartyTokenizerV7Lite | ERC-6909 |
-| Fractional ownership | SharesTokenizerV7 | ERC-20 |
-| Revenue split | RoyaltyTokenizerV7 | ERC-1155 |
-| Time-based access | RentalTokenizerV7 | ERC-1155 |
-| Achievements | BadgeTokenizerV7 | ERC-1155 |
-| Credentials | SoulboundTokenizerV7 | ERC-721 (non-transferable) |
-| Custody/escrow | VaultTokenizerV7 | ERC-721 |
-| Securities | SecurityTokenTokenizerV7 | ERC-20 (compliance) |
-| Tickets/items | SemiFungibleTokenizerV7 | ERC-1155 |
+| Single owner (deed, title) | OwnershipTokenizer | ERC-721 |
+| Multi-party contract | MultiPartyTokenizer | ERC-1155 |
+| Multi-party (gas-sensitive) | MultiPartyTokenizerLite | ERC-6909 |
+| Fractional ownership | SharesTokenizer | ERC-20 |
+| Revenue split | RoyaltyTokenizer | ERC-1155 |
+| Time-based access | RentalTokenizer | ERC-1155 |
+| Achievements | BadgeTokenizer | ERC-1155 |
+| Credentials | SoulboundTokenizer | ERC-721 (non-transferable) |
+| Custody/escrow | VaultTokenizer | ERC-721 |
+| Securities | SecurityTokenTokenizer | ERC-20 (compliance) |
+| Tickets/items | SemiFungibleTokenizer | ERC-1155 |
 
 ### Security Considerations
 
@@ -649,10 +649,10 @@ event TrustCredentialsIssued(
 ## Layer Interactions
 
 ```
-Layer 0: AttestationAccessControlV7
-         ↓ (inherited by BaseTokenizerV7)
-Layer 2: IntegraDocumentRegistryV7
-         ↓ (referenced by BaseTokenizerV7)
+Layer 0: AttestationAccessControl
+         ↓ (inherited by BaseTokenizer)
+Layer 2: IntegraDocumentRegistry
+         ↓ (referenced by BaseTokenizer)
 Layer 3: Tokenizers
          ↓ (mint tokens)
 Result:  ERC-20/721/1155 Tokens
@@ -662,9 +662,9 @@ Trust:   EAS Credentials
 
 ## Further Reading
 
-- [BaseTokenizerV7](./BaseTokenizerV7.md) - Abstract base contract
+- [BaseTokenizer](./BaseTokenizer.md) - Abstract base contract
 - [TrustGraphIntegration](./TrustGraphIntegration.md) - Trust credential mixin
-- [IDocumentTokenizerV7](./IDocumentTokenizerV7.md) - Standard interface
+- [IDocumentTokenizer](./IDocumentTokenizer.md) - Standard interface
 - [Tokenizer Comparison](./tokenizer-comparison.md) - Feature matrix
 - [Layer 2 Overview](../layer2/overview.md) - Document registry
 - [Layer 0 Overview](../layer0/overview.md) - Access control foundation

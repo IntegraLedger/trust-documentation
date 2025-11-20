@@ -732,7 +732,7 @@ Add new capabilities without upgrading document registry:
 Need new feature? → Create new resolver → Register in component registry → Attach to documents
 
 NO changes to:
-  ✅ IntegraDocumentRegistryV7_Immutable
+  ✅ IntegraDocumentRegistry_Immutable
   ✅ Tokenizer contracts
   ✅ Existing documents
 ```
@@ -743,8 +743,8 @@ Complete example showing resolver power:
 
 ```solidity
 contract RealEstateManager {
-    IntegraDocumentRegistryV7_Immutable public documentRegistry;
-    IntegraRegistryV7_Immutable public componentRegistry;
+    IntegraDocumentRegistry_Immutable public documentRegistry;
+    IntegraRegistry_Immutable public componentRegistry;
 
     // Resolver IDs
     bytes32 constant CONTACT_RESOLVER = keccak256("ContactResolver");
@@ -825,7 +825,7 @@ This makes Integra's document registry a **programmable platform** where develop
 ## Learn More
 
 - [Document Registry](./document-registration/document-registry.md) - Core document management
-- [SimpleContactResolverV7](./document-registration/simple-contact-resolver.md) - Contact resolver example
-- [TokenClaimResolverV7](./document-registration/token-claim-resolver.md) - EAS resolver example
+- [SimpleContactResolver](./document-registration/simple-contact-resolver.md) - Contact resolver example
+- [TokenClaimResolver](./document-registration/token-claim-resolver.md) - EAS resolver example
 - [Extensibility Overview](./extensibility/overview.md) - System extensibility
 - [Document-Token Binding](./concepts/document-token-binding.md) - How documents and tokens work together

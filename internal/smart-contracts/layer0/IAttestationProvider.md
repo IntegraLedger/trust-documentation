@@ -11,7 +11,7 @@ IAttestationProvider is the standard interface for attestation providers in the 
 ### Purpose
 
 - Define standard interface for all attestation providers
-- Enable provider abstraction in AttestationAccessControlV7
+- Enable provider abstraction in AttestationAccessControl
 - Support multiple attestation methods without contract changes
 - Provide minimal, focused interface for capability verification
 - Allow extensibility through optional methods
@@ -20,7 +20,7 @@ IAttestationProvider is the standard interface for attestation providers in the 
 
 - Minimal interface (only essential methods required)
 - Provider-agnostic design (works with any attestation system)
-- Backward compatible with EASAttestationProviderV7
+- Backward compatible with EASAttestationProvider
 - Extensibility through supportsMethod() pattern
 - Clear separation between required and optional methods
 
@@ -45,16 +45,16 @@ The interface includes ONLY what's necessary for capability verification:
 **Provider Pattern**
 
 ```
-AttestationAccessControlV7 (Base Layer)
+AttestationAccessControl (Base Layer)
     ↓ Routes to provider
 IAttestationProvider (Interface)
     ↓ Implemented by
-EASAttestationProviderV7, VCProvider, ZKProvider, etc.
+EASAttestationProvider, VCProvider, ZKProvider, etc.
 ```
 
 ### Integration Points
 
-- **AttestationAccessControlV7**: Calls verifyCapabilities()
+- **AttestationAccessControl**: Calls verifyCapabilities()
 - **AttestationProviderRegistry**: Registers implementations
 - **Provider Implementations**: EAS, VC, ZK, DID, JWT providers
 
@@ -85,7 +85,7 @@ function verifyCapabilities(
 
 ### 2. Capability Bitmask
 
-Providers return capabilities as bitmask matching CapabilityNamespaceV7:
+Providers return capabilities as bitmask matching CapabilityNamespace:
 
 ```solidity
 uint256 capabilities = CORE_VIEW | CORE_CLAIM | CORE_TRANSFER;
@@ -496,7 +496,7 @@ providerRegistry.registerProvider(
 
 ```solidity
 contract ProviderManager {
-    AttestationProviderRegistryV7_Immutable public registry;
+    AttestationProviderRegistry_Immutable public registry;
 
     function getProviderDetails(bytes32 providerId)
         external
@@ -526,7 +526,7 @@ contract ProviderManager {
 
 ```solidity
 contract MultiProviderVerifier {
-    AttestationProviderRegistryV7_Immutable public registry;
+    AttestationProviderRegistry_Immutable public registry;
 
     function verifyWithAnyProvider(
         bytes32[] calldata providerIds,
@@ -664,7 +664,7 @@ contract CapabilityAggregator {
 ## References
 
 - [Layer 0 Overview](./overview.md)
-- [AttestationAccessControlV7](./AttestationAccessControlV7.md)
-- [EASAttestationProviderV7](./EASAttestationProviderV7.md)
-- [AttestationProviderRegistryV7_Immutable](./AttestationProviderRegistryV7_Immutable.md)
-- [CapabilityNamespaceV7_Immutable](./CapabilityNamespaceV7_Immutable.md)
+- [AttestationAccessControl](./AttestationAccessControl.md)
+- [EASAttestationProvider](./EASAttestationProvider.md)
+- [AttestationProviderRegistry_Immutable](./AttestationProviderRegistry_Immutable.md)
+- [CapabilityNamespace_Immutable](./CapabilityNamespace_Immutable.md)

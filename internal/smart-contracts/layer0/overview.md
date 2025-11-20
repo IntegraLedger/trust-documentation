@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Layer 0 provides the foundational infrastructure for the Integra V7 smart contract system. This layer establishes immutable capability definitions, provider registries, and attestation-based access control that all higher layers depend on.
+Layer 0 provides the foundational infrastructure for the Integra smart contract system. This layer establishes immutable capability definitions, provider registries, and attestation-based access control that all higher layers depend on.
 
 ## Architecture Philosophy
 
@@ -16,29 +16,29 @@ Layer 0 follows a **progressive ossification** strategy:
 
 ### 1. Immutable Contracts (Deploy Once, Never Upgrade)
 
-#### CapabilityNamespaceV7_Immutable
+#### CapabilityNamespace_Immutable
 - **Purpose**: Defines permanent capability bit positions (0-255)
 - **Why Immutable**: Capability meanings must never change across time or contracts
 - **Key Feature**: Organized 256-bit namespace with role templates
 
-#### AttestationProviderRegistryV7_Immutable
+#### AttestationProviderRegistry_Immutable
 - **Purpose**: Registry for attestation providers (EAS, VC, ZK, DIDs)
 - **Why Immutable**: Provider references must remain valid forever
 - **Key Feature**: Code hash validation prevents malicious provider upgrades
 
-#### IntegraVerifierRegistryV7_Immutable
+#### IntegraVerifierRegistry_Immutable
 - **Purpose**: Registry for ZK proof verifiers
 - **Why Immutable**: Verifier references must remain valid forever
 - **Key Feature**: Code hash validation for verifier integrity
 
 ### 2. Upgradeable Contracts (Ossify After Governance Transition)
 
-#### AttestationAccessControlV7
+#### AttestationAccessControl
 - **Purpose**: Abstract base for attestation-based access control
 - **Upgrade Path**: BOOTSTRAP → MULTISIG → DAO → OSSIFIED
 - **Key Feature**: Provider-agnostic verification with immutable registry references
 
-#### EASAttestationProviderV7
+#### EASAttestationProvider
 - **Purpose**: EAS implementation of IAttestationProvider
 - **Upgrade Path**: UUPS upgradeable during governance transition
 - **Key Feature**: 13-step verification with cross-chain replay prevention
@@ -57,17 +57,17 @@ Layer 0 follows a **progressive ossification** strategy:
 ```
 1. User calls function with attestation proof
                 ↓
-2. AttestationAccessControlV7 (routing layer)
+2. AttestationAccessControl (routing layer)
    - Gets provider ID (document-specific or default)
-   - Looks up provider in AttestationProviderRegistryV7_Immutable
+   - Looks up provider in AttestationProviderRegistry_Immutable
    - Provider registry validates code hash (security check)
                 ↓
 3. Provider Implementation (authorization layer)
-   - EASAttestationProviderV7 decodes proof
+   - EASAttestationProvider decodes proof
    - Runs 13-step verification process
    - Returns (verified, capabilities)
                 ↓
-4. CapabilityNamespaceV7_Immutable (capability check)
+4. CapabilityNamespace_Immutable (capability check)
    - hasCapability(granted, required)
    - Admin override if CORE_ADMIN set
                 ↓
@@ -79,12 +79,12 @@ Layer 0 follows a **progressive ossification** strategy:
 ```
 ┌─────────────────────────────────────────────────┐
 │  Layer 1+ (Documents, Tokens, etc.)             │
-│  - Inherits AttestationAccessControlV7         │
+│  - Inherits AttestationAccessControl         │
 │  - Uses requiresCapability modifier             │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
-│  AttestationAccessControlV7 (Routing)           │
+│  AttestationAccessControl (Routing)           │
 │  - Provider selection logic                     │
 │  - Capability verification orchestration        │
 └─────────────────────────────────────────────────┘
@@ -97,13 +97,13 @@ Layer 0 follows a **progressive ossification** strategy:
                     ↓
 ┌─────────────────────────────────────────────────┐
 │  IAttestationProvider Implementation (Auth)     │
-│  - EASAttestationProviderV7                     │
+│  - EASAttestationProvider                     │
 │  - VCAttestationProvider (future)               │
 │  - ZKAttestationProvider (future)               │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
-│  CapabilityNamespaceV7 (Definitions)            │
+│  CapabilityNamespace (Definitions)            │
 │  - Permanent capability bit positions           │
 │  - Role templates (VIEWER, PARTICIPANT, etc.)   │
 └─────────────────────────────────────────────────┘
@@ -119,7 +119,7 @@ Layer 0 follows a **progressive ossification** strategy:
    - Returns address(0) if code changed (graceful degradation)
 
 2. **Immutable References**
-   - AttestationAccessControlV7 stores immutable references to registries
+   - AttestationAccessControl stores immutable references to registries
    - Capability namespace never changes after deployment
    - Provider code hash validation always works
 
@@ -215,9 +215,9 @@ Layer 0 follows a **progressive ossification** strategy:
 
 ### For Contract Developers
 
-1. **Inherit AttestationAccessControlV7**
+1. **Inherit AttestationAccessControl**
    ```solidity
-   contract MyContract is AttestationAccessControlV7 {
+   contract MyContract is AttestationAccessControl {
        function initialize(
            address namespace,
            address providerRegistry,
@@ -334,11 +334,11 @@ Layer 0 follows a **progressive ossification** strategy:
 
 ## Migration Guide
 
-### From V6 to V7
+### Migration from V6
 
 **Key Changes**:
 - V6: Hard-coded EAS verification
-- V7: Provider abstraction with multiple attestation systems
+- Current: Provider abstraction with multiple attestation systems
 
 **Migration Steps**:
 1. Deploy immutable contracts (namespace, registries)
@@ -356,11 +356,11 @@ Layer 0 follows a **progressive ossification** strategy:
 ## References
 
 ### Related Documentation
-- [CapabilityNamespaceV7_Immutable](./CapabilityNamespaceV7_Immutable.md)
-- [AttestationProviderRegistryV7_Immutable](./AttestationProviderRegistryV7_Immutable.md)
-- [IntegraVerifierRegistryV7_Immutable](./IntegraVerifierRegistryV7_Immutable.md)
-- [AttestationAccessControlV7](./AttestationAccessControlV7.md)
-- [EASAttestationProviderV7](./EASAttestationProviderV7.md)
+- [CapabilityNamespace_Immutable](./CapabilityNamespace_Immutable.md)
+- [AttestationProviderRegistry_Immutable](./AttestationProviderRegistry_Immutable.md)
+- [IntegraVerifierRegistry_Immutable](./IntegraVerifierRegistry_Immutable.md)
+- [AttestationAccessControl](./AttestationAccessControl.md)
+- [EASAttestationProvider](./EASAttestationProvider.md)
 - [IAttestationProvider](./IAttestationProvider.md)
 
 ### External Resources

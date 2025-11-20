@@ -1,4 +1,4 @@
 export default {
-  SharesTokenizerV7: 'SharesTokenizerV7 (ERC-20 + ERC-4626)',
-  SecurityTokenTokenizerV7: 'SecurityTokenTokenizerV7 (ERC-20 + ERC-1462/3643)',
+  SharesTokenizer: 'SharesTokenizer (ERC-20 + ERC-4626)',
+  SecurityTokenTokenizer: 'SecurityTokenTokenizer (ERC-20 + ERC-1462/3643)',
 };

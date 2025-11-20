@@ -27,7 +27,7 @@ Services are accessed via resolver contracts, enabling:
 
 ## Core Contracts
 
-### IntegraDocumentRegistryV7_Immutable
+### IntegraDocumentRegistry_Immutable
 
 The heart of Layer 2 - an immutable, pure document identity registry.
 
@@ -43,7 +43,7 @@ The heart of Layer 2 - an immutable, pure document identity registry.
 
 [View Full Documentation →](./document-registry)
 
-### IntegraResolverRegistryV7_Immutable
+### IntegraResolverRegistry_Immutable
 
 Immutable registry for document resolver contracts with code integrity verification.
 
@@ -57,7 +57,7 @@ Immutable registry for document resolver contracts with code integrity verificat
 
 [View Full Documentation →](./resolver-registry)
 
-### SimpleContactResolverV7
+### SimpleContactResolver
 
 A communication resolver providing encrypted contact endpoint storage.
 
@@ -418,7 +418,7 @@ string memory encrypted = encryptAES256GCM(
 );
 
 // Set in contact resolver
-SimpleContactResolverV7(contactResolver).setContactURL(
+SimpleContactResolver(contactResolver).setContactURL(
     integraHash,
     encrypted
 );
@@ -559,8 +559,8 @@ The Document Registry undergoes formal verification to prove:
 
 ### Pre-Deployment
 
-- [ ] Deploy IntegraVerifierRegistryV7_Immutable (Layer 0 dependency)
-- [ ] Deploy IntegraResolverRegistryV7_Immutable
+- [ ] Deploy IntegraVerifierRegistry_Immutable (Layer 0 dependency)
+- [ ] Deploy IntegraResolverRegistry_Immutable
 - [ ] Prepare emergency multisig address (Gnosis Safe recommended)
 - [ ] Prepare fee recipient multisig address (immutable)
 - [ ] Determine initial registration fee (recommend: 0)
@@ -568,14 +568,14 @@ The Document Registry undergoes formal verification to prove:
 
 ### Deployment
 
-- [ ] Deploy IntegraDocumentRegistryV7_Immutable with validated parameters
+- [ ] Deploy IntegraDocumentRegistry_Immutable with validated parameters
 - [ ] Verify contract on block explorer
-- [ ] Deploy SimpleContactResolverV7 proxy
-- [ ] Initialize SimpleContactResolverV7 with registry address
+- [ ] Deploy SimpleContactResolver proxy
+- [ ] Initialize SimpleContactResolver with registry address
 
 ### Post-Deployment
 
-- [ ] Register SimpleContactResolverV7 in ResolverRegistry
+- [ ] Register SimpleContactResolver in ResolverRegistry
 - [ ] Approve initial tokenizers via governance
 - [ ] Approve Integra backend executor (if applicable)
 - [ ] Set resolver gas limit overrides (if needed)
@@ -586,8 +586,8 @@ The Document Registry undergoes formal verification to prove:
 
 ### Immutable Contracts (Never Upgraded)
 
-- IntegraDocumentRegistryV7_Immutable
-- IntegraResolverRegistryV7_Immutable
+- IntegraDocumentRegistry_Immutable
+- IntegraResolverRegistry_Immutable
 
 These contracts are deployed once and never upgraded. Bugs are handled via:
 - Emergency pause
@@ -596,7 +596,7 @@ These contracts are deployed once and never upgraded. Bugs are handled via:
 
 ### Upgradeable Contracts (UUPS)
 
-- SimpleContactResolverV7
+- SimpleContactResolver
 
 Upgrade process:
 1. Deploy new implementation
@@ -609,9 +609,9 @@ Upgrade process:
 
 ## Resources
 
-- [IntegraDocumentRegistryV7_Immutable Documentation](./document-registry)
-- [IntegraResolverRegistryV7_Immutable Documentation](./resolver-registry)
-- [SimpleContactResolverV7 Documentation](./simple-contact-resolver)
+- [IntegraDocumentRegistry_Immutable Documentation](./document-registry)
+- [IntegraResolverRegistry_Immutable Documentation](./resolver-registry)
+- [SimpleContactResolver Documentation](./simple-contact-resolver)
 - [IDocumentResolver Interface](./interfaces/document-resolver)
 - [IIntegraExecutor Interface](./interfaces/integra-executor)
 - [Layer 2 Integration Guide](../guides/layer2-integration)
@@ -619,7 +619,7 @@ Upgrade process:
 
 ## Version
 
-**Current Version**: V7.0.0
+**Current Version**: 1.0.0
 **Solidity Version**: 0.8.28
 **License**: MIT
 

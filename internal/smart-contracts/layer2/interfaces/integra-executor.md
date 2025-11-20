@@ -539,7 +539,7 @@ documentRegistry.authorizeDocumentExecutor(integraHash, executorAddress);
 
 ```solidity
 contract MyExecutor is IIntegraExecutor {
-    IntegraDocumentRegistryV7_Immutable public documentRegistry;
+    IntegraDocumentRegistry_Immutable public documentRegistry;
 
     function performTransfer(
         bytes32 integraHash,
@@ -726,7 +726,7 @@ For high-volume executors (e.g., Integra backend), request governance whitelisti
 ```solidity
 contract ExecutorTest is Test {
     MyExecutor executor;
-    IntegraDocumentRegistryV7_Immutable registry;
+    IntegraDocumentRegistry_Immutable registry;
 
     function testExecutorInfo() public {
         (string memory name, string memory version, string memory description) =

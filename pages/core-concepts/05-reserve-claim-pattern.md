@@ -161,7 +161,7 @@ ownershipTokenizer.reserveTokenAnonymous(
 ```
 Document: deedHash
   ├─ Owner: Alice (0xAAA...)
-  ├─ Tokenizer: OwnershipTokenizerV7
+  ├─ Tokenizer: OwnershipTokenizer
   └─ Reserved Token #1:
        ├─ For: address(0) (unknown)
        ├─ Label: 0x encrypted... (buyer can decrypt)
@@ -503,7 +503,7 @@ for (let i = 0; i < partners.length; i++) {
 
 ### Why Attestations?
 
-The reserve-claim pattern uses **TokenClaimResolverV7** to ensure security:
+The reserve-claim pattern uses **TokenClaimResolver** to ensure security:
 
 **Without attestations (insecure):**
 ```solidity
@@ -894,7 +894,7 @@ This makes Integra **the bridge** between traditional business processes and blo
 
 ## Learn More
 
-- [TokenClaimResolverV7](/authorization/token-claims/TokenClaimResolverV7) - Attestation validation
+- [TokenClaimResolver](/authorization/token-claims/TokenClaimResolver) - Attestation validation
 - [Document-Token Binding](/core-concepts/03-document-token-binding) - Document identity architecture
 - [ProcessHash Integration](/core-concepts/06-process-hash-integration) - Workflow correlation
 - [Trust Graph](/core-concepts/07-trust-graph) - Reputation building

@@ -4,7 +4,7 @@ Immutable registry architecture with code hash verification for secure infrastru
 
 ## Overview
 
-The Integra V7 system uses immutable registry contracts to manage critical infrastructure:
+The Integra system uses immutable registry contracts to manage critical infrastructure:
 
 - **Code Hash Verification**: Captures and validates contract code at registration
 - **Active/Inactive Status**: Lifecycle management without removal
@@ -14,9 +14,9 @@ The Integra V7 system uses immutable registry contracts to manage critical infra
 - **Immutable Pattern**: Registries cannot be upgraded (ultimate trust)
 
 **Three Immutable Registries**:
-1. `AttestationProviderRegistryV7_Immutable` - Attestation system providers (EAS, VCs, ZK, DIDs)
-2. `IntegraVerifierRegistryV7_Immutable` - ZK proof verifiers
-3. `IntegraResolverRegistryV7_Immutable` - Document resolvers
+1. `AttestationProviderRegistry_Immutable` - Attestation system providers (EAS, VCs, ZK, DIDs)
+2. `IntegraVerifierRegistry_Immutable` - ZK proof verifiers
+3. `IntegraResolverRegistry_Immutable` - Document resolvers
 
 ## Why Immutable Registries?
 
@@ -245,7 +245,7 @@ function getProvider(bytes32 providerId) external view returns (address) {
 #### Pattern 1: Critical Operation (Must Revert)
 
 ```solidity
-// AttestationAccessControlV7.sol - Provider is required
+// AttestationAccessControl.sol - Provider is required
 function _verifyCapability(...) internal {
     address provider = PROVIDER_REGISTRY.getProvider(providerId);
 
@@ -263,7 +263,7 @@ function _verifyCapability(...) internal {
 #### Pattern 2: Optional Operation (Emit Event, Continue)
 
 ```solidity
-// IntegraDocumentRegistryV7.sol - Primary resolver is best-effort
+// IntegraDocumentRegistry.sol - Primary resolver is best-effort
 function _callPrimaryResolver(bytes32 integraHash, bytes4 selector, bytes memory data)
     internal
     returns (bool success)

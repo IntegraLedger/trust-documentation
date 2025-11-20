@@ -32,7 +32,7 @@ Document Registry (Immutable Identity Layer)
   ├─ integraHash: 0xabc... → Document Record
   │    ├─ documentHash (content proof)
   │    ├─ owner
-  │    ├─ tokenizer → OwnershipTokenizerV7
+  │    ├─ tokenizer → OwnershipTokenizer
   │    └─ resolvers (contact, lifecycle, etc.)
   │
   └─ Tokenizer Contract (ERC Standard Layer)
@@ -50,7 +50,7 @@ Document Registry (Immutable Identity Layer)
 
 ### Step 1: Document Registration
 
-First, a document is registered in the **IntegraDocumentRegistryV7_Immutable**:
+First, a document is registered in the **IntegraDocumentRegistry_Immutable**:
 
 ```solidity
 bytes32 integraHash = documentRegistry.registerDocument(
@@ -125,7 +125,7 @@ address tokenizerAddr = documentRegistry.getTokenizer(integraHash);
 
 **Layer 1: Document Identity (Immutable)**
 ```
-IntegraDocumentRegistryV7_Immutable
+IntegraDocumentRegistry_Immutable
   - Pure identity storage
   - Document hash (content proof)
   - Owner address
@@ -136,7 +136,7 @@ IntegraDocumentRegistryV7_Immutable
 
 **Layer 2: Token Standard (ERC-Compliant)**
 ```
-Tokenizer Contract (e.g., OwnershipTokenizerV7)
+Tokenizer Contract (e.g., OwnershipTokenizer)
   - Implements ERC-721/1155/20
   - Creates tokens bound to integraHash
   - All tokens reference back to document registry
@@ -148,7 +148,7 @@ Tokenizer Contract (e.g., OwnershipTokenizerV7)
 Each tokenizer stores the `integraHash` for every token:
 
 ```solidity
-// Inside OwnershipTokenizerV7 (ERC-721)
+// Inside OwnershipTokenizer (ERC-721)
 struct TokenData {
     bytes32 integraHash;  // ← Document binding
     address owner;
@@ -524,7 +524,7 @@ This is what makes Integra's tokens **Real World Contracts** - they're not just 
 
 ## Learn More
 
-- [Document Registry Documentation](/core-contracts/document-registry/IntegraDocumentRegistryV7)
+- [Document Registry Documentation](/core-contracts/document-registry/IntegraDocumentRegistry)
 - [Tokenizer Overview](/tokenizers/overview)
 - [Architecture Guide](/architecture/overview)
 - [Purpose: Why Integra Exists](/introduction/why-real-world-contracts)

@@ -286,9 +286,9 @@ Full Disclosure:
 Tokenizers that support trust graph inherit `TrustGraphIntegration`:
 
 ```solidity
-contract MultiPartyTokenizerV7 is
+contract MultiPartyTokenizer is
     ERC1155Upgradeable,
-    BaseTokenizerV7,
+    BaseTokenizer,
     TrustGraphIntegration  // ← Adds trust graph
 {
     function claimToken(
@@ -337,7 +337,7 @@ Where credentialHash = keccak256(
 
 Different tokenizers define "complete" differently:
 
-**OwnershipTokenizerV7** (ERC-721):
+**OwnershipTokenizer** (ERC-721):
 ```solidity
 function _isDocumentComplete(bytes32 integraHash)
     internal view override returns (bool)
@@ -347,7 +347,7 @@ function _isDocumentComplete(bytes32 integraHash)
 }
 ```
 
-**MultiPartyTokenizerV7** (ERC-1155):
+**MultiPartyTokenizer** (ERC-1155):
 ```solidity
 function _isDocumentComplete(bytes32 integraHash)
     internal view override returns (bool)
@@ -356,7 +356,7 @@ function _isDocumentComplete(bytes32 integraHash)
 }
 ```
 
-**RentalTokenizerV7** (ERC-1155):
+**RentalTokenizer** (ERC-1155):
 ```solidity
 function _isDocumentComplete(bytes32 integraHash)
     internal view override returns (bool)
@@ -523,11 +523,11 @@ contract PropertyManager {
 ### Building Tokenizers with Trust Graph
 
 ```solidity
-import "./TrustGraphIntegrationV7.sol";
+import "./TrustGraphIntegration.sol";
 
 contract MyTokenizer is
     ERC1155Upgradeable,
-    BaseTokenizerV7,
+    BaseTokenizer,
     TrustGraphIntegration  // ← Enable trust graph
 {
     function initialize(

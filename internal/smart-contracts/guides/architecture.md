@@ -1,6 +1,6 @@
 # Integra V7 Architecture Deep Dive
 
-Complete architectural overview of Integra V7 smart contract system.
+Complete architectural overview of Integra smart contract system.
 
 ## Table of Contents
 
@@ -38,10 +38,10 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 **Purpose**: Permanent foundation that never changes
 
 **Contracts**:
-1. CapabilityNamespaceV7_Immutable
-2. AttestationProviderRegistryV7_Immutable
-3. IntegraVerifierRegistryV7_Immutable
-4. IntegraResolverRegistryV7_Immutable
+1. CapabilityNamespace_Immutable
+2. AttestationProviderRegistry_Immutable
+3. IntegraVerifierRegistry_Immutable
+4. IntegraResolverRegistry_Immutable
 
 **Characteristics**:
 - Deployed once per chain
@@ -57,8 +57,8 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 **Purpose**: Contracts that evolve with governance, then freeze
 
 **Contracts**:
-1. AttestationAccessControlV7 (UUPS upgradeable → Ossified)
-2. IntegraDocumentRegistryV7_Immutable (immutable but with time-limited emergency controls)
+1. AttestationAccessControl (UUPS upgradeable → Ossified)
+2. IntegraDocumentRegistry_Immutable (immutable but with time-limited emergency controls)
 
 **Characteristics**:
 - UUPS proxy pattern
@@ -74,12 +74,12 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 **Purpose**: Continuously upgradeable services
 
 **Contracts**:
-1. EASAttestationProviderV7 (attestation provider implementation)
-2. SimpleContactResolverV7 (communication resolver)
+1. EASAttestationProvider (attestation provider implementation)
+2. SimpleContactResolver (communication resolver)
 3. 11 Tokenizer contracts (document tokenization)
-4. IntegraMessageV7 (messaging)
-5. IntegraSignalV7 (payment requests)
-6. IntegraExecutorV7 (gasless execution)
+4. IntegraMessage (messaging)
+5. IntegraSignal (payment requests)
+6. IntegraExecutor (gasless execution)
 
 **Characteristics**:
 - UUPS proxy pattern
@@ -97,42 +97,42 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Layer 6: Execution                       │
-│                      IntegraExecutorV7                          │
+│                      IntegraExecutor                          │
 │                   (Gasless operations relay)                    │
 └────────────────────────────────┬────────────────────────────────┘
                                  │
                                  ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Layer 4: Communication                      │
-│           IntegraMessageV7, IntegraSignalV7                     │
+│           IntegraMessage, IntegraSignal                     │
 │                  (Messaging & signaling)                        │
 └────────────────────────────────┬────────────────────────────────┘
                                  │
                                  ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Layer 3: Tokenization                       │
-│          OwnershipTokenizerV7, MultiPartyTokenizerV7            │
-│     SharesTokenizerV7, RoyaltyTokenizerV7, etc. (11 total)      │
+│          OwnershipTokenizer, MultiPartyTokenizer            │
+│     SharesTokenizer, RoyaltyTokenizer, etc. (11 total)      │
 │              (Document → Token transformation)                  │
 └────────────────────────────────┬────────────────────────────────┘
                                  │
                                  ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Layer 2: Document Layer                      │
-│         IntegraDocumentRegistryV7_Immutable                     │
-│         IntegraResolverRegistryV7_Immutable                     │
-│             SimpleContactResolverV7                             │
+│         IntegraDocumentRegistry_Immutable                     │
+│         IntegraResolverRegistry_Immutable                     │
+│             SimpleContactResolver                             │
 │            (Document identity & resolvers)                      │
 └────────────────────────────────┬────────────────────────────────┘
                                  │
                                  ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Layer 0: Foundation                         │
-│         CapabilityNamespaceV7_Immutable                         │
-│         AttestationProviderRegistryV7_Immutable                 │
-│         IntegraVerifierRegistryV7_Immutable                     │
-│         AttestationAccessControlV7                              │
-│         EASAttestationProviderV7                                │
+│         CapabilityNamespace_Immutable                         │
+│         AttestationProviderRegistry_Immutable                 │
+│         IntegraVerifierRegistry_Immutable                     │
+│         AttestationAccessControl                              │
+│         EASAttestationProvider                                │
 │     (Attestation & capability framework)                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -141,8 +141,8 @@ Ossifiable core with upgradeable service layer, enabling protocol evolution whil
 
 #### Layer 0 → All Layers
 All contracts inherit or reference Layer 0 for:
-- Capability definitions (CapabilityNamespaceV7)
-- Attestation verification (AttestationAccessControlV7)
+- Capability definitions (CapabilityNamespace)
+- Attestation verification (AttestationAccessControl)
 - Provider lookup (AttestationProviderRegistryV7)
 
 #### Layer 2 → Layer 3
@@ -175,7 +175,7 @@ Executor contracts coordinate with:
        │ 1. registerDocument(...)
        ↓
 ┌─────────────────────────────────────────┐
-│  IntegraDocumentRegistryV7_Immutable    │
+│  IntegraDocumentRegistry_Immutable    │
 │                                         │
 │  ┌────────────────────────────────┐    │
 │  │ 1. Validate inputs             │    │
@@ -215,7 +215,7 @@ Executor contracts coordinate with:
        │ 1. claimToken(integraHash, tokenId, attestationUID, processHash)
        ↓
 ┌────────────────────────────────────────────────────────┐
-│              OwnershipTokenizerV7                      │
+│              OwnershipTokenizer                      │
 │                                                        │
 │  ┌──────────────────────────────────────────────┐    │
 │  │ requireOwnerOrExecutor modifier              │    │
@@ -277,7 +277,7 @@ Executor contracts coordinate with:
                  │ 1. Get provider for document
                  ↓
 ┌────────────────────────────────────────────────┐
-│      AttestationAccessControlV7                │
+│      AttestationAccessControl                │
 │                                                │
 │  documentProvider[integraHash] set?            │
 │    ├─ Yes: Use document-specific provider      │
@@ -287,7 +287,7 @@ Executor contracts coordinate with:
                  │ 2. Lookup provider
                  ↓
 ┌────────────────────────────────────────────────┐
-│   AttestationProviderRegistryV7_Immutable      │
+│   AttestationProviderRegistry_Immutable      │
 │                                                │
 │  ┌──────────────────────────────────────┐     │
 │  │ getProvider(providerId)              │     │
@@ -301,7 +301,7 @@ Executor contracts coordinate with:
                   │ 3. Call provider
                   ↓
 ┌─────────────────────────────────────────────────┐
-│         EASAttestationProviderV7                │
+│         EASAttestationProvider                │
 │                                                 │
 │  verifyCapabilities(proof, recipient, ...)     │
 │                                                 │
@@ -339,7 +339,7 @@ Executor contracts coordinate with:
                    │ 4. Check capabilities
                    ↓
 ┌─────────────────────────────────────────────────┐
-│       CapabilityNamespaceV7_Immutable           │
+│       CapabilityNamespace_Immutable           │
 │                                                 │
 │  hasCapability(granted, required)               │
 │                                                 │
@@ -372,7 +372,7 @@ Executor contracts coordinate with:
                    │ registerDocument(..., primaryResolverId, ...)
                    ↓
 ┌──────────────────────────────────────────────────────────┐
-│          IntegraDocumentRegistryV7_Immutable             │
+│          IntegraDocumentRegistry_Immutable             │
 │                                                          │
 │  ┌────────────────────────────────────────────────┐     │
 │  │ _callPrimaryResolverHook(integraHash)          │     │
@@ -482,7 +482,7 @@ The security model implements multiple independent layers:
 
 **Mitigation**:
 1. Source chain ID embedded in attestation
-2. EASAttestationProviderV7 validates chain ID matches
+2. EASAttestationProvider validates chain ID matches
 3. Source EAS contract address validated
 4. Source document contract address validated
 
@@ -492,7 +492,7 @@ The security model implements multiple independent layers:
 
 **Mitigation**:
 1. Attestation cryptographically bound to recipient address
-2. EASAttestationProviderV7 verifies recipient matches msg.sender
+2. EASAttestationProvider verifies recipient matches msg.sender
 3. Named reservations provide double protection
 4. Even if attacker sees UID, claim will revert
 

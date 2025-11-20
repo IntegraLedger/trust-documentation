@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide helps you choose the right tokenizer for your use case by comparing all 11 tokenizer implementations in Integra V7, analyzing their features, gas costs, token standards, and ideal applications. Understanding the differences between tokenizers is critical for building efficient and appropriate solutions, as each tokenizer is optimized for specific ownership models and use cases ranging from simple single-owner documents to complex multi-party agreements with revenue sharing.
+This guide helps you choose the right tokenizer for your use case by comparing all 11 tokenizer implementations in Integra, analyzing their features, gas costs, token standards, and ideal applications. Understanding the differences between tokenizers is critical for building efficient and appropriate solutions, as each tokenizer is optimized for specific ownership models and use cases ranging from simple single-owner documents to complex multi-party agreements with revenue sharing.
 
 The tokenizer selection process involves evaluating several key factors including the ownership model (single party, multiple parties, or fractional), the appropriate token standard (ERC-721 for unique ownership, ERC-1155 for multi-role scenarios, or ERC-20 for fungible shares), required features such as transferability and trust graph integration, and gas efficiency considerations for high-volume applications. This comprehensive comparison examines each tokenizer's characteristics, benefits, limitations, and real-world applications to help you make an informed decision that balances functionality with cost-effectiveness while meeting your specific business requirements.
 
@@ -10,17 +10,17 @@ The tokenizer selection process involves evaluating several key factors includin
 
 | Use Case | Recommended Tokenizer | Token Standard |
 |----------|----------------------|----------------|
-| Real estate deed (single owner) | OwnershipTokenizerV7 | ERC-721 |
-| Purchase agreement (buyer + seller) | MultiPartyTokenizerV7 | ERC-1155 |
-| High-volume multi-party docs | MultiPartyTokenizerV7Lite | ERC-6909 |
-| Company shares (fractional) | SharesTokenizerV7 | ERC-20 |
-| Music royalties (revenue split) | RoyaltyTokenizerV7 | ERC-1155 |
-| Property rental (time-based) | RentalTokenizerV7 | ERC-1155 |
-| Course completion badges | BadgeTokenizerV7 | ERC-1155 |
-| University degree (credential) | SoulboundTokenizerV7 | ERC-721 SBT |
-| Escrow agreement | VaultTokenizerV7 | ERC-721 |
-| Regulated securities | SecurityTokenTokenizerV7 | ERC-20 |
-| Event tickets (semi-fungible) | SemiFungibleTokenizerV7 | ERC-1155 |
+| Real estate deed (single owner) | OwnershipTokenizer | ERC-721 |
+| Purchase agreement (buyer + seller) | MultiPartyTokenizer | ERC-1155 |
+| High-volume multi-party docs | MultiPartyTokenizerLite | ERC-6909 |
+| Company shares (fractional) | SharesTokenizer | ERC-20 |
+| Music royalties (revenue split) | RoyaltyTokenizer | ERC-1155 |
+| Property rental (time-based) | RentalTokenizer | ERC-1155 |
+| Course completion badges | BadgeTokenizer | ERC-1155 |
+| University degree (credential) | SoulboundTokenizer | ERC-721 SBT |
+| Escrow agreement | VaultTokenizer | ERC-721 |
+| Regulated securities | SecurityTokenTokenizer | ERC-20 |
+| Event tickets (semi-fungible) | SemiFungibleTokenizer | ERC-1155 |
 
 ## Feature Comparison
 
@@ -38,7 +38,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 ## Detailed Comparison
 
-### 1. OwnershipTokenizerV7
+### 1. OwnershipTokenizer
 
 **Token Standard**: ERC-721
 **Best For**: Single-owner documents
@@ -66,7 +66,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 **Gas Costs**: ⭐⭐⭐ (Efficient)
 
-### 2. MultiPartyTokenizerV7
+### 2. MultiPartyTokenizer
 
 **Token Standard**: ERC-1155
 **Best For**: Multi-stakeholder documents
@@ -96,7 +96,7 @@ The tokenizer selection process involves evaluating several key factors includin
 **Gas Costs**: ⭐⭐ (Standard)
 **Gas Optimization**: Bitmap completion check (95% savings)
 
-### 3. MultiPartyTokenizerV7Lite
+### 3. MultiPartyTokenizerLite
 
 **Token Standard**: ERC-6909
 **Best For**: Gas-sensitive multi-party documents
@@ -124,7 +124,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 **Gas Costs**: ⭐⭐⭐⭐ (Very Efficient)
 
-### 4. SharesTokenizerV7
+### 4. SharesTokenizer
 
 **Token Standard**: ERC-20
 **Best For**: Fractional ownership
@@ -153,7 +153,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 **Gas Costs**: ⭐⭐⭐ (Efficient)
 
-### 5. RoyaltyTokenizerV7
+### 5. RoyaltyTokenizer
 
 **Token Standard**: ERC-1155
 **Best For**: Revenue split agreements
@@ -182,7 +182,7 @@ The tokenizer selection process involves evaluating several key factors includin
 **Gas Costs**: ⭐⭐ (Standard)
 **Special Validation**: Total allocation must equal 10,000 (100%)
 
-### 6. RentalTokenizerV7
+### 6. RentalTokenizer
 
 **Token Standard**: ERC-1155
 **Best For**: Time-based access rights
@@ -209,7 +209,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 **Gas Costs**: ⭐⭐ (Standard)
 
-### 7. BadgeTokenizerV7
+### 7. BadgeTokenizer
 
 **Token Standard**: ERC-1155
 **Best For**: Achievement badges and credentials
@@ -236,7 +236,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 **Gas Costs**: ⭐⭐ (Standard)
 
-### 8. SoulboundTokenizerV7
+### 8. SoulboundTokenizer
 
 **Token Standard**: ERC-721 (Non-Transferable)
 **Best For**: Non-transferable credentials
@@ -265,7 +265,7 @@ The tokenizer selection process involves evaluating several key factors includin
 **Gas Costs**: ⭐⭐⭐ (Efficient)
 **Security**: Blocks all transfers (from != 0 && to != 0)
 
-### 9. VaultTokenizerV7
+### 9. VaultTokenizer
 
 **Token Standard**: ERC-721
 **Best For**: Custody and escrow agreements
@@ -292,7 +292,7 @@ The tokenizer selection process involves evaluating several key factors includin
 
 **Gas Costs**: ⭐⭐⭐ (Efficient)
 
-### 10. SecurityTokenTokenizerV7
+### 10. SecurityTokenTokenizer
 
 **Token Standard**: ERC-20
 **Best For**: Regulatory-compliant securities
@@ -321,7 +321,7 @@ The tokenizer selection process involves evaluating several key factors includin
 **Gas Costs**: ⭐⭐⭐ (Efficient)
 **Compliance**: Capability attestations control transfers
 
-### 11. SemiFungibleTokenizerV7
+### 11. SemiFungibleTokenizer
 
 **Token Standard**: ERC-1155
 **Best For**: Semi-fungible tokens
@@ -351,72 +351,72 @@ The tokenizer selection process involves evaluating several key factors includin
 
 ```
 Do you need transferable tokens?
-├─ NO → SoulboundTokenizerV7 (credentials, degrees)
+├─ NO → SoulboundTokenizer (credentials, degrees)
 └─ YES
    ├─ Single owner or multiple parties?
-   │  ├─ SINGLE → OwnershipTokenizerV7 (deeds, titles)
+   │  ├─ SINGLE → OwnershipTokenizer (deeds, titles)
    │  └─ MULTIPLE
    │     ├─ Distinct roles (buyer/seller)?
-   │     │  ├─ YES → MultiPartyTokenizerV7 (contracts, agreements)
+   │     │  ├─ YES → MultiPartyTokenizer (contracts, agreements)
    │     │  │  └─ Need extreme gas efficiency?
-   │     │  │     └─ YES → MultiPartyTokenizerV7Lite (high volume)
+   │     │  │     └─ YES → MultiPartyTokenizerLite (high volume)
    │     │  └─ NO
    │     │     ├─ Revenue split needed?
-   │     │     │  └─ YES → RoyaltyTokenizerV7 (music, IP)
+   │     │     │  └─ YES → RoyaltyTokenizer (music, IP)
    │     │     └─ Fractional ownership?
-   │     │        ├─ YES → SharesTokenizerV7 (company shares)
-   │     │        └─ NO → SemiFungibleTokenizerV7 (tickets, items)
+   │     │        ├─ YES → SharesTokenizer (company shares)
+   │     │        └─ NO → SemiFungibleTokenizer (tickets, items)
    │     │
    │     └─ Time-based access needed?
-   │        └─ YES → RentalTokenizerV7 (leases, subscriptions)
+   │        └─ YES → RentalTokenizer (leases, subscriptions)
    │
    ├─ Achievement/badge system?
-   │  └─ YES → BadgeTokenizerV7 (credentials, achievements)
+   │  └─ YES → BadgeTokenizer (credentials, achievements)
    │
    ├─ Custody/escrow scenario?
-   │  └─ YES → VaultTokenizerV7 (escrow, custody)
+   │  └─ YES → VaultTokenizer (escrow, custody)
    │
    └─ Regulatory compliance needed?
-      └─ YES → SecurityTokenTokenizerV7 (securities, regulated assets)
+      └─ YES → SecurityTokenTokenizer (securities, regulated assets)
 ```
 
 ## Trust Graph Integration
 
 **Tokenizers WITH Trust Graph**:
-- MultiPartyTokenizerV7
-- MultiPartyTokenizerV7Lite
-- SharesTokenizerV7
-- RoyaltyTokenizerV7
-- RentalTokenizerV7
-- BadgeTokenizerV7
-- SecurityTokenTokenizerV7
-- SemiFungibleTokenizerV7
+- MultiPartyTokenizer
+- MultiPartyTokenizerLite
+- SharesTokenizer
+- RoyaltyTokenizer
+- RentalTokenizer
+- BadgeTokenizer
+- SecurityTokenTokenizer
+- SemiFungibleTokenizer
 
 **Tokenizers WITHOUT Trust Graph**:
-- OwnershipTokenizerV7 (single party - no reputation needed)
-- SoulboundTokenizerV7 (credentials, not transactions)
-- VaultTokenizerV7 (custody, not completion-based)
+- OwnershipTokenizer (single party - no reputation needed)
+- SoulboundTokenizer (credentials, not transactions)
+- VaultTokenizer (custody, not completion-based)
 
 **Why?** Trust graph issues credentials when document operations complete with multiple parties. Single-party or credential tokenizers don't need this.
 
 ## Gas Cost Comparison
 
 **Most Efficient** (⭐⭐⭐⭐):
-- MultiPartyTokenizerV7Lite (ERC-6909)
+- MultiPartyTokenizerLite (ERC-6909)
 
 **Very Efficient** (⭐⭐⭐):
-- OwnershipTokenizerV7 (ERC-721)
-- SharesTokenizerV7 (ERC-20)
-- SoulboundTokenizerV7 (ERC-721 SBT)
-- VaultTokenizerV7 (ERC-721)
-- SecurityTokenTokenizerV7 (ERC-20)
+- OwnershipTokenizer (ERC-721)
+- SharesTokenizer (ERC-20)
+- SoulboundTokenizer (ERC-721 SBT)
+- VaultTokenizer (ERC-721)
+- SecurityTokenTokenizer (ERC-20)
 
 **Standard** (⭐⭐):
-- MultiPartyTokenizerV7 (ERC-1155 with bitmap optimization)
-- RoyaltyTokenizerV7 (ERC-1155)
-- RentalTokenizerV7 (ERC-1155)
-- BadgeTokenizerV7 (ERC-1155)
-- SemiFungibleTokenizerV7 (ERC-1155)
+- MultiPartyTokenizer (ERC-1155 with bitmap optimization)
+- RoyaltyTokenizer (ERC-1155)
+- RentalTokenizer (ERC-1155)
+- BadgeTokenizer (ERC-1155)
+- SemiFungibleTokenizer (ERC-1155)
 
 **Why ERC-1155 is less efficient**: Mandatory callbacks, complex approval system
 
@@ -431,7 +431,7 @@ Do you need transferable tokens?
 ## Security Features
 
 **All tokenizers inherit**:
-- BaseTokenizerV7 access control
+- BaseTokenizer access control
 - Per-document executor authorization
 - Attestation-based claim verification
 - Process hash correlation
@@ -455,8 +455,8 @@ Do you need transferable tokens?
 - Each tokenizer: ~700 lines
 - Total: ~7,700 lines (11 tokenizers)
 
-**V7 Style** (shared base):
-- BaseTokenizerV7: ~315 lines (shared)
+**Current Style** (shared base):
+- BaseTokenizer: ~315 lines (shared)
 - TrustGraphIntegration: ~340 lines (shared)
 - Each tokenizer: ~250-350 lines (unique logic)
 - Total: ~3,405 lines
@@ -465,19 +465,19 @@ Do you need transferable tokens?
 ## Anonymous Reservation Support
 
 **Supported**:
-- OwnershipTokenizerV7
-- MultiPartyTokenizerV7
-- MultiPartyTokenizerV7Lite
-- RoyaltyTokenizerV7
-- RentalTokenizerV7
-- BadgeTokenizerV7
-- SoulboundTokenizerV7
-- VaultTokenizerV7
-- SemiFungibleTokenizerV7
+- OwnershipTokenizer
+- MultiPartyTokenizer
+- MultiPartyTokenizerLite
+- RoyaltyTokenizer
+- RentalTokenizer
+- BadgeTokenizer
+- SoulboundTokenizer
+- VaultTokenizer
+- SemiFungibleTokenizer
 
 **Not Supported** (ERC-20 limitation):
-- SharesTokenizerV7
-- SecurityTokenTokenizerV7
+- SharesTokenizer
+- SecurityTokenTokenizer
 
 **Why?** ERC-20 doesn't support anonymous reservations well (no token IDs, just balances).
 
@@ -486,7 +486,7 @@ Do you need transferable tokens?
 ### Single Owner Document
 
 ```solidity
-// Use OwnershipTokenizerV7
+// Use OwnershipTokenizer
 ownershipTokenizer.reserveToken(integraHash, 0, buyerAddress, 1, processHash);
 ownershipTokenizer.claimToken(integraHash, tokenId, attestationUID, processHash);
 // Result: Buyer owns ERC-721 NFT
@@ -495,7 +495,7 @@ ownershipTokenizer.claimToken(integraHash, tokenId, attestationUID, processHash)
 ### Multi-Party Contract
 
 ```solidity
-// Use MultiPartyTokenizerV7
+// Use MultiPartyTokenizer
 multiPartyTokenizer.reserveTokenAnonymous(integraHash, 1, 1, encrypt("buyer"), processHash);
 multiPartyTokenizer.reserveTokenAnonymous(integraHash, 2, 1, encrypt("seller"), processHash);
 // Each party claims with their attestation
@@ -505,7 +505,7 @@ multiPartyTokenizer.reserveTokenAnonymous(integraHash, 2, 1, encrypt("seller"), 
 ### Royalty Split
 
 ```solidity
-// Use RoyaltyTokenizerV7
+// Use RoyaltyTokenizer
 royaltyTokenizer.reserveToken(integraHash, 1, artistAddress, 4000, processHash);  // 40%
 royaltyTokenizer.reserveToken(integraHash, 2, producerAddress, 3000, processHash); // 30%
 royaltyTokenizer.reserveToken(integraHash, 3, labelAddress, 3000, processHash);    // 30%
@@ -516,7 +516,7 @@ royaltyTokenizer.reserveToken(integraHash, 3, labelAddress, 3000, processHash); 
 ### Soulbound Credential
 
 ```solidity
-// Use SoulboundTokenizerV7
+// Use SoulboundTokenizer
 soulboundTokenizer.reserveToken(integraHash, 0, graduateAddress, 1, processHash);
 soulboundTokenizer.claimToken(integraHash, tokenId, attestationUID, processHash);
 // Result: Non-transferable credential NFT
@@ -526,39 +526,39 @@ soulboundTokenizer.claimToken(integraHash, tokenId, attestationUID, processHash)
 ## Recommendations by Industry
 
 ### Real Estate
-- Deeds: **OwnershipTokenizerV7**
-- Fractional RE: **SharesTokenizerV7**
-- Rentals: **RentalTokenizerV7**
-- Escrow: **VaultTokenizerV7**
+- Deeds: **OwnershipTokenizer**
+- Fractional RE: **SharesTokenizer**
+- Rentals: **RentalTokenizer**
+- Escrow: **VaultTokenizer**
 
 ### Finance
-- Company shares: **SharesTokenizerV7**
-- Securities: **SecurityTokenTokenizerV7**
-- Revenue splits: **RoyaltyTokenizerV7**
+- Company shares: **SharesTokenizer**
+- Securities: **SecurityTokenTokenizer**
+- Revenue splits: **RoyaltyTokenizer**
 
 ### Education
-- Degrees: **SoulboundTokenizerV7**
-- Certificates: **BadgeTokenizerV7**
-- Course completion: **BadgeTokenizerV7**
+- Degrees: **SoulboundTokenizer**
+- Certificates: **BadgeTokenizer**
+- Course completion: **BadgeTokenizer**
 
 ### Media & Entertainment
-- Music royalties: **RoyaltyTokenizerV7**
-- Event tickets: **SemiFungibleTokenizerV7**
-- Content licensing: **MultiPartyTokenizerV7**
+- Music royalties: **RoyaltyTokenizer**
+- Event tickets: **SemiFungibleTokenizer**
+- Content licensing: **MultiPartyTokenizer**
 
 ### Gaming
-- Items: **SemiFungibleTokenizerV7**
-- Achievements: **BadgeTokenizerV7**
-- Unique assets: **OwnershipTokenizerV7**
+- Items: **SemiFungibleTokenizer**
+- Achievements: **BadgeTokenizer**
+- Unique assets: **OwnershipTokenizer**
 
 ### Legal
-- Contracts: **MultiPartyTokenizerV7**
-- Escrow: **VaultTokenizerV7**
-- Compliance docs: **SecurityTokenTokenizerV7**
+- Contracts: **MultiPartyTokenizer**
+- Escrow: **VaultTokenizer**
+- Compliance docs: **SecurityTokenTokenizer**
 
 ## Migration Guide
 
-Upgrading from V6 → V7:
+Upgrading from V6 → Current:
 
 **Changes**:
 - processHash added to all functions
@@ -581,14 +581,14 @@ Upgrading from V6 → V7:
 
 ## Individual Tokenizer Documentation
 
-- [OwnershipTokenizerV7](./single-owner/OwnershipTokenizerV7.md)
-- [MultiPartyTokenizerV7](./multi-party/MultiPartyTokenizerV7.md)
-- [MultiPartyTokenizerV7Lite](./multi-party/MultiPartyTokenizerV7Lite.md)
-- [SharesTokenizerV7](./fractional/SharesTokenizerV7.md)
-- [RoyaltyTokenizerV7](./specialized/RoyaltyTokenizerV7.md)
-- [RentalTokenizerV7](./specialized/RentalTokenizerV7.md)
-- [BadgeTokenizerV7](./specialized/BadgeTokenizerV7.md)
-- [SoulboundTokenizerV7](./specialized/SoulboundTokenizerV7.md)
-- [VaultTokenizerV7](./specialized/VaultTokenizerV7.md)
-- [SecurityTokenTokenizerV7](./specialized/SecurityTokenTokenizerV7.md)
-- [SemiFungibleTokenizerV7](./specialized/SemiFungibleTokenizerV7.md)
+- [OwnershipTokenizer](./single-owner/OwnershipTokenizer.md)
+- [MultiPartyTokenizer](./multi-party/MultiPartyTokenizer.md)
+- [MultiPartyTokenizerLite](./multi-party/MultiPartyTokenizerLite.md)
+- [SharesTokenizer](./fractional/SharesTokenizer.md)
+- [RoyaltyTokenizer](./specialized/RoyaltyTokenizer.md)
+- [RentalTokenizer](./specialized/RentalTokenizer.md)
+- [BadgeTokenizer](./specialized/BadgeTokenizer.md)
+- [SoulboundTokenizer](./specialized/SoulboundTokenizer.md)
+- [VaultTokenizer](./specialized/VaultTokenizer.md)
+- [SecurityTokenTokenizer](./specialized/SecurityTokenTokenizer.md)
+- [SemiFungibleTokenizer](./specialized/SemiFungibleTokenizer.md)

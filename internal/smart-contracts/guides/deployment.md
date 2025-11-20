@@ -1,6 +1,6 @@
 # Integra V7 Deployment Guide
 
-Comprehensive guide for deploying Integra V7 smart contracts across EVM chains.
+Comprehensive guide for deploying Integra smart contracts across EVM chains.
 
 ## Table of Contents
 
@@ -45,10 +45,10 @@ Week 15+:   Progressive ossification begins
 **Goal**: Deploy immutable foundation on testnet (Polygon Mumbai/Amoy)
 
 **Contracts**:
-- CapabilityNamespaceV7_Immutable
-- AttestationProviderRegistryV7_Immutable
-- IntegraVerifierRegistryV7_Immutable
-- IntegraResolverRegistryV7_Immutable
+- CapabilityNamespace_Immutable
+- AttestationProviderRegistry_Immutable
+- IntegraVerifierRegistry_Immutable
+- IntegraResolverRegistry_Immutable
 
 **Duration**: 1 week
 
@@ -57,10 +57,10 @@ Week 15+:   Progressive ossification begins
 **Goal**: Deploy upgradeable contracts on testnet
 
 **Contracts**:
-- AttestationAccessControlV7
-- EASAttestationProviderV7
-- IntegraDocumentRegistryV7_Immutable
-- SimpleContactResolverV7
+- AttestationAccessControl
+- EASAttestationProvider
+- IntegraDocumentRegistry_Immutable
+- SimpleContactResolver
 - All tokenizers
 - Communication layer
 - Execution layer
@@ -96,10 +96,10 @@ Week 15+:   Progressive ossification begins
 **Goal**: Certora formal verification of critical contracts
 
 **Contracts**:
-- CapabilityNamespaceV7_Immutable
-- AttestationProviderRegistryV7_Immutable
-- IntegraDocumentRegistryV7_Immutable
-- AttestationAccessControlV7
+- CapabilityNamespace_Immutable
+- AttestationProviderRegistry_Immutable
+- IntegraDocumentRegistry_Immutable
+- AttestationAccessControl
 
 **Duration**: 2 weeks
 
@@ -226,24 +226,24 @@ ledgerAccounts: ["0x..."]
 
 ## Tier 1 Deployment (Immutable Quad)
 
-### 1. Deploy CapabilityNamespaceV7_Immutable
+### 1. Deploy CapabilityNamespace_Immutable
 
 ```javascript
 // scripts/deploy-tier1-namespace.js
 const { ethers } = require("hardhat");
 
 async function main() {
-  console.log("Deploying CapabilityNamespaceV7_Immutable...");
+  console.log("Deploying CapabilityNamespace_Immutable...");
 
   const CapabilityNamespace = await ethers.getContractFactory(
-    "CapabilityNamespaceV7_Immutable"
+    "CapabilityNamespace_Immutable"
   );
 
   const namespace = await CapabilityNamespace.deploy();
   await namespace.waitForDeployment();
 
   const address = await namespace.getAddress();
-  console.log("CapabilityNamespaceV7_Immutable deployed to:", address);
+  console.log("CapabilityNamespace_Immutable deployed to:", address);
 
   // Verify deployment
   const version = await namespace.VERSION();
@@ -276,7 +276,7 @@ main()
 npx hardhat run scripts/deploy-tier1-namespace.js --network polygon
 ```
 
-### 2. Deploy AttestationProviderRegistryV7_Immutable
+### 2. Deploy AttestationProviderRegistry_Immutable
 
 ```javascript
 // scripts/deploy-tier1-provider-registry.js
@@ -285,18 +285,18 @@ const { ethers } = require("hardhat");
 async function main() {
   const bootstrapGovernor = process.env.BOOTSTRAP_GOVERNOR;
 
-  console.log("Deploying AttestationProviderRegistryV7_Immutable...");
+  console.log("Deploying AttestationProviderRegistry_Immutable...");
   console.log("Bootstrap Governor:", bootstrapGovernor);
 
   const ProviderRegistry = await ethers.getContractFactory(
-    "AttestationProviderRegistryV7_Immutable"
+    "AttestationProviderRegistry_Immutable"
   );
 
   const providerRegistry = await ProviderRegistry.deploy(bootstrapGovernor);
   await providerRegistry.waitForDeployment();
 
   const address = await providerRegistry.getAddress();
-  console.log("AttestationProviderRegistryV7_Immutable deployed to:", address);
+  console.log("AttestationProviderRegistry_Immutable deployed to:", address);
 
   // Verify governor has GOVERNOR_ROLE
   const GOVERNOR_ROLE = await providerRegistry.GOVERNOR_ROLE();
@@ -314,7 +314,7 @@ main()
   });
 ```
 
-### 3. Deploy IntegraVerifierRegistryV7_Immutable
+### 3. Deploy IntegraVerifierRegistry_Immutable
 
 ```javascript
 // scripts/deploy-tier1-verifier-registry.js
@@ -323,17 +323,17 @@ const { ethers } = require("hardhat");
 async function main() {
   const bootstrapGovernor = process.env.BOOTSTRAP_GOVERNOR;
 
-  console.log("Deploying IntegraVerifierRegistryV7_Immutable...");
+  console.log("Deploying IntegraVerifierRegistry_Immutable...");
 
   const VerifierRegistry = await ethers.getContractFactory(
-    "IntegraVerifierRegistryV7_Immutable"
+    "IntegraVerifierRegistry_Immutable"
   );
 
   const verifierRegistry = await VerifierRegistry.deploy(bootstrapGovernor);
   await verifierRegistry.waitForDeployment();
 
   const address = await verifierRegistry.getAddress();
-  console.log("IntegraVerifierRegistryV7_Immutable deployed to:", address);
+  console.log("IntegraVerifierRegistry_Immutable deployed to:", address);
 
   return address;
 }
@@ -346,7 +346,7 @@ main()
   });
 ```
 
-### 4. Deploy IntegraResolverRegistryV7_Immutable
+### 4. Deploy IntegraResolverRegistry_Immutable
 
 ```javascript
 // scripts/deploy-tier1-resolver-registry.js
@@ -355,17 +355,17 @@ const { ethers } = require("hardhat");
 async function main() {
   const bootstrapGovernor = process.env.BOOTSTRAP_GOVERNOR;
 
-  console.log("Deploying IntegraResolverRegistryV7_Immutable...");
+  console.log("Deploying IntegraResolverRegistry_Immutable...");
 
   const ResolverRegistry = await ethers.getContractFactory(
-    "IntegraResolverRegistryV7_Immutable"
+    "IntegraResolverRegistry_Immutable"
   );
 
   const resolverRegistry = await ResolverRegistry.deploy(bootstrapGovernor);
   await resolverRegistry.waitForDeployment();
 
   const address = await resolverRegistry.getAddress();
-  console.log("IntegraResolverRegistryV7_Immutable deployed to:", address);
+  console.log("IntegraResolverRegistry_Immutable deployed to:", address);
 
   return address;
 }
@@ -397,33 +397,33 @@ async function main() {
 
   const deployments = {};
 
-  // 1. Deploy CapabilityNamespaceV7_Immutable
-  console.log("\n1. Deploying CapabilityNamespaceV7_Immutable...");
-  const CapabilityNamespace = await ethers.getContractFactory("CapabilityNamespaceV7_Immutable");
+  // 1. Deploy CapabilityNamespace_Immutable
+  console.log("\n1. Deploying CapabilityNamespace_Immutable...");
+  const CapabilityNamespace = await ethers.getContractFactory("CapabilityNamespace_Immutable");
   const namespace = await CapabilityNamespace.deploy();
   await namespace.waitForDeployment();
   deployments.namespace = await namespace.getAddress();
   console.log("Deployed to:", deployments.namespace);
 
-  // 2. Deploy AttestationProviderRegistryV7_Immutable
-  console.log("\n2. Deploying AttestationProviderRegistryV7_Immutable...");
-  const ProviderRegistry = await ethers.getContractFactory("AttestationProviderRegistryV7_Immutable");
+  // 2. Deploy AttestationProviderRegistry_Immutable
+  console.log("\n2. Deploying AttestationProviderRegistry_Immutable...");
+  const ProviderRegistry = await ethers.getContractFactory("AttestationProviderRegistry_Immutable");
   const providerRegistry = await ProviderRegistry.deploy(process.env.BOOTSTRAP_GOVERNOR);
   await providerRegistry.waitForDeployment();
   deployments.providerRegistry = await providerRegistry.getAddress();
   console.log("Deployed to:", deployments.providerRegistry);
 
-  // 3. Deploy IntegraVerifierRegistryV7_Immutable
-  console.log("\n3. Deploying IntegraVerifierRegistryV7_Immutable...");
-  const VerifierRegistry = await ethers.getContractFactory("IntegraVerifierRegistryV7_Immutable");
+  // 3. Deploy IntegraVerifierRegistry_Immutable
+  console.log("\n3. Deploying IntegraVerifierRegistry_Immutable...");
+  const VerifierRegistry = await ethers.getContractFactory("IntegraVerifierRegistry_Immutable");
   const verifierRegistry = await VerifierRegistry.deploy(process.env.BOOTSTRAP_GOVERNOR);
   await verifierRegistry.waitForDeployment();
   deployments.verifierRegistry = await verifierRegistry.getAddress();
   console.log("Deployed to:", deployments.verifierRegistry);
 
-  // 4. Deploy IntegraResolverRegistryV7_Immutable
-  console.log("\n4. Deploying IntegraResolverRegistryV7_Immutable...");
-  const ResolverRegistry = await ethers.getContractFactory("IntegraResolverRegistryV7_Immutable");
+  // 4. Deploy IntegraResolverRegistry_Immutable
+  console.log("\n4. Deploying IntegraResolverRegistry_Immutable...");
+  const ResolverRegistry = await ethers.getContractFactory("IntegraResolverRegistry_Immutable");
   const resolverRegistry = await ResolverRegistry.deploy(process.env.BOOTSTRAP_GOVERNOR);
   await resolverRegistry.waitForDeployment();
   deployments.resolverRegistry = await resolverRegistry.getAddress();
@@ -457,7 +457,7 @@ main()
 
 ## Tier 2 Deployment (Ossifiable Foundation)
 
-### 1. Deploy AttestationAccessControlV7 (UUPS Proxy)
+### 1. Deploy AttestationAccessControl (UUPS Proxy)
 
 ```javascript
 // scripts/deploy-tier2-attestation-access-control.js
@@ -468,10 +468,10 @@ async function main() {
   const providerRegistryAddress = process.env.PROVIDER_REGISTRY_ADDRESS;
   const bootstrapGovernor = process.env.BOOTSTRAP_GOVERNOR;
 
-  console.log("Deploying AttestationAccessControlV7 proxy...");
+  console.log("Deploying AttestationAccessControl proxy...");
 
   const AttestationAccessControl = await ethers.getContractFactory(
-    "AttestationAccessControlV7"
+    "AttestationAccessControl"
   );
 
   // Default provider ID (will be set after EAS provider deployment)
@@ -494,7 +494,7 @@ async function main() {
   await proxy.waitForDeployment();
   const address = await proxy.getAddress();
 
-  console.log("AttestationAccessControlV7 proxy deployed to:", address);
+  console.log("AttestationAccessControl proxy deployed to:", address);
 
   const implAddress = await upgrades.erc1967.getImplementationAddress(address);
   console.log("Implementation address:", implAddress);
@@ -510,7 +510,7 @@ main()
   });
 ```
 
-### 2. Deploy EASAttestationProviderV7
+### 2. Deploy EASAttestationProvider
 
 ```javascript
 // scripts/deploy-tier2-eas-provider.js
@@ -522,10 +522,10 @@ async function main() {
   const easAddress = process.env.EAS_ADDRESS;
   const bootstrapGovernor = process.env.BOOTSTRAP_GOVERNOR;
 
-  console.log("Deploying EASAttestationProviderV7 proxy...");
+  console.log("Deploying EASAttestationProvider proxy...");
 
   const EASProvider = await ethers.getContractFactory(
-    "EASAttestationProviderV7"
+    "EASAttestationProvider"
   );
 
   const schemaUID = process.env.EAS_SCHEMA_UID;
@@ -550,7 +550,7 @@ async function main() {
   await proxy.waitForDeployment();
   const address = await proxy.getAddress();
 
-  console.log("EASAttestationProviderV7 proxy deployed to:", address);
+  console.log("EASAttestationProvider proxy deployed to:", address);
 
   const implAddress = await upgrades.erc1967.getImplementationAddress(address);
   console.log("Implementation address:", implAddress);
@@ -559,7 +559,7 @@ async function main() {
   console.log("\nRegistering provider in registry...");
   const providerId = ethers.keccak256(ethers.toUtf8Bytes("eas-v7"));
   const providerRegistry = await ethers.getContractAt(
-    "AttestationProviderRegistryV7_Immutable",
+    "AttestationProviderRegistry_Immutable",
     providerRegistryAddress
   );
 
@@ -584,7 +584,7 @@ main()
   });
 ```
 
-### 3. Deploy IntegraDocumentRegistryV7_Immutable
+### 3. Deploy IntegraDocumentRegistry_Immutable
 
 ```javascript
 // scripts/deploy-tier2-document-registry.js
@@ -597,10 +597,10 @@ async function main() {
   const emergencyMultisig = process.env.EMERGENCY_MULTISIG;
   const feeRecipient = process.env.FEE_RECIPIENT;
 
-  console.log("Deploying IntegraDocumentRegistryV7_Immutable...");
+  console.log("Deploying IntegraDocumentRegistry_Immutable...");
 
   const DocumentRegistry = await ethers.getContractFactory(
-    "IntegraDocumentRegistryV7_Immutable"
+    "IntegraDocumentRegistry_Immutable"
   );
 
   const initialRegistrationFee = 0;  // Start with free registration
@@ -619,7 +619,7 @@ async function main() {
   await documentRegistry.waitForDeployment();
   const address = await documentRegistry.getAddress();
 
-  console.log("IntegraDocumentRegistryV7_Immutable deployed to:", address);
+  console.log("IntegraDocumentRegistry_Immutable deployed to:", address);
 
   // Verify emergency expiry (6 months from now)
   const emergencyExpiry = await documentRegistry.emergencyExpiry();
@@ -637,7 +637,7 @@ main()
   });
 ```
 
-### 4. Deploy SimpleContactResolverV7
+### 4. Deploy SimpleContactResolver
 
 ```javascript
 // scripts/deploy-tier2-contact-resolver.js
@@ -647,10 +647,10 @@ async function main() {
   const documentRegistryAddress = process.env.DOCUMENT_REGISTRY_ADDRESS;
   const bootstrapGovernor = process.env.BOOTSTRAP_GOVERNOR;
 
-  console.log("Deploying SimpleContactResolverV7 proxy...");
+  console.log("Deploying SimpleContactResolver proxy...");
 
   const ContactResolver = await ethers.getContractFactory(
-    "SimpleContactResolverV7"
+    "SimpleContactResolver"
   );
 
   const proxy = await upgrades.deployProxy(
@@ -665,7 +665,7 @@ async function main() {
   await proxy.waitForDeployment();
   const address = await proxy.getAddress();
 
-  console.log("SimpleContactResolverV7 proxy deployed to:", address);
+  console.log("SimpleContactResolver proxy deployed to:", address);
 
   const implAddress = await upgrades.erc1967.getImplementationAddress(address);
   console.log("Implementation address:", implAddress);
@@ -674,7 +674,7 @@ async function main() {
   console.log("\nRegistering resolver in registry...");
   const resolverId = ethers.keccak256(ethers.toUtf8Bytes("contact-v7"));
   const resolverRegistry = await ethers.getContractAt(
-    "IntegraResolverRegistryV7_Immutable",
+    "IntegraResolverRegistry_Immutable",
     process.env.RESOLVER_REGISTRY_ADDRESS
   );
 
@@ -751,61 +751,61 @@ async function main() {
   deployments.ownershipTokenizer = await deployTokenizer(
     "Integra Property Deeds",
     "IPROP",
-    "OwnershipTokenizerV7"
+    "OwnershipTokenizer"
   );
 
   deployments.multiPartyTokenizer = await deployTokenizer(
     "Integra Multi-Party Agreements",
     "IMULTI",
-    "MultiPartyTokenizerV7"
+    "MultiPartyTokenizer"
   );
 
   deployments.sharesTokenizer = await deployTokenizer(
     "Integra Company Shares",
     "ISHARE",
-    "SharesTokenizerV7"
+    "SharesTokenizer"
   );
 
   deployments.royaltyTokenizer = await deployTokenizer(
     "Integra Royalty Rights",
     "IROY",
-    "RoyaltyTokenizerV7"
+    "RoyaltyTokenizer"
   );
 
   deployments.rentalTokenizer = await deployTokenizer(
     "Integra Rental Agreements",
     "IRENT",
-    "RentalTokenizerV7"
+    "RentalTokenizer"
   );
 
   deployments.badgeTokenizer = await deployTokenizer(
     "Integra Achievement Badges",
     "IBADGE",
-    "BadgeTokenizerV7"
+    "BadgeTokenizer"
   );
 
   deployments.soulboundTokenizer = await deployTokenizer(
     "Integra Credentials",
     "ICRED",
-    "SoulboundTokenizerV7"
+    "SoulboundTokenizer"
   );
 
   deployments.vaultTokenizer = await deployTokenizer(
     "Integra Vault Custody",
     "IVAULT",
-    "VaultTokenizerV7"
+    "VaultTokenizer"
   );
 
   deployments.securityTokenizer = await deployTokenizer(
     "Integra Security Tokens",
     "ISEC",
-    "SecurityTokenTokenizerV7"
+    "SecurityTokenTokenizer"
   );
 
   deployments.semiFungibleTokenizer = await deployTokenizer(
     "Integra Semi-Fungible Tokens",
     "ISFT",
-    "SemiFungibleTokenizerV7"
+    "SemiFungibleTokenizer"
   );
 
   // Save deployments
@@ -842,7 +842,7 @@ async function verifyDeployment(addresses) {
   console.log("1. Verifying Tier 1 (Immutable Quad)...");
 
   const namespace = await ethers.getContractAt(
-    "CapabilityNamespaceV7_Immutable",
+    "CapabilityNamespace_Immutable",
     addresses.namespace
   );
   const version = await namespace.VERSION();
@@ -850,7 +850,7 @@ async function verifyDeployment(addresses) {
   console.log("Namespace is immutable: ✓");
 
   const providerRegistry = await ethers.getContractAt(
-    "AttestationProviderRegistryV7_Immutable",
+    "AttestationProviderRegistry_Immutable",
     addresses.providerRegistry
   );
   const hasGovernor = await providerRegistry.hasRole(
@@ -863,7 +863,7 @@ async function verifyDeployment(addresses) {
   console.log("\n2. Verifying Tier 2 (Ossifiable Foundation)...");
 
   const documentRegistry = await ethers.getContractAt(
-    "IntegraDocumentRegistryV7_Immutable",
+    "IntegraDocumentRegistry_Immutable",
     addresses.documentRegistry
   );
   const emergencyExpiry = await documentRegistry.emergencyExpiry();
@@ -875,7 +875,7 @@ async function verifyDeployment(addresses) {
   console.log("\n3. Verifying resolver registration...");
 
   const resolverRegistry = await ethers.getContractAt(
-    "IntegraResolverRegistryV7_Immutable",
+    "IntegraResolverRegistry_Immutable",
     addresses.resolverRegistry
   );
   const contactResolverId = ethers.keccak256(ethers.toUtf8Bytes("contact-v7"));
@@ -893,7 +893,7 @@ async function verifyDeployment(addresses) {
   console.log("\n5. Verifying UUPS proxies...");
 
   const ownershipTokenizer = await ethers.getContractAt(
-    "OwnershipTokenizerV7",
+    "OwnershipTokenizer",
     addresses.ownershipTokenizer
   );
   const canUpgrade = await ownershipTokenizer.canUpgrade();
@@ -1058,7 +1058,7 @@ main()
 // scripts/governance-transition.js
 async function transitionToMultisig(contractAddress, multisigAddress) {
   const contract = await ethers.getContractAt(
-    "AttestationAccessControlV7",
+    "AttestationAccessControl",
     contractAddress
   );
 
@@ -1076,7 +1076,7 @@ async function transitionToMultisig(contractAddress, multisigAddress) {
 
 async function transitionToDAO(contractAddress, daoAddress) {
   const contract = await ethers.getContractAt(
-    "AttestationAccessControlV7",
+    "AttestationAccessControl",
     contractAddress
   );
 
@@ -1094,7 +1094,7 @@ async function transitionToDAO(contractAddress, daoAddress) {
 
 async function ossify(contractAddress) {
   const contract = await ethers.getContractAt(
-    "AttestationAccessControlV7",
+    "AttestationAccessControl",
     contractAddress
   );
 

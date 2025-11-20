@@ -1,10 +1,10 @@
 # Access Control Patterns
 
-Multi-layer access control architecture implementing zero-trust security across all Integra V7 smart contracts.
+Multi-layer access control architecture implementing zero-trust security across all Integra smart contracts.
 
 ## Overview
 
-The Integra V7 access control system implements a sophisticated multi-layer security model that combines attestation-based capabilities, document ownership validation, and per-document executor authorization to create a comprehensive zero-trust security architecture. Each layer operates independently while complementing the others, ensuring that sensitive operations require multiple forms of validation before execution. This defense-in-depth approach means that even if one security layer is compromised, the remaining layers continue to protect system integrity.
+The Integra access control system implements a sophisticated multi-layer security model that combines attestation-based capabilities, document ownership validation, and per-document executor authorization to create a comprehensive zero-trust security architecture. Each layer operates independently while complementing the others, ensuring that sensitive operations require multiple forms of validation before execution. This defense-in-depth approach means that even if one security layer is compromised, the remaining layers continue to protect system integrity.
 
 The three-tiered model provides different levels of granularity for access control across the platform. At the foundation level, attestation-based capabilities enable fine-grained permissions through 256-bit capability bitmasks, supporting multiple attestation providers including EAS, Verifiable Credentials, ZK proofs, and DIDs with built-in front-running protection. The document ownership layer provides coarse-grained permissions based on immutable ownership records, guaranteeing owner sovereignty over document configuration and lifecycle. Finally, the per-document executor authorization layer enables secure delegation of operational authority through an opt-in model that supports EOAs, DAOs, multisigs, and custom contract executors while maintaining zero-trust defaults and preserving ultimate owner control.
 
@@ -16,7 +16,7 @@ The three-tiered model provides different levels of granularity for access contr
 
 ### Capability Namespace Architecture
 
-The `CapabilityNamespaceV7_Immutable` contract defines a permanent 256-bit capability namespace organized into tiers:
+The `CapabilityNamespace_Immutable` contract defines a permanent 256-bit capability namespace organized into tiers:
 
 ```solidity
 /**
@@ -137,7 +137,7 @@ function removeCapability(uint256 current, uint256 toRemove)
 The attestation system uses a provider abstraction layer to support multiple attestation systems:
 
 ```solidity
-// AttestationAccessControlV7.sol - Provider selection
+// AttestationAccessControl.sol - Provider selection
 /// @notice Default provider for all documents
 bytes32 public defaultProviderId;
 
@@ -181,7 +181,7 @@ function _verifyCapability(
 
 ### 13-Step Verification Process (EAS Provider)
 
-The `EASAttestationProviderV7` implements comprehensive verification:
+The `EASAttestationProvider` implements comprehensive verification:
 
 ```solidity
 /**
@@ -296,7 +296,7 @@ function claimToken(
 The document registry implements a pure ownership model with immutable trust guarantees:
 
 ```solidity
-// IntegraDocumentRegistryV7_Immutable.sol
+// IntegraDocumentRegistry_Immutable.sol
 struct DocumentRecord {
     address owner;                      // Document owner
     address tokenizer;                  // Associated tokenizer
@@ -393,7 +393,7 @@ Per-document authorization implements opt-in executor authorization with zero-tr
 
 ```solidity
 /**
- * @notice V7 SECURE ACCESS CONTROL: Per-document executor authorization
+ * @notice SECURE ACCESS CONTROL: Per-document executor authorization
  * @dev Implements zero-trust model with opt-in executor
  *
  * ACCESS PATHS (in priority order):
@@ -529,7 +529,7 @@ The system supports three types of executors with different validation paths:
  */
 function _validateExecutor(address executor) internal view {
     // PATH 1: Whitelisted executor (governance-approved)
-    // Fast path for known good executors (IntegraExecutorV7, DAOs, etc.)
+    // Fast path for known good executors (IntegraExecutor, DAOs, etc.)
     if (approvedExecutors[executor]) return;
 
     // PATH 2: Contract executor with interface validation

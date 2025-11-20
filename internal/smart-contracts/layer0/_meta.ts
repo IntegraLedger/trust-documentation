@@ -1,9 +1,9 @@
 export default {
   overview: 'Layer 0 Overview',
-  CapabilityNamespaceV7_Immutable: 'CapabilityNamespaceV7_Immutable',
-  AttestationProviderRegistryV7_Immutable: 'AttestationProviderRegistryV7_Immutable',
-  IntegraVerifierRegistryV7_Immutable: 'IntegraVerifierRegistryV7_Immutable',
-  AttestationAccessControlV7: 'AttestationAccessControlV7',
-  EASAttestationProviderV7: 'EASAttestationProviderV7',
+  CapabilityNamespace_Immutable: 'CapabilityNamespace_Immutable',
+  AttestationProviderRegistry_Immutable: 'AttestationProviderRegistry_Immutable',
+  IntegraVerifierRegistry_Immutable: 'IntegraVerifierRegistry_Immutable',
+  AttestationAccessControl: 'AttestationAccessControl',
+  EASAttestationProvider: 'EASAttestationProvider',
   IAttestationProvider: 'IAttestationProvider',
 };

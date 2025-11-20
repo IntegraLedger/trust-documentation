@@ -1,3 +1,3 @@
 export default {
-  CapabilityNamespaceV7: 'CapabilityNamespaceV7',
+  CapabilityNamespace: 'CapabilityNamespace',
 };

@@ -933,4 +933,4 @@ This sophisticated model enables:
 - [Reserve-Claim Pattern](/core-concepts/05-reserve-claim-pattern) - Token issuance for non-wallet users
 - [Document-Token Binding](/core-concepts/03-document-token-binding) - How documents and tokens connect
 - [Tokenizer Overview](/tokenizers/overview) - Different token models
-- [Document Registry](/core-contracts/document-registry/IntegraDocumentRegistryV7) - Document ownership functions
+- [Document Registry](/core-contracts/document-registry/IntegraDocumentRegistry) - Document ownership functions

@@ -1,8 +1,8 @@
-# SimpleContactResolverV7
+# SimpleContactResolver
 
 ## Overview
 
-SimpleContactResolverV7 is a communication resolver that provides encrypted URL contact endpoint storage for documents. It implements the IDocumentResolver interface and uses client-side encryption for privacy while maintaining on-chain accessibility.
+SimpleContactResolver is a communication resolver that provides encrypted URL contact endpoint storage for documents. It implements the IDocumentResolver interface and uses client-side encryption for privacy while maintaining on-chain accessibility.
 
 **Status**: UUPS Upgradeable (application layer)
 **Version**: 7.0.0
@@ -266,7 +266,7 @@ function isLegitimateResolver() external pure override returns (bool) {
 address public documentRegistry;
 ```
 
-Reference to the IntegraDocumentRegistryV7_Immutable contract for owner validation.
+Reference to the IntegraDocumentRegistry_Immutable contract for owner validation.
 
 ### Encrypted Contact URLs
 
@@ -495,14 +495,14 @@ print(decrypted)  # "https://integra.io/contact/doc123"
 ### Basic Integration
 
 ```solidity
-import "@integra/contracts/layer2/resolvers/SimpleContactResolverV7.sol";
+import "@integra/contracts/layer2/resolvers/SimpleContactResolver.sol";
 import "@integra/contracts/layer2/interfaces/IDocumentResolver.sol";
 
 contract MyIntegration {
-    SimpleContactResolverV7 public contactResolver;
+    SimpleContactResolver public contactResolver;
 
     constructor(address _contactResolver) {
-        contactResolver = SimpleContactResolverV7(_contactResolver);
+        contactResolver = SimpleContactResolver(_contactResolver);
     }
 
     function setMyContactURL(bytes32 integraHash, string memory encryptedURL) external {
@@ -762,8 +762,8 @@ Reserves 47 storage slots for future variables without shifting existing storage
 
 ```solidity
 contract SimpleContactResolverTest is Test {
-    SimpleContactResolverV7 resolver;
-    IntegraDocumentRegistryV7_Immutable registry;
+    SimpleContactResolver resolver;
+    IntegraDocumentRegistry_Immutable registry;
 
     address owner = address(0x1);
     bytes32 integraHash = keccak256("doc1");
@@ -771,8 +771,8 @@ contract SimpleContactResolverTest is Test {
 
     function setUp() public {
         // Deploy registry and resolver
-        registry = new IntegraDocumentRegistryV7_Immutable(...);
-        resolver = new SimpleContactResolverV7();
+        registry = new IntegraDocumentRegistry_Immutable(...);
+        resolver = new SimpleContactResolver();
 
         // Initialize resolver
         resolver.initialize(address(registry), governor);
@@ -800,7 +800,7 @@ contract SimpleContactResolverTest is Test {
     function testOnlyOwnerCanSet() public {
         vm.prank(address(0x2)); // Not owner
         vm.expectRevert(abi.encodeWithSelector(
-            SimpleContactResolverV7.OnlyDocumentOwner.selector,
+            SimpleContactResolver.OnlyDocumentOwner.selector,
             address(0x2),
             owner
         ));
@@ -819,23 +819,23 @@ Test with document registry and encryption/decryption flows.
 
 ```solidity
 // Deploy implementation
-SimpleContactResolverV7 implementation = new SimpleContactResolverV7();
+SimpleContactResolver implementation = new SimpleContactResolver();
 
 // Deploy proxy
 ERC1967Proxy proxy = new ERC1967Proxy(
     address(implementation),
     abi.encodeWithSelector(
-        SimpleContactResolverV7.initialize.selector,
+        SimpleContactResolver.initialize.selector,
         documentRegistryAddress,
         governorAddress
     )
 );
 
 // Proxy is now the resolver
-SimpleContactResolverV7 resolver = SimpleContactResolverV7(address(proxy));
+SimpleContactResolver resolver = SimpleContactResolver(address(proxy));
 
 // Register in resolver registry
-bytes32 resolverId = keccak256("SimpleContactResolverV7");
+bytes32 resolverId = keccak256("SimpleContactResolver");
 resolverRegistry.registerResolver(
     resolverId,
     address(resolver),
@@ -848,22 +848,22 @@ resolverRegistry.registerResolver(
 
 ```solidity
 // Deploy new implementation
-SimpleContactResolverV7 newImplementation = new SimpleContactResolverV7();
+SimpleContactResolver newImplementation = new SimpleContactResolver();
 
 // Upgrade via governor
 vm.prank(governor);
-SimpleContactResolverV7(proxy).upgradeTo(address(newImplementation));
+SimpleContactResolver(proxy).upgradeTo(address(newImplementation));
 
 // Verify upgrade
 assertEq(
-    SimpleContactResolverV7(proxy).VERSION(),
+    SimpleContactResolver(proxy).VERSION(),
     newImplementation.VERSION()
 );
 ```
 
 ## Resources
 
-- [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/resolvers/SimpleContactResolverV7.sol)
+- [Source Code](https://github.com/IntegraLedger/smart-contracts-evm-v7/blob/main/src/layer2/resolvers/SimpleContactResolver.sol)
 - [IDocumentResolver Interface](./interfaces/document-resolver)
 - [Document Registry Documentation](./document-registry)
 - [Resolver Development Guide](../guides/resolver-development)

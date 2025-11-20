@@ -41,7 +41,7 @@ Contact endpoints and messaging services.
 - URL for API endpoints
 - Encrypted contact information
 
-**Example Implementation**: `SimpleContactResolverV7`
+**Example Implementation**: `SimpleContactResolver`
 
 ### Compliance
 Regulatory requirements and KYC/AML checks.
@@ -385,7 +385,7 @@ Get contact endpoint for a document.
 **Returns**:
 - `endpoint`: Contact endpoint (may be encrypted)
 
-**Example Implementation (SimpleContactResolverV7)**:
+**Example Implementation (SimpleContactResolver)**:
 ```solidity
 function getContactEndpoint(
     bytes32 integraHash,
@@ -774,7 +774,7 @@ function canOwnDocument(...)
 
 See the following resolver implementations for reference:
 
-- [SimpleContactResolverV7](../simple-contact-resolver) - Communication resolver
+- [SimpleContactResolver](../simple-contact-resolver) - Communication resolver
 - LeaseExpiryResolverV7 - Lifecycle resolver (coming soon)
 - KYCComplianceResolverV7 - Compliance resolver (coming soon)
 

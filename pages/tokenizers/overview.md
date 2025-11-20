@@ -4,7 +4,7 @@
 
 Tokenizers are smart contracts that create the bridge between real-world documents and blockchain tokens, transforming static legal agreements into programmable, tradeable digital assets while maintaining the security and immutability of the underlying document registry. This architecture enables traditional contracts such as property deeds, rental agreements, and business partnerships to exist as standard ERC tokens that work with any compatible wallet, marketplace, or DeFi protocol while remaining cryptographically bound to their source documents for verifiable authenticity.
 
-Every Integra tokenizer inherits from BaseTokenizerV7, which provides the critical document-token binding mechanism ensuring permanent, bidirectional linkage between tokens and documents. This binding guarantees that tokens are permanently bound to documents through cryptographic linkage to an integraHash in the document registry, that document properties dictate token behavior including transferability rules and ownership restrictions, and that token ownership provides verifiable proof of participation in or ownership of the underlying real-world contract. The system supports all major token standards including ERC-721 for unique ownership, ERC-1155 for multi-party scenarios, and ERC-20 for fractional ownership, with 11 specialized tokenizer implementations covering use cases from simple property deeds to complex royalty distribution agreements.
+Every Integra tokenizer inherits from BaseTokenizer, which provides the critical document-token binding mechanism ensuring permanent, bidirectional linkage between tokens and documents. This binding guarantees that tokens are permanently bound to documents through cryptographic linkage to an integraHash in the document registry, that document properties dictate token behavior including transferability rules and ownership restrictions, and that token ownership provides verifiable proof of participation in or ownership of the underlying real-world contract. The system supports all major token standards including ERC-721 for unique ownership, ERC-1155 for multi-party scenarios, and ERC-20 for fractional ownership, with 11 specialized tokenizer implementations covering use cases from simple property deeds to complex royalty distribution agreements.
 
 ## How Tokenizers Work
 
@@ -13,7 +13,7 @@ Every Integra tokenizer inherits from BaseTokenizerV7, which provides the critic
 ```
 1. Document Registration
    ↓
-   User registers document in IntegraDocumentRegistryV7
+   User registers document in IntegraDocumentRegistry
    ↓
    Receives integraHash (unique document identifier)
 
@@ -45,7 +45,7 @@ Every Integra tokenizer inherits from BaseTokenizerV7, which provides the critic
 Every tokenizer maintains the critical link between documents and tokens:
 
 ```solidity
-// Core binding in BaseTokenizerV7
+// Core binding in BaseTokenizer
 mapping(bytes32 => uint256) public integraHashToTokenId;
 mapping(uint256 => bytes32) public tokenIdToIntegraHash;
 
@@ -68,9 +68,9 @@ Integra supports all major ERC token standards, each serving different use cases
 **Best for:** Unique ownership of single documents
 
 **Tokenizers:**
-- **OwnershipTokenizerV7** - Simple 1:1 document ownership
-- **SoulboundTokenizerV7** - Non-transferable credentials and certifications
-- **VaultTokenizerV7** - Escrow and locked ownership with time-based release
+- **OwnershipTokenizer** - Simple 1:1 document ownership
+- **SoulboundTokenizer** - Non-transferable credentials and certifications
+- **VaultTokenizer** - Escrow and locked ownership with time-based release
 
 **Use Cases:**
 - Property deeds
@@ -83,11 +83,11 @@ Integra supports all major ERC token standards, each serving different use cases
 **Best for:** Documents with multiple parties or roles
 
 **Tokenizers:**
-- **MultiPartyTokenizerV7** - Multiple parties in single contract (buyer/seller, landlord/tenant)
-- **RentalTokenizerV7** - Time-based access with rental payments
-- **BadgeTokenizerV7** - Achievement badges and participation credentials
-- **SemiFungibleTokenizerV7** - Hybrid fungible/non-fungible for compliance documents
-- **RoyaltyTokenizerV7** - Automated revenue distribution to stakeholders
+- **MultiPartyTokenizer** - Multiple parties in single contract (buyer/seller, landlord/tenant)
+- **RentalTokenizer** - Time-based access with rental payments
+- **BadgeTokenizer** - Achievement badges and participation credentials
+- **SemiFungibleTokenizer** - Hybrid fungible/non-fungible for compliance documents
+- **RoyaltyTokenizer** - Automated revenue distribution to stakeholders
 
 **Use Cases:**
 - Multi-party agreements
@@ -100,8 +100,8 @@ Integra supports all major ERC token standards, each serving different use cases
 **Best for:** Fractional ownership and shares
 
 **Tokenizers:**
-- **SharesTokenizerV7** - Company shares, investment units, fractional real estate
-- **SecurityTokenTokenizerV7** - Regulated securities with compliance checks
+- **SharesTokenizer** - Company shares, investment units, fractional real estate
+- **SecurityTokenTokenizer** - Regulated securities with compliance checks
 
 **Use Cases:**
 - Fractional property ownership
@@ -117,16 +117,16 @@ Integra supports all major ERC token standards, each serving different use cases
 Is ownership unique and indivisible?
 ├─ YES → Use ERC-721
 │   ├─ Should token be transferable?
-│   │   ├─ YES → OwnershipTokenizerV7
-│   │   └─ NO → SoulboundTokenizerV7
+│   │   ├─ YES → OwnershipTokenizer
+│   │   └─ NO → SoulboundTokenizer
 │   └─ Need escrow/time-lock?
-│       └─ YES → VaultTokenizerV7
+│       └─ YES → VaultTokenizer
 │
 └─ NO → Is ownership shared or fractional?
-    ├─ Multiple distinct parties? → MultiPartyTokenizerV7 (ERC-1155)
-    ├─ Time-based access? → RentalTokenizerV7 (ERC-1155)
-    ├─ Revenue sharing? → RoyaltyTokenizerV7 (ERC-1155)
-    └─ Fractional ownership? → SharesTokenizerV7 (ERC-20)
+    ├─ Multiple distinct parties? → MultiPartyTokenizer (ERC-1155)
+    ├─ Time-based access? → RentalTokenizer (ERC-1155)
+    ├─ Revenue sharing? → RoyaltyTokenizer (ERC-1155)
+    └─ Fractional ownership? → SharesTokenizer (ERC-20)
 ```
 
 See [Choosing a Tokenizer](./choosing-a-tokenizer) for detailed comparison.
@@ -178,7 +178,7 @@ This enables token distribution **before** recipients have blockchain wallets.
 Every tokenizer connects to the document registry:
 
 ```solidity
-IIntegraDocumentRegistryV7 public immutable DOCUMENT_REGISTRY;
+IIntegraDocumentRegistry public immutable DOCUMENT_REGISTRY;
 
 function _verifyDocument(bytes32 integraHash) internal view {
     // Ensure document exists
@@ -228,9 +228,9 @@ See [Trust Graph](../core-concepts/07-trust-graph) for details.
 **Pattern:** One token = One owner
 
 **Tokenizers:**
-- [OwnershipTokenizerV7](./single-owner/OwnershipTokenizerV7) - Standard NFT ownership
-- [SoulboundTokenizerV7](./single-owner/SoulboundTokenizerV7) - Non-transferable tokens
-- [VaultTokenizerV7](./single-owner/VaultTokenizerV7) - Time-locked ownership
+- [OwnershipTokenizer](./single-owner/OwnershipTokenizer) - Standard NFT ownership
+- [SoulboundTokenizer](./single-owner/SoulboundTokenizer) - Non-transferable tokens
+- [VaultTokenizer](./single-owner/VaultTokenizer) - Time-locked ownership
 
 **When to use:**
 - Property ownership
@@ -243,12 +243,12 @@ See [Trust Graph](../core-concepts/07-trust-graph) for details.
 **Pattern:** Multiple tokens per document, different roles
 
 **Tokenizers:**
-- [MultiPartyTokenizerV7](./multi-token/MultiPartyTokenizerV7) - Generic multi-party contracts
-- [MultiPartyTokenizerV7Lite](./multi-token/MultiPartyTokenizerV7Lite) - Lightweight version
-- [RentalTokenizerV7](./multi-token/RentalTokenizerV7) - Rental agreements with payments
-- [RoyaltyTokenizerV7](./multi-token/RoyaltyTokenizerV7) - Revenue distribution
-- [BadgeTokenizerV7](./multi-token/BadgeTokenizerV7) - Achievement badges
-- [SemiFungibleTokenizerV7](./multi-token/SemiFungibleTokenizerV7) - Compliance documents
+- [MultiPartyTokenizer](./multi-token/MultiPartyTokenizer) - Generic multi-party contracts
+- [MultiPartyTokenizerLite](./multi-token/MultiPartyTokenizerLite) - Lightweight version
+- [RentalTokenizer](./multi-token/RentalTokenizer) - Rental agreements with payments
+- [RoyaltyTokenizer](./multi-token/RoyaltyTokenizer) - Revenue distribution
+- [BadgeTokenizer](./multi-token/BadgeTokenizer) - Achievement badges
+- [SemiFungibleTokenizer](./multi-token/SemiFungibleTokenizer) - Compliance documents
 
 **When to use:**
 - Contracts with multiple parties
@@ -261,8 +261,8 @@ See [Trust Graph](../core-concepts/07-trust-graph) for details.
 **Pattern:** Divisible ownership shares
 
 **Tokenizers:**
-- [SharesTokenizerV7](./fungible-shares/SharesTokenizerV7) - Company shares, fractional ownership
-- [SecurityTokenTokenizerV7](./fungible-shares/SecurityTokenTokenizerV7) - Regulated securities
+- [SharesTokenizer](./fungible-shares/SharesTokenizer) - Company shares, fractional ownership
+- [SecurityTokenTokenizer](./fungible-shares/SecurityTokenTokenizer) - Regulated securities
 
 **When to use:**
 - Fractional real estate
@@ -329,7 +329,7 @@ sharesTokenizer.transfer(investor3, 250 * 10**18); // 25%
 
 ## Security Features
 
-All tokenizers inherit comprehensive security from `BaseTokenizerV7`:
+All tokenizers inherit comprehensive security from `BaseTokenizer`:
 
 1. **Reentrancy Protection** - All state-changing functions use `nonReentrant` modifier
 2. **Pausability** - Emergency circuit breaker via `whenNotPaused`
@@ -361,7 +361,7 @@ Determine which tokenizer fits your use case based on:
 
 ```solidity
 // Option A: Use deployed tokenizer
-address tokenizer = integraRegistry.getComponent(TOKENIZER_TYPE, "OwnershipTokenizerV7");
+address tokenizer = integraRegistry.getComponent(TOKENIZER_TYPE, "OwnershipTokenizer");
 
 // Option B: Deploy custom tokenizer
 MyTokenizer tokenizer = new MyTokenizer(documentRegistry);
@@ -405,18 +405,18 @@ tokenizer.claimToken(integraHash, tokenId, attestationUID, processHash);
 ## Tokenizer Reference
 
 ### Single-Owner (ERC-721)
-- [OwnershipTokenizerV7](./single-owner/OwnershipTokenizerV7)
-- [SoulboundTokenizerV7](./single-owner/SoulboundTokenizerV7)
-- [VaultTokenizerV7](./single-owner/VaultTokenizerV7)
+- [OwnershipTokenizer](./single-owner/OwnershipTokenizer)
+- [SoulboundTokenizer](./single-owner/SoulboundTokenizer)
+- [VaultTokenizer](./single-owner/VaultTokenizer)
 
 ### Multi-Token (ERC-1155)
-- [MultiPartyTokenizerV7](./multi-token/MultiPartyTokenizerV7)
-- [MultiPartyTokenizerV7Lite](./multi-token/MultiPartyTokenizerV7Lite)
-- [RentalTokenizerV7](./multi-token/RentalTokenizerV7)
-- [RoyaltyTokenizerV7](./multi-token/RoyaltyTokenizerV7)
-- [BadgeTokenizerV7](./multi-token/BadgeTokenizerV7)
-- [SemiFungibleTokenizerV7](./multi-token/SemiFungibleTokenizerV7)
+- [MultiPartyTokenizer](./multi-token/MultiPartyTokenizer)
+- [MultiPartyTokenizerLite](./multi-token/MultiPartyTokenizerLite)
+- [RentalTokenizer](./multi-token/RentalTokenizer)
+- [RoyaltyTokenizer](./multi-token/RoyaltyTokenizer)
+- [BadgeTokenizer](./multi-token/BadgeTokenizer)
+- [SemiFungibleTokenizer](./multi-token/SemiFungibleTokenizer)
 
 ### Fungible Shares (ERC-20)
-- [SharesTokenizerV7](./fungible-shares/SharesTokenizerV7)
-- [SecurityTokenTokenizerV7](./fungible-shares/SecurityTokenTokenizerV7)
+- [SharesTokenizer](./fungible-shares/SharesTokenizer)
+- [SecurityTokenTokenizer](./fungible-shares/SecurityTokenTokenizer)

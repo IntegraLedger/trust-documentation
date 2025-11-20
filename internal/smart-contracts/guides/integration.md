@@ -1,6 +1,6 @@
 # Integra V7 Integration Guide
 
-Complete guide for integrating with Integra V7 smart contracts.
+Complete guide for integrating with Integra smart contracts.
 
 ## Table of Contents
 
@@ -138,33 +138,33 @@ module.exports = {
 // Tier 1: Immutable Quad
 const ADDRESSES = {
   // Layer 0 - Foundation
-  capabilityNamespace: "0x...",  // CapabilityNamespaceV7_Immutable
-  providerRegistry: "0x...",     // AttestationProviderRegistryV7_Immutable
-  verifierRegistry: "0x...",     // IntegraVerifierRegistryV7_Immutable
+  capabilityNamespace: "0x...",  // CapabilityNamespace_Immutable
+  providerRegistry: "0x...",     // AttestationProviderRegistry_Immutable
+  verifierRegistry: "0x...",     // IntegraVerifierRegistry_Immutable
 
   // Layer 2 - Document Layer
-  documentRegistry: "0x...",     // IntegraDocumentRegistryV7_Immutable
-  resolverRegistry: "0x...",     // IntegraResolverRegistryV7_Immutable
-  contactResolver: "0x...",      // SimpleContactResolverV7
+  documentRegistry: "0x...",     // IntegraDocumentRegistry_Immutable
+  resolverRegistry: "0x...",     // IntegraResolverRegistry_Immutable
+  contactResolver: "0x...",      // SimpleContactResolver
 
   // Layer 3 - Tokenization
-  ownershipTokenizer: "0x...",   // OwnershipTokenizerV7
-  multiPartyTokenizer: "0x...",  // MultiPartyTokenizerV7
-  sharesTokenizer: "0x...",      // SharesTokenizerV7
-  royaltyTokenizer: "0x...",     // RoyaltyTokenizerV7
-  rentalTokenizer: "0x...",      // RentalTokenizerV7
-  badgeTokenizer: "0x...",       // BadgeTokenizerV7
-  soulboundTokenizer: "0x...",   // SoulboundTokenizerV7
-  vaultTokenizer: "0x...",       // VaultTokenizerV7
-  securityTokenizer: "0x...",    // SecurityTokenTokenizerV7
-  semiFungibleTokenizer: "0x...", // SemiFungibleTokenizerV7
+  ownershipTokenizer: "0x...",   // OwnershipTokenizer
+  multiPartyTokenizer: "0x...",  // MultiPartyTokenizer
+  sharesTokenizer: "0x...",      // SharesTokenizer
+  royaltyTokenizer: "0x...",     // RoyaltyTokenizer
+  rentalTokenizer: "0x...",      // RentalTokenizer
+  badgeTokenizer: "0x...",       // BadgeTokenizer
+  soulboundTokenizer: "0x...",   // SoulboundTokenizer
+  vaultTokenizer: "0x...",       // VaultTokenizer
+  securityTokenizer: "0x...",    // SecurityTokenTokenizer
+  semiFungibleTokenizer: "0x...", // SemiFungibleTokenizer
 
   // Layer 4 - Communication
-  messageContract: "0x...",      // IntegraMessageV7
-  signalContract: "0x...",       // IntegraSignalV7
+  messageContract: "0x...",      // IntegraMessage
+  signalContract: "0x...",       // IntegraSignal
 
   // Layer 6 - Execution
-  executorContract: "0x...",     // IntegraExecutorV7
+  executorContract: "0x...",     // IntegraExecutor
 
   // External Dependencies
   easContract: "0x...",          // Ethereum Attestation Service
@@ -180,8 +180,8 @@ npm install @integra/contracts
 ```
 
 ```javascript
-import { abi as DocumentRegistryABI } from "@integra/contracts/artifacts/IntegraDocumentRegistryV7_Immutable.json";
-import { abi as OwnershipTokenizerABI } from "@integra/contracts/artifacts/OwnershipTokenizerV7.json";
+import { abi as DocumentRegistryABI } from "@integra/contracts/artifacts/IntegraDocumentRegistry_Immutable.json";
+import { abi as OwnershipTokenizerABI } from "@integra/contracts/artifacts/OwnershipTokenizer.json";
 ```
 
 **Option 2: From GitHub**

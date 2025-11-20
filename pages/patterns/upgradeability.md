@@ -1,10 +1,10 @@
 # Upgradeability Patterns
 
-Progressive decentralization and upgrade patterns in Integra V7 smart contracts.
+Progressive decentralization and upgrade patterns in Integra smart contracts.
 
 ## Overview
 
-The Integra V7 system uses a hybrid upgradeability model that strategically combines upgradeable and immutable contracts to balance innovation with security. This dual approach allows application-layer contracts to evolve through the UUPS proxy pattern while keeping foundational infrastructure permanently immutable, creating a system that can adapt to changing requirements during early stages while progressively hardening toward complete immutability at maturity. The model implements storage gap management for safe upgrades, stage-gated authorization that respects governance evolution, and clear separation between upgradeable application logic and immutable core infrastructure.
+The Integra system uses a hybrid upgradeability model that strategically combines upgradeable and immutable contracts to balance innovation with security. This dual approach allows application-layer contracts to evolve through the UUPS proxy pattern while keeping foundational infrastructure permanently immutable, creating a system that can adapt to changing requirements during early stages while progressively hardening toward complete immutability at maturity. The model implements storage gap management for safe upgrades, stage-gated authorization that respects governance evolution, and clear separation between upgradeable application logic and immutable core infrastructure.
 
 Progressive ossification provides a time-tested path from centralized deployment to complete decentralization through four distinct governance stages. The BOOTSTRAP stage (0-6 months) enables rapid iteration and bug fixes under team control, transitioning to MULTISIG governance (6-12 months) through a guardian multisig for increased safety and deliberation. The DAO stage (12-24 months) achieves full community governance with on-chain voting, culminating in the OSSIFIED stage (24+ months) where contracts become permanently frozen and no further upgrades are possible. This progression is one-way and irreversible, preventing governance capture while giving users absolute confidence in the final system state. Meanwhile, critical infrastructure contracts including capability namespaces, component registries, and the document registry deploy as immutable from day one, providing permanent security guarantees that never change regardless of governance transitions.
 
@@ -26,7 +26,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
-abstract contract AttestationAccessControlV7 is
+abstract contract AttestationAccessControl is
     UUPSUpgradeable,  // ✅ UUPS upgradeable
     AccessControlUpgradeable,
     ReentrancyGuardUpgradeable,
@@ -46,8 +46,8 @@ abstract contract AttestationAccessControlV7 is
         __Pausable_init();
 
         // Set immutable references (via storage, not true immutability)
-        NAMESPACE = CapabilityNamespaceV7_Immutable(_namespace);
-        PROVIDER_REGISTRY = AttestationProviderRegistryV7_Immutable(_providerRegistry);
+        NAMESPACE = CapabilityNamespace_Immutable(_namespace);
+        PROVIDER_REGISTRY = AttestationProviderRegistry_Immutable(_providerRegistry);
 
         // Initialize governance
         currentStage = GovernanceStage.BOOTSTRAP;
@@ -87,13 +87,13 @@ abstract contract AttestationAccessControlV7 is
 ```typescript
 // 1. Deploy new implementation
 const NewImplementation = await ethers.getContractFactory(
-  "AttestationAccessControlV7_V2"
+  "AttestationAccessControl_V2"
 );
 const newImpl = await NewImplementation.deploy();
 
 // 2. Upgrade proxy to new implementation
 const proxy = await ethers.getContractAt(
-  "AttestationAccessControlV7",
+  "AttestationAccessControl",
   proxyAddress
 );
 await proxy.upgradeTo(newImpl.address);
@@ -114,10 +114,10 @@ console.log(`Upgraded to: ${implAddress}`);
 
 ### Contracts Using UUPS
 
-- Foundation Contracts: `AttestationAccessControlV7` (abstract), `EASAttestationProviderV7`
-- Tokenization Contracts: All tokenizers (via `BaseTokenizerV7`)
-- Communication Contracts: `IntegraMessageV7`, `IntegraSignalV7`
-- Execution Contracts: `IntegraExecutorV7`
+- Foundation Contracts: `AttestationAccessControl` (abstract), `EASAttestationProvider`
+- Tokenization Contracts: All tokenizers (via `BaseTokenizer`)
+- Communication Contracts: `IntegraMessage`, `IntegraSignal`
+- Execution Contracts: `IntegraExecutor`
 
 ## Pattern 2: Progressive Ossification
 
@@ -372,8 +372,8 @@ Critical infrastructure contracts (registries, namespaces) are deployed as immut
 ### Immutable Contracts
 
 ```solidity
-// CapabilityNamespaceV7_Immutable.sol
-contract CapabilityNamespaceV7_Immutable {
+// CapabilityNamespace_Immutable.sol
+contract CapabilityNamespace_Immutable {
     // NO UUPS inheritance
     // NO initializer
     // NO upgrade function
@@ -397,8 +397,8 @@ contract CapabilityNamespaceV7_Immutable {
 ```
 
 ```solidity
-// AttestationProviderRegistryV7_Immutable.sol
-contract AttestationProviderRegistryV7_Immutable is AccessControl {
+// AttestationProviderRegistry_Immutable.sol
+contract AttestationProviderRegistry_Immutable is AccessControl {
     // NO UUPS inheritance
     // Uses constructor (not initializer)
     // Cannot be upgraded after deployment
@@ -418,25 +418,25 @@ contract AttestationProviderRegistryV7_Immutable is AccessControl {
 
 ### Why Immutable Registries?
 
-**Capability Namespace** (`CapabilityNamespaceV7_Immutable`):
+**Capability Namespace** (`CapabilityNamespace_Immutable`):
 - Capability bit positions must NEVER change
 - Bit 7 always means CORE_ADMIN, forever
 - Changing would break ALL attestations across ALL time
 - Must be immutable for consistency
 
-**Provider Registry** (`AttestationProviderRegistryV7_Immutable`):
+**Provider Registry** (`AttestationProviderRegistry_Immutable`):
 - Code hash verification logic must be trustworthy
 - Cannot be upgraded to malicious logic
 - Graceful degradation pattern must be reliable
 - Must be immutable for security
 
-**Verifier Registry** (`IntegraVerifierRegistryV7_Immutable`):
+**Verifier Registry** (`IntegraVerifierRegistry_Immutable`):
 - ZK verifier addresses must be trustworthy
 - Code hash verification must work correctly
 - Cannot risk malicious upgrade
 - Must be immutable for proof integrity
 
-**Resolver Registry** (`IntegraResolverRegistryV7_Immutable`):
+**Resolver Registry** (`IntegraResolverRegistry_Immutable`):
 - Resolver lookup must be reliable
 - Code hash verification must work
 - Cannot risk DOS via malicious upgrade
@@ -446,19 +446,19 @@ contract AttestationProviderRegistryV7_Immutable is AccessControl {
 
 ```
 UPGRADEABLE (UUPS with ossification):
-├── AttestationAccessControlV7 (can evolve, will ossify)
-├── EASAttestationProviderV7 (can add features, will ossify)
-├── BaseTokenizerV7 + concrete tokenizers (can add types, will ossify)
-├── IntegraMessageV7 (can evolve, will ossify)
-├── IntegraSignalV7 (can evolve, will ossify)
-└── IntegraExecutorV7 (can evolve, will ossify)
+├── AttestationAccessControl (can evolve, will ossify)
+├── EASAttestationProvider (can add features, will ossify)
+├── BaseTokenizer + concrete tokenizers (can add types, will ossify)
+├── IntegraMessage (can evolve, will ossify)
+├── IntegraSignal (can evolve, will ossify)
+└── IntegraExecutor (can evolve, will ossify)
 
 IMMUTABLE (never upgrade):
-├── CapabilityNamespaceV7_Immutable (permanent bit definitions)
-├── AttestationProviderRegistryV7_Immutable (trusted infrastructure)
-├── IntegraVerifierRegistryV7_Immutable (trusted infrastructure)
-├── IntegraResolverRegistryV7_Immutable (trusted infrastructure)
-└── IntegraDocumentRegistryV7_Immutable (permanent document records)
+├── CapabilityNamespace_Immutable (permanent bit definitions)
+├── AttestationProviderRegistry_Immutable (trusted infrastructure)
+├── IntegraVerifierRegistry_Immutable (trusted infrastructure)
+├── IntegraResolverRegistry_Immutable (trusted infrastructure)
+└── IntegraDocumentRegistry_Immutable (permanent document records)
 ```
 
 ### Benefits
@@ -481,8 +481,8 @@ Storage gaps reserve slots in upgradeable contracts for future state variables, 
  * @dev Storage gap for future upgrades
  *
  * CURRENT STATE VARIABLES: 9 slots
- * 1. CapabilityNamespaceV7_Immutable public NAMESPACE;
- * 2. AttestationProviderRegistryV7_Immutable public PROVIDER_REGISTRY;
+ * 1. CapabilityNamespace_Immutable public NAMESPACE;
+ * 2. AttestationProviderRegistry_Immutable public PROVIDER_REGISTRY;
  * 3. GovernanceStage public currentStage;
  * 4. address public bootstrapGovernor;
  * 5. address public guardianMultisig;
@@ -505,28 +505,28 @@ uint256[41] private __gap;
 ### Storage Gap Examples Across Contracts
 
 ```solidity
-// AttestationAccessControlV7 (9 variables)
+// AttestationAccessControl (9 variables)
 uint256[41] private __gap;
 
-// EASAttestationProviderV7 (7 variables)
+// EASAttestationProvider (7 variables)
 uint256[43] private __gap;
 
-// BaseTokenizerV7 (1 variable)
+// BaseTokenizer (1 variable)
 uint256[49] private __gap;
 
 // TrustGraphIntegration (4 variables)
 uint256[46] private __gap;
 
-// OwnershipTokenizerV7 (4 variables)
+// OwnershipTokenizer (4 variables)
 uint256[46] private __gap;
 
-// IntegraMessageV7 (1 variable)
+// IntegraMessage (1 variable)
 uint256[49] private __gap;
 
-// IntegraSignalV7 (9 variables)
+// IntegraSignal (9 variables)
 uint256[41] private __gap;
 
-// IntegraExecutorV7 (5 variables)
+// IntegraExecutor (5 variables)
 uint256[45] private __gap;
 ```
 
@@ -592,7 +592,7 @@ Upgradeable contracts must disable their constructors to prevent implementation 
 ### Implementation
 
 ```solidity
-abstract contract AttestationAccessControlV7 is UUPSUpgradeable {
+abstract contract AttestationAccessControl is UUPSUpgradeable {
     /**
      * @notice Disable initializers in implementation contract
      * @dev Prevents initialization of implementation (only proxy should be initialized)

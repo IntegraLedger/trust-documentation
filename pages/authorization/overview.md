@@ -4,9 +4,9 @@ How permissions and claims work in the Integra ecosystem.
 
 ## Overview
 
-The authorization layer manages who can do what, using EAS attestations for off-chain identity with on-chain proof. This system provides a flexible, capability-based permission framework that enables fine-grained access control across all Integra V7 smart contracts while maintaining compatibility with existing identity systems.
+The authorization layer manages who can do what, using EAS attestations for off-chain identity with on-chain proof. This system provides a flexible, capability-based permission framework that enables fine-grained access control across all Integra smart contracts while maintaining compatibility with existing identity systems.
 
-At its core, the authorization system relies on three key components: attestation-based capabilities for precise permission management, token claims secured through the TokenClaimResolverV7 for validating token ownership rights, and comprehensive access control patterns that implement zero-trust security principles. Together, these components create a robust authorization infrastructure that protects sensitive operations while enabling seamless integration with decentralized identity providers.
+At its core, the authorization system relies on three key components: attestation-based capabilities for precise permission management, token claims secured through the TokenClaimResolver for validating token ownership rights, and comprehensive access control patterns that implement zero-trust security principles. Together, these components create a robust authorization infrastructure that protects sensitive operations while enabling seamless integration with decentralized identity providers.
 
 ## Components
 
@@ -18,9 +18,9 @@ Integration with Ethereum Attestation Service for decentralized authorization.
 
 ### Token Claims
 
-Secure token claiming with TokenClaimResolverV7.
+Secure token claiming with TokenClaimResolver.
 
-[TokenClaimResolverV7 →](./token-claims/TokenClaimResolverV7)
+[TokenClaimResolver →](./token-claims/TokenClaimResolver)
 
 ### Access Control
 

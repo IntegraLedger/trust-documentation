@@ -4,7 +4,7 @@ Gas-optimized batch processing for enterprise-scale document management.
 
 ## Overview
 
-The Integra V7 system implements comprehensive batch operations for gas efficiency:
+The Integra system implements comprehensive batch operations for gas efficiency:
 
 - **Gas Optimization**: 85-90% gas savings vs individual operations
 - **Array Validation**: Length checks and bounds enforcement

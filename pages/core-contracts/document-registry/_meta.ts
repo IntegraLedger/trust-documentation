@@ -1,3 +1,3 @@
 export default {
-  IntegraDocumentRegistryV7: 'IntegraDocumentRegistryV7',
+  IntegraDocumentRegistry: 'IntegraDocumentRegistry',
 };

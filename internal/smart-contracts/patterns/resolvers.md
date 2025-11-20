@@ -397,7 +397,7 @@ function emergencyUnlockResolvers(bytes32 integraHash, string calldata justifica
 
 **Example**:
 ```solidity
-contract SimpleContactResolverV7 {
+contract SimpleContactResolver {
     struct ContactInfo {
         string email;
         string phone;

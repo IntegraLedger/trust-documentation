@@ -15,8 +15,8 @@ Integra's unique architecture permanently binds ERC tokens to real-world documen
 These immutable contracts provide the security and capability framework. You'll reference these when verifying permissions and looking up components.
 
 **Key Contracts:**
-- **CapabilityNamespaceV7_Immutable** - Defines permission capabilities (CORE_CLAIM, CORE_TRANSFER, etc.)
-- **IntegraRegistryV7_Immutable** - Unified registry for all infrastructure components:
+- **CapabilityNamespace_Immutable** - Defines permission capabilities (CORE_CLAIM, CORE_TRANSFER, etc.)
+- **IntegraRegistry_Immutable** - Unified registry for all infrastructure components:
   - **PROVIDER** type: Attestation providers (EAS, VC, ZK, DIDs)
   - **VERIFIER** type: ZK proof verifiers (Groth16, PLONK, Poseidon)
   - **RESOLVER** type: Document resolvers (lifecycle, compliance, custom)
@@ -33,9 +33,9 @@ These immutable contracts provide the security and capability framework. You'll 
 These contracts manage document identity and attach services to documents.
 
 **Key Contracts:**
-- **IntegraDocumentRegistryV7_Immutable** - Core document registry (one per chain)
-- **TokenClaimResolverV7** - Validates token claim attestations (prevents unauthorized claims)
-- **SimpleContactResolverV7** - Encrypted contact information resolver
+- **IntegraDocumentRegistry_Immutable** - Core document registry (one per chain)
+- **TokenClaimResolver** - Validates token claim attestations (prevents unauthorized claims)
+- **SimpleContactResolver** - Encrypted contact information resolver
 
 **When you'll use them:**
 - Registering new documents
@@ -48,19 +48,19 @@ These contracts manage document identity and attach services to documents.
 These are the contracts you'll interact with most frequently.
 
 **Tokenizer Contracts** (11 types):
-- **OwnershipTokenizerV7** - Simple NFT ownership
-- **RentalTokenizerV7** - Rental agreements with expiration
-- **SharesTokenizerV7** - Fractional ownership
-- **RoyaltyTokenizerV7** - Revenue sharing
-- **MultiPartyTokenizerV7** - Multi-party agreements
+- **OwnershipTokenizer** - Simple NFT ownership
+- **RentalTokenizer** - Rental agreements with expiration
+- **SharesTokenizer** - Fractional ownership
+- **RoyaltyTokenizer** - Revenue sharing
+- **MultiPartyTokenizer** - Multi-party agreements
 - And 6 more specialized tokenizers
 
 **Communication Contracts:**
-- **IntegraMessageV7** - Document-related messaging
-- **IntegraSignalV7** - Payment requests and signals
+- **IntegraMessage** - Document-related messaging
+- **IntegraSignal** - Payment requests and signals
 
 **Execution Contracts:**
-- **IntegraExecutorV7** - Gasless meta-transactions
+- **IntegraExecutor** - Gasless meta-transactions
 
 **When you'll use them:**
 - Minting tokens for documents
@@ -75,7 +75,7 @@ These are the contracts you'll interact with most frequently.
 
 ```solidity
 // 1. User registers a document
-IntegraDocumentRegistryV7.registerDocument(
+IntegraDocumentRegistry.registerDocument(
     documentHash,        // SHA-256 of document
     referenceHash,       // IPFS CID or other reference
     tokenizer,          // Which tokenizer to use
@@ -100,7 +100,7 @@ IntegraDocumentRegistryV7.registerDocument(
 
 ```solidity
 // 1. User claims a token for a registered document
-OwnershipTokenizerV7.claimToken(
+OwnershipTokenizer.claimToken(
     integraHash,      // Document ID
     tokenId,          // Token number
     attestationUID,   // Proof of permission (from EAS)
@@ -181,7 +181,7 @@ bytes memory contactData = IDocumentResolver(contactResolver).resolve(integraHas
 
 ```solidity
 // Use rental tokenizer for subscription/rental
-RentalTokenizerV7 rentalTokenizer = RentalTokenizerV7(tokenizerAddress);
+RentalTokenizer rentalTokenizer = RentalTokenizer(tokenizerAddress);
 
 // Pay rent (tenant calls this monthly)
 rentalTokenizer.payRent{value: monthlyRent}(tokenId);
@@ -197,7 +197,7 @@ if (isActive) {
 
 ```solidity
 // Use royalty tokenizer for revenue sharing
-RoyaltyTokenizerV7 royaltyTokenizer = RoyaltyTokenizerV7(tokenizerAddress);
+RoyaltyTokenizer royaltyTokenizer = RoyaltyTokenizer(tokenizerAddress);
 
 // Distribute revenue to token holders
 royaltyTokenizer.distributeRoyalties{value: revenue}(integraHash);
@@ -213,7 +213,7 @@ if (pending > 0) {
 
 ```solidity
 // Use multi-party tokenizer for contracts with multiple parties
-MultiPartyTokenizerV7 multiParty = MultiPartyTokenizerV7(tokenizerAddress);
+MultiPartyTokenizer multiParty = MultiPartyTokenizer(tokenizerAddress);
 
 // Each party claims their token
 multiParty.claimToken(integraHash, tokenId1, attestationUID1, processHash);
@@ -269,7 +269,7 @@ tokenizer.claimToken(integraHash, tokenId, attestationUID, processHash);
 - **Gas Efficiency**: 30-50% cheaper claims (validation happens once, not per claim)
 - **Clean System**: Invalid attestations never get created
 
-**See**: [TokenClaimResolverV7 Documentation](./document-registration/token-claim-resolver.md)
+**See**: [TokenClaimResolver Documentation](./document-registration/token-claim-resolver.md)
 
 ## Key Concepts for Developers
 

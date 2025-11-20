@@ -1,6 +1,6 @@
 # Integra V7 Testing Guide
 
-Comprehensive testing strategy for Integra V7 smart contracts.
+Comprehensive testing strategy for Integra smart contracts.
 
 ## Table of Contents
 
@@ -118,13 +118,13 @@ test/
 pragma solidity 0.8.28;
 
 import "forge-std/Test.sol";
-import "../../../contracts/layer0/CapabilityNamespaceV7_Immutable.sol";
+import "../../../contracts/layer0/CapabilityNamespace_Immutable.sol";
 
 contract CapabilityNamespaceTest is Test {
-    CapabilityNamespaceV7_Immutable public namespace;
+    CapabilityNamespace_Immutable public namespace;
 
     function setUp() public {
-        namespace = new CapabilityNamespaceV7_Immutable();
+        namespace = new CapabilityNamespace_Immutable();
     }
 
     /// @dev Test capability constants are correct
@@ -222,10 +222,10 @@ contract CapabilityNamespaceTest is Test {
 pragma solidity 0.8.28;
 
 import "forge-std/Test.sol";
-import "../../../contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
+import "../../../contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
 
 contract IntegraDocumentRegistryTest is Test {
-    IntegraDocumentRegistryV7_Immutable public registry;
+    IntegraDocumentRegistry_Immutable public registry;
 
     address public governor = address(0x1);
     address public emergencyMultisig = address(0x2);
@@ -239,7 +239,7 @@ contract IntegraDocumentRegistryTest is Test {
     function setUp() public {
         vm.startPrank(governor);
 
-        registry = new IntegraDocumentRegistryV7_Immutable(
+        registry = new IntegraDocumentRegistry_Immutable(
             verifierRegistry,
             resolverRegistry,
             governor,
@@ -322,7 +322,7 @@ contract IntegraDocumentRegistryTest is Test {
         // Register second time (fails)
         vm.expectRevert(
             abi.encodeWithSelector(
-                IntegraDocumentRegistryV7_Immutable.DocumentAlreadyExists.selector,
+                IntegraDocumentRegistry_Immutable.DocumentAlreadyExists.selector,
                 integraHash
             )
         );
@@ -402,7 +402,7 @@ contract IntegraDocumentRegistryTest is Test {
         vm.prank(attacker);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IntegraDocumentRegistryV7_Immutable.Unauthorized.selector,
+                IntegraDocumentRegistry_Immutable.Unauthorized.selector,
                 attacker,
                 integraHash
             )
@@ -464,7 +464,7 @@ contract IntegraDocumentRegistryTest is Test {
         // Emergency unlock should fail
         vm.prank(emergencyMultisig);
         vm.expectRevert(
-            IntegraDocumentRegistryV7_Immutable.EmergencyPowersExpired.selector
+            IntegraDocumentRegistry_Immutable.EmergencyPowersExpired.selector
         );
 
         registry.emergencyUnlockResolvers(integraHash, "Too late");
@@ -521,18 +521,18 @@ contract IntegraDocumentRegistryTest is Test {
 pragma solidity 0.8.28;
 
 import "forge-std/Test.sol";
-import "../../contracts/layer0/CapabilityNamespaceV7_Immutable.sol";
-import "../../contracts/layer0/AttestationProviderRegistryV7_Immutable.sol";
-import "../../contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
-import "../../contracts/layer3/OwnershipTokenizerV7.sol";
+import "../../contracts/layer0/CapabilityNamespace_Immutable.sol";
+import "../../contracts/layer0/AttestationProviderRegistry_Immutable.sol";
+import "../../contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
+import "../../contracts/layer3/OwnershipTokenizer.sol";
 import "../helpers/MockEAS.sol";
 
 contract DocumentRegistrationFlowTest is Test {
     // Contracts
-    CapabilityNamespaceV7_Immutable public namespace;
-    AttestationProviderRegistryV7_Immutable public providerRegistry;
-    IntegraDocumentRegistryV7_Immutable public documentRegistry;
-    OwnershipTokenizerV7 public tokenizer;
+    CapabilityNamespace_Immutable public namespace;
+    AttestationProviderRegistry_Immutable public providerRegistry;
+    IntegraDocumentRegistry_Immutable public documentRegistry;
+    OwnershipTokenizer public tokenizer;
     MockEAS public eas;
 
     // Actors
@@ -548,14 +548,14 @@ contract DocumentRegistrationFlowTest is Test {
         vm.startPrank(governor);
 
         // Deploy Layer 0
-        namespace = new CapabilityNamespaceV7_Immutable();
-        providerRegistry = new AttestationProviderRegistryV7_Immutable(governor);
+        namespace = new CapabilityNamespace_Immutable();
+        providerRegistry = new AttestationProviderRegistry_Immutable(governor);
 
         // Deploy mock EAS
         eas = new MockEAS();
 
         // Deploy Layer 2
-        documentRegistry = new IntegraDocumentRegistryV7_Immutable(
+        documentRegistry = new IntegraDocumentRegistry_Immutable(
             address(0), // verifierRegistry
             address(0), // resolverRegistry
             governor,
@@ -566,7 +566,7 @@ contract DocumentRegistrationFlowTest is Test {
         );
 
         // Deploy Layer 3 (tokenizer proxy)
-        tokenizer = new OwnershipTokenizerV7();
+        tokenizer = new OwnershipTokenizer();
         tokenizer.initialize(
             "Integra Property Deeds",
             "IPROP",
@@ -801,13 +801,13 @@ certoraRun certora/conf/DocumentRegistry.conf
 pragma solidity 0.8.28;
 
 import "forge-std/Test.sol";
-import "../../contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
+import "../../contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
 
 contract BatchOperationsGasTest is Test {
-    IntegraDocumentRegistryV7_Immutable public registry;
+    IntegraDocumentRegistry_Immutable public registry;
 
     function setUp() public {
-        registry = new IntegraDocumentRegistryV7_Immutable(
+        registry = new IntegraDocumentRegistry_Immutable(
             address(0),
             address(0),
             address(this),
@@ -921,19 +921,19 @@ forge test --match-path test/gas/*.t.sol --gas-report
 pragma solidity 0.8.28;
 
 import "forge-std/Test.sol";
-import "../../contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
+import "../../contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
 
 contract PolygonForkTest is Test {
     string POLYGON_RPC_URL = vm.envString("POLYGON_RPC_URL");
 
-    IntegraDocumentRegistryV7_Immutable public registry;
+    IntegraDocumentRegistry_Immutable public registry;
 
     function setUp() public {
         // Fork Polygon mainnet
         vm.createSelectFork(POLYGON_RPC_URL);
 
         // Deploy on fork
-        registry = new IntegraDocumentRegistryV7_Immutable(
+        registry = new IntegraDocumentRegistry_Immutable(
             address(0),
             address(0),
             address(this),
@@ -1008,10 +1008,10 @@ slither . --exclude-dependencies
 myth analyze contracts/**/*.sol
 
 # Echidna (fuzzing)
-echidna-test contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol --contract IntegraDocumentRegistryV7_Immutable
+echidna-test contracts/layer2/IntegraDocumentRegistry_Immutable.sol --contract IntegraDocumentRegistry_Immutable
 
 # Manticore (symbolic execution)
-manticore contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol
+manticore contracts/layer2/IntegraDocumentRegistry_Immutable.sol
 ```
 
 ### Security Test Cases
@@ -1022,14 +1022,14 @@ manticore contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol
 pragma solidity 0.8.28;
 
 import "forge-std/Test.sol";
-import "../../contracts/layer2/IntegraDocumentRegistryV7_Immutable.sol";
+import "../../contracts/layer2/IntegraDocumentRegistry_Immutable.sol";
 
 contract MaliciousResolver {
-    IntegraDocumentRegistryV7_Immutable public registry;
+    IntegraDocumentRegistry_Immutable public registry;
     bool public attacked;
 
     constructor(address _registry) {
-        registry = IntegraDocumentRegistryV7_Immutable(_registry);
+        registry = IntegraDocumentRegistry_Immutable(_registry);
     }
 
     function onDocumentRegistered(
@@ -1059,11 +1059,11 @@ contract MaliciousResolver {
 }
 
 contract ReentrancyTest is Test {
-    IntegraDocumentRegistryV7_Immutable public registry;
+    IntegraDocumentRegistry_Immutable public registry;
     MaliciousResolver public malicious;
 
     function setUp() public {
-        registry = new IntegraDocumentRegistryV7_Immutable(
+        registry = new IntegraDocumentRegistry_Immutable(
             address(0),
             address(0),
             address(this),

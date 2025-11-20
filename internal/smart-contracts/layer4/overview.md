@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Layer 4 provides the communication infrastructure for the Integra V7 smart contract system. This layer enables workflow participants to exchange messages and payment requests in a privacy-preserving, spam-resistant manner while maintaining correlation with workflow processes.
+Layer 4 provides the communication infrastructure for the Integra smart contract system. This layer enables workflow participants to exchange messages and payment requests in a privacy-preserving, spam-resistant manner while maintaining correlation with workflow processes.
 
 ## Architecture Philosophy
 
@@ -16,7 +16,7 @@ Layer 4 follows an **event-sourced communication** strategy:
 
 ## Layer Components
 
-### 1. IntegraMessageV7 (Workflow Messaging)
+### 1. IntegraMessage (Workflow Messaging)
 
 Event-sourced messaging system for workflow coordination.
 
@@ -29,9 +29,9 @@ Event-sourced messaging system for workflow coordination.
 - Poseidon hash for all ID generation
 - No on-chain correlation checking (done off-chain)
 
-[View Full Documentation →](./IntegraMessageV7.md)
+[View Full Documentation →](./IntegraMessage.md)
 
-### 2. IntegraSignalV7 (Payment Requests)
+### 2. IntegraSignal (Payment Requests)
 
 Token-to-token payment request system with encrypted payloads.
 
@@ -45,11 +45,11 @@ Token-to-token payment request system with encrypted payloads.
 - State machine for payment lifecycle
 - Batch operations for efficiency
 
-[View Full Documentation →](./IntegraSignalV7.md)
+[View Full Documentation →](./IntegraSignal.md)
 
 ## Communication Patterns
 
-### Event-Sourced Messaging (IntegraMessageV7)
+### Event-Sourced Messaging (IntegraMessage)
 
 ```
 1. Participant knows processHash (via ZK proof)
@@ -76,7 +76,7 @@ Token-to-token payment request system with encrypted payloads.
 - Off-chain correlation enables flexible querying
 - Token holder verification ensures authorization
 
-### Payment Request Flow (IntegraSignalV7)
+### Payment Request Flow (IntegraSignal)
 
 ```
 1. Requestor encrypts payment details
@@ -119,8 +119,8 @@ Token-to-token payment request system with encrypted payloads.
 ```
 ┌─────────────────────────────────────────────────┐
 │  Layer 4: Communication                         │
-│  - IntegraMessageV7 (workflow events)           │
-│  - IntegraSignalV7 (payment requests)           │
+│  - IntegraMessage (workflow events)           │
+│  - IntegraSignal (payment requests)           │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
@@ -147,12 +147,12 @@ Token-to-token payment request system with encrypted payloads.
 ```
 processHash = Poseidon(workflowSecret, participants, timestamp)
 
-IntegraMessageV7:
+IntegraMessage:
 - Proves knowledge of processHash (ZK proof)
 - Emits messages tagged with processHash
 - Off-chain indexer groups by processHash
 
-IntegraSignalV7:
+IntegraSignal:
 - Includes processHash in payment request
 - Emits events tagged with processHash
 - Links payments to workflow context
@@ -168,27 +168,27 @@ IntegraSignalV7:
 
 ### Defense in Depth
 
-1. **ZK Proof Anti-Spam (IntegraMessageV7)**
+1. **ZK Proof Anti-Spam (IntegraMessage)**
    - Must prove knowledge of processHash
    - Prevents random spam messages
    - No gas costs for invalid proofs (revert early)
 
-2. **Token Holder Verification (IntegraSignalV7)**
+2. **Token Holder Verification (IntegraSignal)**
    - Requestor must hold requestorTokenId
    - Payer must hold payerTokenId
    - Trust substrate ensures authorized parties
 
-3. **Encrypted Payloads (IntegraSignalV7)**
+3. **Encrypted Payloads (IntegraSignal)**
    - Payment details never on-chain
    - Only requestor + payer can decrypt
    - Hybrid encryption scheme
 
-4. **EAS Attestation Integrity (IntegraSignalV7)**
+4. **EAS Attestation Integrity (IntegraSignal)**
    - Payload hash attested by EAS
    - Prevents payload tampering
    - Verifiable integrity
 
-5. **State Machine Protection (IntegraSignalV7)**
+5. **State Machine Protection (IntegraSignal)**
    - Only valid state transitions allowed
    - Prevents double-payment
    - Timeout mechanism prevents stale requests
@@ -210,12 +210,12 @@ IntegraSignalV7:
 
 #### Privacy Guarantees
 
-**IntegraMessageV7**:
+**IntegraMessage**:
 - Message content encrypted off-chain (if needed)
 - processHash reveals no workflow details
 - Correlation only possible with processHash knowledge
 
-**IntegraSignalV7**:
+**IntegraSignal**:
 - Payment amounts encrypted in payload
 - Only display amount visible (UI purposes)
 - Neither party's financial details exposed
@@ -225,12 +225,12 @@ IntegraSignalV7:
 
 ### Event-Sourced Design
 
-**IntegraMessageV7**:
+**IntegraMessage**:
 - No storage writes (only event emission)
 - Gas cost: ~60,000-80,000 (with ZK proof verification)
 - Scales to unlimited messages (no storage growth)
 
-**IntegraSignalV7**:
+**IntegraSignal**:
 - Storage only for active payment requests
 - Completed payments remain in storage (audit trail)
 - Batch operations reduce per-request gas cost
@@ -539,17 +539,17 @@ const paymentDetails = await decryptAES256GCM(
 - [ ] Create payment payload schema in EAS
 - [ ] Prepare governor address
 
-### Deployment (IntegraMessageV7)
+### Deployment (IntegraMessage)
 
-- [ ] Deploy IntegraMessageV7 proxy
+- [ ] Deploy IntegraMessage proxy
 - [ ] Initialize with verifier registry and governor
 - [ ] Verify contract on block explorer
 - [ ] Test message registration with valid ZK proof
 - [ ] Configure monitoring and alerting
 
-### Deployment (IntegraSignalV7)
+### Deployment (IntegraSignal)
 
-- [ ] Deploy IntegraSignalV7 proxy
+- [ ] Deploy IntegraSignal proxy
 - [ ] Initialize with document registry, EAS, and schema UID
 - [ ] Verify contract on block explorer
 - [ ] Set default payment timeout (if not using default)
@@ -567,18 +567,18 @@ const paymentDetails = await decryptAES256GCM(
 
 ## Migration Guide
 
-### From V6 to V7
+### Migration from V6
 
-**IntegraMessageV7 Changes**:
+**IntegraMessage Changes**:
 - V6: No messaging system
-- V7: Event-sourced messaging with ZK proof anti-spam
+- Current: Event-sourced messaging with ZK proof anti-spam
 
-**IntegraSignalV7 Changes**:
+**IntegraSignal Changes**:
 - V6: Basic payment requests
-- V7: Encrypted payloads, configurable timeouts, extensions
+- Current: Encrypted payloads, configurable timeouts, extensions
 
 **Migration Steps**:
-1. Deploy V7 contracts
+1. Deploy contracts
 2. Update frontend to use encryption
 3. Migrate existing payment requests (if any)
 4. Update off-chain indexers
@@ -587,8 +587,8 @@ const paymentDetails = await decryptAES256GCM(
 ## Resources
 
 ### Contract Documentation
-- [IntegraMessageV7](./IntegraMessageV7.md)
-- [IntegraSignalV7](./IntegraSignalV7.md)
+- [IntegraMessage](./IntegraMessage.md)
+- [IntegraSignal](./IntegraSignal.md)
 
 ### Related Layers
 - [Layer 0: Foundation Layer](../layer0/overview.md)
@@ -602,7 +602,7 @@ const paymentDetails = await decryptAES256GCM(
 
 ## Version
 
-**Current Version**: V7.0.0
+**Current Version**: 1.0.0
 **Solidity Version**: 0.8.28
 **License**: MIT
 

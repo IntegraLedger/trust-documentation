@@ -1,6 +1,6 @@
 # Integra V7 Security Guide
 
-Comprehensive security best practices for Integra V7 smart contracts.
+Comprehensive security best practices for Integra smart contracts.
 
 ## Table of Contents
 
@@ -327,7 +327,7 @@ function getProvider(bytes32 providerId) external view returns (address) {
 
 **Mitigation**:
 ```solidity
-// EASAttestationProviderV7 validates chain-specific data
+// EASAttestationProvider validates chain-specific data
 (
     uint256 sourceChainId,
     address sourceEASAddress,
@@ -494,7 +494,7 @@ function _callPrimaryResolverHook(bytes32 integraHash) internal {
 ```solidity
 // ATTACK: Malicious tokenizer attempts reentrancy
 contract MaliciousTokenizer {
-    IntegraDocumentRegistryV7 public registry;
+    IntegraDocumentRegistry public registry;
 
     function onDocumentRegistered(...) external {
         // Attempt reentrancy
@@ -503,7 +503,7 @@ contract MaliciousTokenizer {
 }
 
 // DEFENSE: ReentrancyGuard prevents reentrancy
-contract IntegraDocumentRegistryV7 is ReentrancyGuardUpgradeable {
+contract IntegraDocumentRegistry is ReentrancyGuardUpgradeable {
     function registerDocument(...) external nonReentrant {
         // State changes
         documents[integraHash] = ...;
