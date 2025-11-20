@@ -6,9 +6,7 @@ The Integra platform provides REST APIs for interacting with blockchain smart co
 
 Our APIs are designed for developers building applications on top of Integra's blockchain infrastructure. Whether you're tokenizing documents, managing multi-party workflows, or querying blockchain state, these APIs provide programmatic access to all Integra functionality.
 
-## Available APIs
-
-### Integra Universal API
+## Integra Universal API
 
 The primary public-facing API for Integra services, providing access to workflows, blockchain chains, and transaction data.
 
@@ -21,31 +19,6 @@ The primary public-facing API for Integra services, providing access to workflow
 - Real-time status updates
 
 [View Universal API Documentation →](/api-reference/universal-api)
-
-### Integra Hogan API
-
-Specialized API for interacting with Integra Ledger blockchain contracts, designed for document registration and blockchain data queries.
-
-**Base URL:** `https://hl.trustwithintegra.com`
-
-**Key Features:**
-- Contract registration
-- Blockchain data queries
-- Document verification
-- Smart contract interactions
-
-[View Hogan API Documentation →](/api-reference/hogan-api)
-
-### Hogan Lovells Endpoints
-
-Partner-specific API endpoints for Hogan Lovells integration with Integra blockchain services.
-
-**Key Features:**
-- Custom workflow endpoints
-- Partner-specific integrations
-- Specialized document handling
-
-[View Hogan Lovells API Documentation →](/api-reference/hogan-lovells)
 
 ## Authentication
 
@@ -183,8 +156,6 @@ pip install integra-sdk-python
 
 ## Next Steps
 
-Choose an API to explore:
+Explore the complete API documentation:
 
 - [Integra Universal API →](/api-reference/universal-api)
-- [Integra Hogan API →](/api-reference/hogan-api)
-- [Hogan Lovells Endpoints →](/api-reference/hogan-lovells)
