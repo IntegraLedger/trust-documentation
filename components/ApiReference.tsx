@@ -1,7 +1,4 @@
-'use client'
-
-import { ApiReferenceReact } from '@scalar/api-reference-react'
-import '@scalar/api-reference-react/style.css'
+import { useEffect, useRef } from 'react'
 
 interface ApiReferenceProps {
   specUrl: string
@@ -9,10 +6,17 @@ interface ApiReferenceProps {
 }
 
 export default function ApiReference({ specUrl, title }: ApiReferenceProps) {
-  return (
-    <div style={{ minHeight: '100vh' }}>
-      <ApiReferenceReact
-        configuration={{
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    // Load Scalar from CDN
+    const script = document.createElement('script')
+    script.src = 'https://cdn.jsdelivr.net/npm/@scalar/api-reference'
+    script.onload = () => {
+      if (containerRef.current && (window as any).Scalar) {
+        (window as any).Scalar.createApiReference(containerRef.current, {
           spec: {
             url: specUrl,
           },
@@ -20,13 +24,15 @@ export default function ApiReference({ specUrl, title }: ApiReferenceProps) {
           darkMode: false,
           layout: 'modern',
           theme: 'purple',
-          customCss: `
-            .scalar-app {
-              font-family: inherit;
-            }
-          `,
-        }}
-      />
-    </div>
-  )
+        })
+      }
+    }
+    document.head.appendChild(script)
+
+    return () => {
+      document.head.removeChild(script)
+    }
+  }, [specUrl])
+
+  return <div ref={containerRef} style={{ minHeight: '100vh', width: '100%' }} />
 }
