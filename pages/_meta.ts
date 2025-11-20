@@ -9,4 +9,5 @@ export default {
   resolvers: 'Resolvers',
   communication: 'Communication',
   patterns: 'Patterns',
+  'api-reference': 'API Reference',
 };

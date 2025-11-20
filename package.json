@@ -15,6 +15,7 @@
   "dependencies": {
     "@privy-io/react-auth": "^2.19.2",
     "@scalar/api-reference": "^1.39.3",
+    "@scalar/api-reference-react": "^0.8.6",
     "next": "^14.2.33",
     "nextra": "^3.3.1",
     "nextra-theme-docs": "^3.3.1",
