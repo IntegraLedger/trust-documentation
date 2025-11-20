@@ -18,9 +18,7 @@ The primary public-facing API for Integra services, providing access to workflow
 - Transaction data queries
 - Real-time status updates
 
-**Resources:**
-- [View Universal API Documentation →](/api-reference/universal-api)
-- [OpenAPI Specification](https://api.integra.dev/v1/openapi.json) - JSON spec for use with Swagger UI, Postman, or other API tools
+[View Universal API Documentation →](/api-reference/universal-api)
 
 ## Authentication
 
@@ -132,43 +130,6 @@ Integra APIs support webhooks for real-time event notifications. Configure webho
 - Smart contract events
 
 Webhook payloads include event type, timestamp, and relevant data for each event.
-
-## OpenAPI Tools
-
-The Integra Universal API provides an OpenAPI 3.0 specification that can be used with various API development tools:
-
-**Access the OpenAPI Spec:**
-- Direct link: [https://api.integra.dev/v1/openapi.json](https://api.integra.dev/v1/openapi.json)
-- Also available in this documentation: [Download OpenAPI Spec](/openapi/integra-universal-api.json)
-
-**Compatible Tools:**
-
-### Swagger UI
-View interactive API documentation:
-```bash
-docker run -p 8080:8080 -e SWAGGER_JSON_URL=https://api.integra.dev/v1/openapi.json swaggerapi/swagger-ui
-```
-Then open http://localhost:8080 in your browser.
-
-### Postman
-Import the OpenAPI spec into Postman:
-1. Open Postman
-2. Click "Import"
-3. Paste the URL: `https://api.integra.dev/v1/openapi.json`
-4. All API endpoints will be automatically added to your workspace
-
-### API Client Generation
-Generate API clients in your preferred language:
-```bash
-# Install OpenAPI Generator
-npm install -g @openapitools/openapi-generator-cli
-
-# Generate TypeScript client
-openapi-generator-cli generate -i https://api.integra.dev/v1/openapi.json -g typescript-axios -o ./integra-client
-
-# Generate Python client
-openapi-generator-cli generate -i https://api.integra.dev/v1/openapi.json -g python -o ./integra-client
-```
 
 ## SDK and Libraries
 
